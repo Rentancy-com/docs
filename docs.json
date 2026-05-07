@@ -11,7 +11,7 @@
     "dark": "/logo-light.svg"
   },
   "favicon": "https://media.brand.dev/0aeb1ee4-c521-4fbe-b536-f1df81215cbc.png",
-  "navbar":{
+  "navbar": {
     "primary": {
       "type": "github",
       "href": "https://github.com/lofty"
@@ -108,39 +108,64 @@
             "group": "Leads",
             "pages": [
               "api-reference/leads/overview",
-              "api-reference/leads/list-leads",
-              "api-reference/leads/create-lead",
-              "api-reference/leads/get-lead",
-              "api-reference/leads/update-lead",
-              "api-reference/leads/delete-lead",
-              "api-reference/leads/assign-lead",
-              "api-reference/leads/activities",
-              "api-reference/leads/list-lead-activities",
-              "api-reference/leads/add-activity",
-              "api-reference/leads/resolve-assignees-by-lead-info",
-              "api-reference/leads/place-a-property",
-              "api-reference/leads/place-an-inquiry",
-              "api-reference/leads/system-logs",
-              "api-reference/leads/brokermint-webhook-update-a-synced-lead"
+              {
+                "group": "Core",
+                "pages": [
+                  "api-reference/leads/list-leads",
+                  "api-reference/leads/create-lead",
+                  "api-reference/leads/get-lead",
+                  "api-reference/leads/update-lead",
+                  "api-reference/leads/delete-lead"
+                ]
+              },
+              {
+                "group": "Assignment & Activity",
+                "pages": [
+                  "api-reference/leads/assign-lead",
+                  "api-reference/leads/resolve-assignees-by-lead-info",
+                  "api-reference/leads/activities",
+                  "api-reference/leads/list-lead-activities",
+                  "api-reference/leads/add-activity"
+                ]
+              },
+              {
+                "group": "Other Operations",
+                "pages": [
+                  "api-reference/leads/place-a-property",
+                  "api-reference/leads/place-an-inquiry",
+                  "api-reference/leads/system-logs",
+                  "api-reference/leads/brokermint-webhook-update-a-synced-lead"
+                ]
+              }
             ]
           },
           {
             "group": "Tasks & Appointments",
             "pages": [
-              "api-reference/tasks/v2/list-tasks",
-              "api-reference/tasks/v2/create-task",
-              "api-reference/tasks/v2/get-task",
-              "api-reference/tasks/v2/update-task",
-              "api-reference/tasks/v2/delete-task",
-              "api-reference/tasks/v2/finish-task",
-              "api-reference/tasks/v2/unfinish-task",
-              "api-reference/tasks/v2/my-tasks",
-              "api-reference/tasks/v1/list-tasks",
-              "api-reference/tasks/v1/create-task",
-              "api-reference/tasks/v1/get-task",
-              "api-reference/tasks/v1/update-task",
-              "api-reference/tasks/v1/delete-task",
-              "api-reference/tasks/v1/list-appointments"
+              {
+                "group": "V2",
+                "pages": [
+                  "api-reference/tasks/v2/list-tasks",
+                  "api-reference/tasks/v2/create-task",
+                  "api-reference/tasks/v2/get-task",
+                  "api-reference/tasks/v2/update-task",
+                  "api-reference/tasks/v2/delete-task",
+                  "api-reference/tasks/v2/finish-task",
+                  "api-reference/tasks/v2/unfinish-task",
+                  "api-reference/tasks/v2/my-tasks"
+                ]
+              },
+              {
+                "group": "V1",
+                "pages": [
+                  "api-reference/tasks/v1/list-tasks",
+                  "api-reference/tasks/v1/create-task",
+                  "api-reference/tasks/v1/get-task",
+                  "api-reference/tasks/v1/update-task",
+                  "api-reference/tasks/v1/delete-task",
+                  "api-reference/tasks/v1/list-appointments"
+                ]
+              }
             ]
           },
           {
@@ -166,31 +191,56 @@
           {
             "group": "Transactions",
             "pages": [
-              "api-reference/transactions/list-transactions",
-              "api-reference/transactions/create-transaction",
-              "api-reference/transactions/get-transaction",
-              "api-reference/transactions/partially-update-a-transaction",
-              "api-reference/transactions/list-transactions-for-a-lead",
-              "api-reference/transactions/list-transaction-custom-field-definitions",
-              "api-reference/transactions/update-transaction-property-address",
-              "api-reference/transactions/get-transaction-property-address",
-              "api-reference/transactions/brokermint-webhook-update-a-synced-transaction"
+              {
+                "group": "Core",
+                "pages": [
+                  "api-reference/transactions/list-transactions",
+                  "api-reference/transactions/create-transaction",
+                  "api-reference/transactions/get-transaction",
+                  "api-reference/transactions/partially-update-a-transaction",
+                  "api-reference/transactions/list-transactions-for-a-lead"
+                ]
+              },
+              {
+                "group": "Property & Custom Fields",
+                "pages": [
+                  "api-reference/transactions/list-transaction-custom-field-definitions",
+                  "api-reference/transactions/update-transaction-property-address",
+                  "api-reference/transactions/get-transaction-property-address",
+                  "api-reference/transactions/brokermint-webhook-update-a-synced-transaction"
+                ]
+              }
             ]
           },
           {
             "group": "Communication",
             "pages": [
-              "api-reference/communication/call-history",
-              "api-reference/communication/list-call-history-of-a-lead-v2",
-              "api-reference/communication/list-emails",
-              "api-reference/communication/send-email",
-              "api-reference/communication/list-sms",
-              "api-reference/communication/send-sms",
-              "api-reference/communication/list-notes",
-              "api-reference/communication/get-a-note-by-id",
-              "api-reference/communication/create-note",
-              "api-reference/communication/update-note",
-              "api-reference/communication/delete-note",
+              {
+                "group": "Calls",
+                "pages": [
+                  "api-reference/communication/call-history",
+                  "api-reference/communication/list-call-history-of-a-lead-v2"
+                ]
+              },
+              {
+                "group": "Email & SMS",
+                "pages": [
+                  "api-reference/communication/list-emails",
+                  "api-reference/communication/send-email",
+                  "api-reference/communication/list-sms",
+                  "api-reference/communication/send-sms"
+                ]
+              },
+              {
+                "group": "Notes",
+                "pages": [
+                  "api-reference/communication/list-notes",
+                  "api-reference/communication/get-a-note-by-id",
+                  "api-reference/communication/create-note",
+                  "api-reference/communication/update-note",
+                  "api-reference/communication/delete-note"
+                ]
+              },
               "api-reference/communication/search-communications-by-agent"
             ]
           },
@@ -220,12 +270,13 @@
             ]
           },
           {
-            "group": "Team Members",
+            "group": "Team",
             "pages": [
               "api-reference/team/members",
               "api-reference/team/get-a-team-member-by-account-email",
               "api-reference/team/get-a-team-member-by-user-id-deprecated",
-              "api-reference/team/get-the-current-users-profile"
+              "api-reference/team/get-the-current-users-profile",
+              "api-reference/vendor/list-vendors-of-the-callers-team"
             ]
           },
           {
@@ -280,39 +331,43 @@
           {
             "group": "Sales Agents",
             "pages": [
-              "api-reference/sales-agents/get-current-users-sales-agent",
-              "api-reference/sales-agents/get-current-users-sales-agent-quota",
-              "api-reference/sales-agents/get-sales-agent-by-lead-id",
-              "api-reference/sales-agents/query-sales-agent-settings",
-              "api-reference/sales-agents/update-sales-agent-settings",
-              "api-reference/sales-agents/query-working-leads-paginated",
-              "api-reference/sales-agents/check-if-lead-is-a-working-lead",
-              "api-reference/sales-agents/batch-add-leads-to-sales-agent-working-pool",
-              "api-reference/sales-agents/mute-a-working-lead",
-              "api-reference/sales-agents/get-sales-agent-lead-mute-status",
-              "api-reference/sales-agents/get-plan-tasks-by-lead-id",
-              "api-reference/sales-agents/batch-create-plan-tasks-for-leads",
-              "api-reference/sales-agents/send-sms-to-agent-via-ai-number"
+              {
+                "group": "Agent & Settings",
+                "pages": [
+                  "api-reference/sales-agents/get-current-users-sales-agent",
+                  "api-reference/sales-agents/get-current-users-sales-agent-quota",
+                  "api-reference/sales-agents/get-sales-agent-by-lead-id",
+                  "api-reference/sales-agents/query-sales-agent-settings",
+                  "api-reference/sales-agents/update-sales-agent-settings"
+                ]
+              },
+              {
+                "group": "Working Leads",
+                "pages": [
+                  "api-reference/sales-agents/query-working-leads-paginated",
+                  "api-reference/sales-agents/check-if-lead-is-a-working-lead",
+                  "api-reference/sales-agents/batch-add-leads-to-sales-agent-working-pool",
+                  "api-reference/sales-agents/mute-a-working-lead",
+                  "api-reference/sales-agents/get-sales-agent-lead-mute-status"
+                ]
+              },
+              {
+                "group": "Plan Tasks & Messaging",
+                "pages": [
+                  "api-reference/sales-agents/get-plan-tasks-by-lead-id",
+                  "api-reference/sales-agents/batch-create-plan-tasks-for-leads",
+                  "api-reference/sales-agents/send-sms-to-agent-via-ai-number"
+                ]
+              }
             ]
           },
           {
             "group": "Notifications",
             "pages": [
+              "api-reference/opportunity/send-an-opportunity-notification-to-the-leads-assi",
               "api-reference/notifications/send-app-push-for-taskappointment-reminder",
               "api-reference/notifications/send-system-sms-to-agent",
               "api-reference/notifications/send-system-email-to-agent"
-            ]
-          },
-          {
-            "group": "Opportunity",
-            "pages": [
-              "api-reference/opportunity/send-an-opportunity-notification-to-the-leads-assi"
-            ]
-          },
-          {
-            "group": "Vendor",
-            "pages": [
-              "api-reference/vendor/list-vendors-of-the-callers-team"
             ]
           }
         ]
