@@ -68,6 +68,7 @@
               "cli/troubleshooting",
               {
                 "group": "Command Reference",
+                "icon": "book",
                 "pages": [
                   "cli/reference/overview",
                   "cli/reference/auth",
