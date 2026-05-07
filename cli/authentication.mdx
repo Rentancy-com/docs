@@ -10,7 +10,7 @@ icon: "key"
 | --- | --- | --- | --- |
 | 1 | **Token URL** | CI/CD, automation that already has a session ID | `LOFTY_TOKEN_URL` + `LOFTY_SESSION_ID` |
 | 2 | **Browser OAuth (PKCE)** | Interactive use on a developer machine | `lofty-cli auth login-browser` |
-| 3 | **OAuth 2.0 client credentials** | Server-to-server integrations | `LOFTY_CLIENT_ID` + `LOFTY_CLIENT_SECRET` + `LOFTY_CUSTOMER_KEY` |
+| 3 | **OAuth 2.0 client credentials** | Server-to-server integrations | `LOFTY_CLIENT_ID` + `LOFTY_CLIENT_SECRET` + `LOFTY_CUSTOMER_KEY` (resource owner) |
 | 4 | **Direct access token** | One-off testing, container env injection | `LOFTY_ACCESS_TOKEN` (+ optional `LOFTY_REFRESH_TOKEN`) |
 
 <Note>
@@ -47,32 +47,36 @@ The flow uses OAuth 2.0 with [PKCE](https://oauth.net/2/pkce/) — no client sec
 
 ## Method 3 -- OAuth client credentials
 
-Use this for server-to-server scenarios where there is no human to complete a browser flow.
+Use this for server-to-server scenarios where there is no human to complete a browser flow. This implements the [OAuth 2.0 Client Credentials Grant](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) with an additional resource owner identifier.
 
-### Step 1 -- register a vendor application
+### Step 1 -- register an OAuth application
 
-Sign in to the [Lofty Vendor Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) to obtain a `client_id` and `client_secret`.
+Sign in to the [Lofty Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) to create an application and obtain your `client_id` and `client_secret`.
 
-### Step 2 -- export the vendor credentials
+### Step 2 -- configure client credentials
 
 ```bash
 export LOFTY_CLIENT_ID="your-client-id"
 export LOFTY_CLIENT_SECRET="your-client-secret"
 ```
 
-### Step 3 -- provide the customer key
+### Step 3 -- specify the target account
 
-The customer key represents the Lofty user whose data you are accessing. Find it in the Lofty CRM under **Settings > Integrations > API**.
+The customer key identifies which Lofty account's data the CLI will access (the resource owner). Each Lofty user has a unique API key — find it in the Lofty CRM under **Settings > Integrations > API**.
 
 ```bash
 export LOFTY_CUSTOMER_KEY="your-customer-key"
 ```
 
-Then exchange for a token:
+Then exchange for an access token:
 
 ```bash
 lofty-cli auth login
 ```
+
+<Note>
+Unlike a standard Client Credentials Grant where the client acts on its own behalf, Lofty requires `LOFTY_CUSTOMER_KEY` to specify which account to access. The token is scoped to that account's data and permissions.
+</Note>
 
 ## Method 4 -- Direct access token
 
