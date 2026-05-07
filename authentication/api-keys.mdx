@@ -1,68 +1,47 @@
 ---
 title: "API Keys"
-description: "Use a Lofty API key for internal integrations and testing. Learn where to find your key, how to authenticate, and when to use OAuth 2.0 instead."
+description: "Authenticate with the Lofty API using a static API key."
 ---
 
-Lofty supports API key authentication as an alternative to OAuth 2.0. API keys are simpler to set up — no OAuth flow required — but they come with significant security trade-offs. Use API keys only for internal tools or exploratory development where you control the environment, and where the key will never be shared with or visible to external parties.
-
-## Find your API key
-
-Your API key is available in your Lofty account. Navigate to **Settings > Integrations > API** to view or generate your key.
-
-<Note>
-  Each API key is tied to the user account where it was generated. Requests authenticated with that key act with that user's account permissions.
-</Note>
-
-## Make an authenticated request
-
-Include your API key in the `Authorization` header of every request.
-
-| Header | Value |
-|---|---|
-| `Content-type` | `application/json` |
-| `Authorization` | `token [API_KEY]` |
-
-<CodeGroup>
-
-```bash cURL
-curl --request GET \
-  --url https://api.lofty.com/v1.0/leads \
-  --header 'Content-type: application/json' \
-  --header 'Authorization: token YOUR_API_KEY'
-```
-
-</CodeGroup>
-
-Replace `YOUR_API_KEY` with the key from your Lofty account settings.
-
-## Security requirements
+API keys provide a simple authentication method for internal tools and development. Unlike OAuth 2.0, API keys do not expire automatically and have no built-in scope control.
 
 <Warning>
-  API keys must remain internal. Do not share them with external vendors, embed them in client-side code, or commit them to public repositories. You assume full responsibility for managing the key's usage and security.
+  API keys are intended for internal use only. For production integrations or any third-party access, use [OAuth 2.0](/authentication/oauth2).
 </Warning>
 
-Unlike OAuth 2.0 tokens, API keys are not subject to Lofty's security assessment process and do not expire automatically. If a key is compromised, you must revoke and replace it manually. There is no built-in scope control — the key provides access consistent with the account it belongs to.
+## Obtain your API key
 
-## Limitations compared to OAuth 2.0
+Navigate to **Settings → Integrations → API** in your Lofty account to view or generate your key.
 
-| | API key | OAuth 2.0 |
-|---|---|---|
-| **Expiration** | No automatic expiration | Access tokens expire automatically |
-| **Security assessments** | Not subject to review | Subject to Lofty's security review |
-| **Scope control** | No built-in restrictions | Scoped to specific API endpoints |
-| **Responsibility** | Client manages all security | Shared between client and Lofty |
-| **External sharing** | Never — internal use only | Supported through authorized OAuth flows |
+Each key is bound to the account that generated it. Requests authenticated with that key inherit the account's permissions.
+
+## Authenticate requests
+
+Pass your API key in the `Authorization` header with the `token` prefix:
+
+```bash
+curl https://api.lofty.com/v1.0/leads \
+  -H "Content-Type: application/json" \
+  -H "Authorization: token <API_KEY>"
+```
+
+## Security considerations
+
+- **Do not** expose keys in client-side code, public repositories, or logs.
+- **Do not** share keys with external vendors or third parties.
+- Keys are not subject to Lofty's security review process — you are responsible for access control.
+- If a key is compromised, revoke it immediately in your account settings and generate a new one.
 
 ## When to use API keys
 
-API keys are appropriate when:
-
-- You're building an **internal tool** used only within your own organization
-- You need to **test the API quickly** before committing to a full OAuth integration
-- You have a **server-side script** running in a controlled environment with no external exposure
-
-For anything user-facing, multi-tenant, or shared with other organizations, use OAuth 2.0.
+| Scenario | Recommended method |
+|---|---|
+| Internal automation or scripts | API Key |
+| Quick prototyping and testing | API Key |
+| Third-party integrations | OAuth 2.0 |
+| User-facing applications | OAuth 2.0 |
+| Multi-tenant platforms | OAuth 2.0 |
 
 <Tip>
-  Lofty strongly recommends OAuth 2.0 whenever possible. If your use case grows beyond internal tooling, migrate to OAuth 2.0 before expanding access. See [Authenticate with OAuth 2.0](/authentication/oauth2) to get started.
+  If your use case grows beyond internal tooling, migrate to [OAuth 2.0](/authentication/oauth2) before expanding access.
 </Tip>
