@@ -1,34 +1,62 @@
 ---
 title: "Overview"
-description: "Tasks & Appointments API version comparison and migration guide."
+description: "Manage tasks, appointments, and calendar events in Lofty."
 ---
 
-The Tasks & Appointments API has two versions. **V2 is recommended** for all new integrations.
+The Task & Calendar API lets you create, update, and track tasks and calendar events associated with leads. Tasks and appointments share a unified namespace in V2 — each endpoint resolves the target by ID regardless of type.
 
-## Version comparison
+All endpoints require a valid Bearer token in the `Authorization` header. See [Authentication](/authentication/overview) for details.
 
-| | V1 | V2 |
+## Endpoints
+
+### Tasks
+
+| Method | Path | Description |
 |---|---|---|
-| **Namespace** | Tasks and appointments are separate | Unified — share the same `taskId` namespace |
-| **Endpoints** | CRUD only | CRUD + finish / unfinish / my-tasks |
-| **ID resolution** | Must know the type | Resolves by ID regardless of type |
-| **Appointments** | Separate `GET /v1.0/appts` | Included in task endpoints via type field |
+| `GET` | `/v2.0/tasks` | List tasks for a lead |
+| `POST` | `/v2.0/tasks` | Create a task or appointment |
+| `GET` | `/v2.0/tasks/{taskId}` | Get a task by ID |
+| `PUT` | `/v2.0/tasks/{taskId}` | Update a task or appointment |
+| `DELETE` | `/v2.0/tasks/{taskId}` | Delete a task or appointment |
 
-## Which version should I use?
+### Lifecycle
 
-<CardGroup cols={2}>
-  <Card title="V2 (recommended)" icon="star">
-    Unified API for tasks and appointments. Supports finish/unfinish operations and listing tasks assigned to the current user. Use this for all new integrations.
-  </Card>
-  <Card title="V1 (legacy)" icon="clock-rotate-left">
-    Original API with separate task and appointment endpoints. Still supported but will not receive new features. Migrate to V2 when possible.
-  </Card>
-</CardGroup>
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/v2.0/tasks/{taskId}/finish` | Mark a task as completed |
+| `POST` | `/v2.0/tasks/{taskId}/unfinish` | Reopen a completed task |
+| `GET` | `/v2.0/tasks/my-tasks` | List tasks assigned to the current user |
 
-## Key differences
+### Calendar
 
-**V2 unifies tasks and appointments** — In V1, tasks and appointments are managed through different endpoints. V2 treats them as the same resource with a type distinction, simplifying your integration logic.
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/v2.0/calendar` | List calendar events |
+| `POST` | `/v2.0/calendar` | Create a calendar event |
+| `PUT` | `/v2.0/calendar/{calendarId}` | Update a calendar event |
+| `DELETE` | `/v2.0/calendar/{calendarId}` | Delete a calendar event |
+| `POST` | `/v2.0/calendar/{calendarId}/finish` | Mark event as completed |
+| `POST` | `/v2.0/calendar/{calendarId}/unfinish` | Reopen a completed event |
+| `GET` | `/v2.0/calendar/meetings/available` | List available meeting slots |
 
-**V2 adds lifecycle operations** — `finish` and `unfinish` endpoints let you mark tasks as complete or reopen them without a full update call.
+## Legacy (V1)
 
-**V2 supports user-scoped queries** — `GET /v2.0/tasks/my-tasks` returns only the tasks assigned to the authenticated user, useful for building agent dashboards.
+V1 endpoints are still supported but will not receive new features. **Use V2 for all new integrations.**
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/v1.0/tasks` | List tasks |
+| `POST` | `/v1.0/tasks` | Create a task |
+| `GET` | `/v1.0/tasks/{taskId}` | Get a task by ID |
+| `PUT` | `/v1.0/tasks/{taskId}` | Update a task |
+| `DELETE` | `/v1.0/tasks/{taskId}` | Delete a task |
+| `GET` | `/v1.0/appts` | List appointments |
+
+<Note>
+In V1, tasks and appointments use separate endpoints. V2 unifies them — a single `POST /v2.0/tasks` can create both types, distinguished by a type field.
+</Note>
+
+## Related resources
+
+- [Webhooks — Task events](/concepts/webhooks#10-task) — receive real-time notifications on task changes
+- [Webhooks — Appointment events](/concepts/webhooks#11-appointment) — receive real-time notifications on appointment changes

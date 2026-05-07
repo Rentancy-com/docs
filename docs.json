@@ -159,11 +159,11 @@
             ]
           },
           {
-            "group": "Tasks & Appointments",
+            "group": "Task & Calendar",
             "pages": [
               "api-reference/tasks/overview",
               {
-                "group": "V2",
+                "group": "Tasks",
                 "pages": [
                   "api-reference/tasks/v2/list-tasks",
                   "api-reference/tasks/v2/create-task",
@@ -176,17 +176,6 @@
                 ]
               },
               {
-                "group": "V1",
-                "pages": [
-                  "api-reference/tasks/v1/list-tasks",
-                  "api-reference/tasks/v1/create-task",
-                  "api-reference/tasks/v1/get-task",
-                  "api-reference/tasks/v1/update-task",
-                  "api-reference/tasks/v1/delete-task",
-                  "api-reference/tasks/v1/list-appointments"
-                ]
-              },
-              {
                 "group": "Calendar",
                 "pages": [
                   "api-reference/calendar/v2/list-events",
@@ -196,6 +185,17 @@
                   "api-reference/calendar/v2/finish-event",
                   "api-reference/calendar/v2/unfinish-event",
                   "api-reference/calendar/v2/available-meetings"
+                ]
+              },
+              {
+                "group": "Legacy (V1)",
+                "pages": [
+                  "api-reference/tasks/v1/list-tasks",
+                  "api-reference/tasks/v1/create-task",
+                  "api-reference/tasks/v1/get-task",
+                  "api-reference/tasks/v1/update-task",
+                  "api-reference/tasks/v1/delete-task",
+                  "api-reference/tasks/v1/list-appointments"
                 ]
               }
             ]
@@ -265,14 +265,6 @@
                   "api-reference/notifications/send-system-email-to-agent"
                 ]
               }
-            ]
-          },
-          {
-            "group": "Webhooks",
-            "pages": [
-              "api-reference/webhooks/list-webhooks",
-              "api-reference/webhooks/create-webhook",
-              "api-reference/webhooks/delete-webhook"
             ]
           },
           {
@@ -371,6 +363,14 @@
                   "api-reference/ai/create-leadanalysis-task"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/list-webhooks",
+              "api-reference/webhooks/create-webhook",
+              "api-reference/webhooks/delete-webhook"
             ]
           }
         ]

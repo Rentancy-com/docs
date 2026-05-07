@@ -6397,7 +6397,7 @@
           "Tasks & Appointments V2"
         ],
         "summary": "List tasks assigned to the caller",
-        "description": "Returns tasks assigned to the caller, sorted by startTime descending. Supports cursor-based pagination via currentId (offset) + limit.\n\nNotes:\n- currentId must be >= 0 (INVALID_PARAMETER otherwise).\n- limit must be in [1, 100] (LIMIT_NOT_VALID otherwise).\n- timeZoneCode selects how start/end times are formatted; when omitted, the caller's configured timezone is used.",
+        "description": "Returns tasks and appointments assigned to the current user, sorted by start time descending.",
         "operationId": "listTasksByUser",
         "parameters": [
           {
