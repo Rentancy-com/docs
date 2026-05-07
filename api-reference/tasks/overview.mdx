@@ -1,0 +1,34 @@
+---
+title: "Overview"
+description: "Tasks & Appointments API version comparison and migration guide."
+---
+
+The Tasks & Appointments API has two versions. **V2 is recommended** for all new integrations.
+
+## Version comparison
+
+| | V1 | V2 |
+|---|---|---|
+| **Namespace** | Tasks and appointments are separate | Unified — share the same `taskId` namespace |
+| **Endpoints** | CRUD only | CRUD + finish / unfinish / my-tasks |
+| **ID resolution** | Must know the type | Resolves by ID regardless of type |
+| **Appointments** | Separate `GET /v1.0/appts` | Included in task endpoints via type field |
+
+## Which version should I use?
+
+<CardGroup cols={2}>
+  <Card title="V2 (recommended)" icon="star">
+    Unified API for tasks and appointments. Supports finish/unfinish operations and listing tasks assigned to the current user. Use this for all new integrations.
+  </Card>
+  <Card title="V1 (legacy)" icon="clock-rotate-left">
+    Original API with separate task and appointment endpoints. Still supported but will not receive new features. Migrate to V2 when possible.
+  </Card>
+</CardGroup>
+
+## Key differences
+
+**V2 unifies tasks and appointments** — In V1, tasks and appointments are managed through different endpoints. V2 treats them as the same resource with a type distinction, simplifying your integration logic.
+
+**V2 adds lifecycle operations** — `finish` and `unfinish` endpoints let you mark tasks as complete or reopen them without a full update call.
+
+**V2 supports user-scoped queries** — `GET /v2.0/tasks/my-tasks` returns only the tasks assigned to the authenticated user, useful for building agent dashboards.

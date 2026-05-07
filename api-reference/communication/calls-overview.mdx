@@ -1,0 +1,33 @@
+---
+title: "Calls Overview"
+description: "Understand the two sets of call APIs and when to use each."
+---
+
+Lofty provides two groups of call-related endpoints that serve different purposes.
+
+## Communication API vs Calls API
+
+| | Communication API | Calls API |
+|---|---|---|
+| **Endpoints** | `GET /v1.0/communication/call` (V1, V2) | `GET /v1.0/calls`, `GET /v1.0/calls/{callId}` |
+| **Purpose** | Query call **history** for a specific lead | Query call **records** across leads |
+| **Scope** | Lead-scoped (requires `leadUserId`) | Team-scoped (filter by lead, agent, date) |
+| **Data** | Communication timeline entries | Call metadata + recording access |
+| **Recording** | Not included | `GET /v1.0/call/url/{callId}` returns recording URL |
+
+## Which should I use?
+
+<CardGroup cols={2}>
+  <Card title="Communication API" icon="clock-rotate-left">
+    Use when you need a lead's **call history** as part of their communication timeline. Best for CRM views showing all interactions with a lead.
+  </Card>
+  <Card title="Calls API" icon="phone">
+    Use when you need to **list calls**, **get call details**, or **access recordings**. Best for call analytics, logging, and playback features.
+  </Card>
+</CardGroup>
+
+## V1 vs V2 (Communication API)
+
+The Communication API has two versions:
+- **V1** (`GET /v1.0/communication/call`) — Returns basic call history.
+- **V2** (`GET /v1.0/communication/call/v2`) — Returns additional event types and richer metadata. **Recommended** for new integrations.

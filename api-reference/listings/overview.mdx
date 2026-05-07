@@ -1,0 +1,29 @@
+---
+title: "Overview"
+description: "Understand the different listing search endpoints and when to use each."
+---
+
+Lofty provides three listing endpoints for different use cases.
+
+## Endpoint comparison
+
+| Endpoint | Method | Purpose | Response |
+|---|---|---|---|
+| `/v2.0/listings/search` | POST | Search by location, price, beds, baths, etc. | JSON |
+| `/v1.0/listing` | GET | Search by agent, office, or MLS ID | JSON |
+| `/v1.0/getPublishedListings` | GET | Export team listings for syndication | XML |
+
+## Which should I use?
+
+<CardGroup cols={2}>
+  <Card title="Search Listings (V2)" icon="magnifying-glass">
+    General-purpose listing search. Filter by location keywords, price range, bedrooms, bathrooms, sqft, property type, and listing status. Best for building property search features.
+  </Card>
+  <Card title="Search by Agent/Office" icon="user">
+    Look up active and sold listings for a specific agent, their office, or by MLS listing IDs. Best for agent portfolio pages and listing management.
+  </Card>
+</CardGroup>
+
+<Note>
+**Get Published Listings** returns XML (not JSON) and is intended for syndication partners. Use the V2 search endpoint for application integrations.
+</Note>
