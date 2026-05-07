@@ -7,11 +7,11 @@
     "light": "#ffffff"
   },
   "logo": {
-    "light": "https://media.brand.dev/0cf02087-d34b-4909-899b-41d586d9e99c.svg",
-    "dark": "https://media.brand.dev/0cf02087-d34b-4909-899b-41d586d9e99c.svg"
+    "light": "/logo-dark.svg",
+    "dark": "/logo-light.svg"
   },
   "favicon": "https://media.brand.dev/0aeb1ee4-c521-4fbe-b536-f1df81215cbc.png",
-  "navbar": {
+  "navbar":{
     "primary": {
       "type": "github",
       "href": "https://github.com/lofty"
@@ -56,11 +56,53 @@
               "guides/working-leads",
               "guides/ai-features"
             ]
+          },
+          {
+            "group": "Lofty CLI",
+            "pages": [
+              "cli/install",
+              "cli/quickstart",
+              "cli/authentication",
+              "cli/configuration",
+              "cli/output-formats",
+              "cli/troubleshooting",
+              {
+                "group": "Command Reference",
+                "pages": [
+                  "cli/reference/overview",
+                  "cli/reference/auth",
+                  "cli/reference/leads",
+                  "cli/reference/transactions",
+                  "cli/reference/calendar",
+                  "cli/reference/tasks-appointments",
+                  "cli/reference/communication",
+                  "cli/reference/calls",
+                  "cli/reference/notes",
+                  "cli/reference/sales-agents",
+                  "cli/reference/agent-org",
+                  "cli/reference/agent-user",
+                  "cli/reference/alerts",
+                  "cli/reference/intelligent-features",
+                  "cli/reference/lead-activity",
+                  "cli/reference/lead-routing",
+                  "cli/reference/listing",
+                  "cli/reference/log-type",
+                  "cli/reference/members",
+                  "cli/reference/notifications",
+                  "cli/reference/opportunity",
+                  "cli/reference/system-logs",
+                  "cli/reference/team-features",
+                  "cli/reference/vendor",
+                  "cli/reference/webhooks"
+                ]
+              }
+            ]
           }
         ]
       },
       {
         "tab": "API Reference",
+        "openapi": "openapi/openapi.json",
         "groups": [
           {
             "group": "Leads",
@@ -77,15 +119,39 @@
             ]
           },
           {
-            "group": "Tasks & Calendar",
+            "group": "Tasks & Appointments V1",
             "pages": [
-              "api-reference/tasks/list-tasks",
-              "api-reference/tasks/create-task",
-              "api-reference/tasks/get-task",
-              "api-reference/tasks/update-task",
-              "api-reference/tasks/delete-task",
-              "api-reference/calendar/list-events",
-              "api-reference/calendar/create-event"
+              "api-reference/tasks/v1/list-tasks",
+              "api-reference/tasks/v1/create-task",
+              "api-reference/tasks/v1/get-task",
+              "api-reference/tasks/v1/update-task",
+              "api-reference/tasks/v1/delete-task",
+              "api-reference/tasks/v1/list-appointments"
+            ]
+          },
+          {
+            "group": "Tasks & Appointments V2",
+            "pages": [
+              "api-reference/tasks/v2/list-tasks",
+              "api-reference/tasks/v2/create-task",
+              "api-reference/tasks/v2/get-task",
+              "api-reference/tasks/v2/update-task",
+              "api-reference/tasks/v2/delete-task",
+              "api-reference/tasks/v2/finish-task",
+              "api-reference/tasks/v2/unfinish-task",
+              "api-reference/tasks/v2/my-tasks"
+            ]
+          },
+          {
+            "group": "Calendar V2",
+            "pages": [
+              "api-reference/calendar/v2/list-events",
+              "api-reference/calendar/v2/create-event",
+              "api-reference/calendar/v2/update-event",
+              "api-reference/calendar/v2/delete-event",
+              "api-reference/calendar/v2/finish-event",
+              "api-reference/calendar/v2/unfinish-event",
+              "api-reference/calendar/v2/available-meetings"
             ]
           },
           {
@@ -101,10 +167,15 @@
           {
             "group": "Communication",
             "pages": [
-              "api-reference/communication/calls",
-              "api-reference/communication/emails",
-              "api-reference/communication/sms",
-              "api-reference/communication/notes"
+              "api-reference/communication/call-history",
+              "api-reference/communication/list-emails",
+              "api-reference/communication/send-email",
+              "api-reference/communication/list-sms",
+              "api-reference/communication/send-sms",
+              "api-reference/communication/list-notes",
+              "api-reference/communication/create-note",
+              "api-reference/communication/update-note",
+              "api-reference/communication/delete-note"
             ]
           },
           {

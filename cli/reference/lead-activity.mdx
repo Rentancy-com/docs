@@ -1,0 +1,42 @@
+---
+title: "lofty-cli lead-activity"
+description: "Reference for the lofty-cli lead-activity command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli lead-activity [options] [command]
+
+Manage lead-activity
+
+Options:
+  -h, --help                      display help for command
+
+Commands:
+  activities [options] <lead-id>  List lead activities
+  help [command]                  display help for command
+```
+
+## `lofty-cli lead-activity activities`
+
+```bash
+Usage: lofty-cli lead-activity activities [options] <lead-id>
+
+List lead activities
+
+Options:
+  --current-id <id>         Cursor-based pagination anchor. Pass the last
+                            returned item's id to fetch the next page. Default 0
+                            (start from beginning). (number)
+  --offset <value>          Offset for offset-based pagination. Ignored when
+                            currentId > 0. Default 0. (number)
+  --limit <value>           Page size, 1-1000. Default 10. (number)
+  --time-zone-code <value>  Timezone in IANA format (e.g. America/Los_Angeles).
+                            Affects activityTime formatting. Defaults to user
+                            config. (string)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```

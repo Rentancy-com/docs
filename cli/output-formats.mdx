@@ -1,0 +1,114 @@
+---
+title: "Output Formats"
+description: "lofty-cli supports four output formats so you can pipe results into any downstream tool. The default is human-readable text; everything else is selected with --format or the --json shortcut."
+icon: "table-columns"
+---
+
+`lofty-cli` supports four output formats so you can pipe results into any downstream tool. The default is human-readable text; everything else is selected with `--format` (or the `--json` shortcut).
+
+## `text` (default)
+
+Designed for terminals. Tables are aligned and colorized; long fields are truncated.
+
+```bash
+lofty-cli leads list
+```
+
+```text
+ID         FIRSTNAME  LASTNAME  STAGE       CREATED
+12345      John       Smith     New         2026-04-01
+12346      Jane       Doe       Contacted   2026-04-02
+```
+
+Use `--no-color` to drop ANSI sequences and `--no-header` to omit the column row — useful when piping to `awk` or `cut`:
+
+```bash
+lofty-cli leads list --no-header --no-color | awk '{print $1}'
+```
+
+## `json`
+
+Stable, machine-readable, and the only format that preserves nested fields and full precision for 64-bit IDs.
+
+```bash
+lofty-cli leads list --json
+# or equivalently:
+lofty-cli leads list --format json
+```
+
+```json
+[
+  {
+    "leadId": "1234567890123",
+    "firstName": "John",
+    "lastName": "Smith",
+    "stage": "New"
+  }
+]
+```
+
+<Warning>
+  Lofty IDs are 64-bit integers. Always use `--json` (not `text`) when piping IDs to another script — see [JavaScript / TypeScript Integration](/javascript-integration) for why precision matters.
+</Warning>
+
+Combine with [`jq`](https://jqlang.github.io/jq/) for ad-hoc filtering:
+
+```bash
+lofty-cli leads list --json | jq '.[] | select(.stage == "New") | .leadId'
+```
+
+## `csv`
+
+Round-trips cleanly into spreadsheets and `csvkit` / `pandas`.
+
+```bash
+lofty-cli leads list --format csv
+```
+
+```csv
+leadId,firstName,lastName,stage,createdAt
+1234567890123,John,Smith,New,2026-04-01T12:00:00Z
+```
+
+Add `--no-header` to drop the header row when appending to an existing file.
+
+## `yaml`
+
+Useful for human review of nested API responses.
+
+```bash
+lofty-cli leads get --id 1234567890123 --format yaml
+```
+
+```yaml
+leadId: '1234567890123'
+firstName: John
+lastName: Smith
+stage: New
+addresses:
+  - line1: 123 Main St
+    city: San Francisco
+```
+
+## Choosing fields
+
+Most `list` and `get` commands accept `--return-fields` to reduce payload size and speed up downstream parsing:
+
+```bash
+lofty-cli leads list --return-fields leadId,firstName,lastName,stage
+```
+
+The server applies the projection — the wire response itself is smaller, not just the rendered output.
+
+## Exit codes
+
+| Code | Meaning |
+| --- | --- |
+| `0` | Success — output is valid for the requested format |
+| `1` | Generic CLI error (validation, network, parsing) |
+| `2` | Authentication failure — see [Authentication](/cli/authentication) |
+| `>2` | API error — the response body is printed in the chosen format |
+
+<Tip>
+  Scripts should always check the exit code rather than inspect stderr text.
+</Tip>

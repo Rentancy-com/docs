@@ -1,0 +1,119 @@
+---
+title: "lofty-cli intelligent-features"
+description: "Reference for the lofty-cli intelligent-features command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli intelligent-features [options] [command]
+
+Manage intelligent-features
+
+Options:
+  -h, --help                    display help for command
+
+Commands:
+  prepare-insight [options]     Generate Prepare Insight
+  lead-analysis [options]       Query LeadAnalysis task list
+  post-lead-analysis [options]  Create LeadAnalysis task
+  generate [options]            Trigger Call Summary generation
+  call-script [options]         Generate Call Script
+  call-summary [options]        Get Call Summary
+  help [command]                display help for command
+```
+
+## `lofty-cli intelligent-features prepare-insight`
+
+```bash
+Usage: lofty-cli intelligent-features prepare-insight [options]
+
+Generate Prepare Insight
+
+Options:
+  --lead-id <id>         [REQUIRED] Lead ID (number, e.g. 100001)
+  --appointment-id <id>  [REQUIRED] Appointment ID (number, e.g. 200001)
+  --fields <cols>        Comma-separated columns to display
+  --json                 Output as JSON
+  --format <fmt>         Output format: text, json, csv, yaml
+  -h, --help             display help for command
+```
+
+## `lofty-cli intelligent-features lead-analysis`
+
+```bash
+Usage: lofty-cli intelligent-features lead-analysis [options]
+
+Query LeadAnalysis task list
+
+Options:
+  --page-num <n>   pageNum (number)
+  --page-size <n>  pageSize (number)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli intelligent-features post-lead-analysis`
+
+```bash
+Usage: lofty-cli intelligent-features post-lead-analysis [options]
+
+Create LeadAnalysis task
+
+Options:
+  --lead-ids <id>  [REQUIRED] Lead IDs to analyze (required, cannot be empty)
+                   (array, e.g. 100001,100002)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli intelligent-features generate`
+
+```bash
+Usage: lofty-cli intelligent-features generate [options]
+
+Trigger Call Summary generation
+
+Options:
+  --call-record-id <id>  [REQUIRED] Call record ID (number, e.g. 123456)
+  --lead-id <id>         [REQUIRED] Lead ID (number, e.g. 100001)
+  --fields <cols>        Comma-separated columns to display
+  --json                 Output as JSON
+  --format <fmt>         Output format: text, json, csv, yaml
+  -h, --help             display help for command
+```
+
+## `lofty-cli intelligent-features call-script`
+
+```bash
+Usage: lofty-cli intelligent-features call-script [options]
+
+Generate Call Script
+
+Options:
+  --lead-id <id>   [REQUIRED] Lead ID (number, e.g. 100001)
+  --task-id <id>   [REQUIRED] Task ID (number, e.g. 300001)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli intelligent-features call-summary`
+
+```bash
+Usage: lofty-cli intelligent-features call-summary [options]
+
+Get Call Summary
+
+Options:
+  --call-record-id <id>  [REQUIRED] callRecordId (number)
+  --fields <cols>        Comma-separated columns to display
+  --json                 Output as JSON
+  --format <fmt>         Output format: text, json, csv, yaml
+  -h, --help             display help for command
+```

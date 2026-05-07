@@ -1,0 +1,88 @@
+---
+title: "lofty-cli agent-user"
+description: "Reference for the lofty-cli agent-user command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli agent-user [options] [command]
+
+Manage agent-user
+
+Options:
+  -h, --help                display help for command
+
+Commands:
+  add [options] <agent-id>  Add tags for agent
+  create [options]          Create a new agent with profile message
+  help [command]            display help for command
+```
+
+## `lofty-cli agent-user add`
+
+```bash
+Usage: lofty-cli agent-user add [options] <agent-id>
+
+Add tags for agent
+
+Options:
+  --tag-names <name>    [REQUIRED] List of tag names to add, max 20 at a time
+                        (array, e.g. VIP,Premium)
+  --auto-create <bool>  Whether to auto-create tags that do not exist
+                        (true|false)
+  --fields <cols>       Comma-separated columns to display
+  --json                Output as JSON
+  --format <fmt>        Output format: text, json, csv, yaml
+  -h, --help            display help for command
+```
+
+## `lofty-cli agent-user create`
+
+```bash
+Usage: lofty-cli agent-user create [options]
+
+Create a new agent with profile message
+
+Options:
+  --account-type <type>                      [REQUIRED] The account type of the agent (number)
+  --account-info-last-name <name>            [REQUIRED] last name of the agent (string, e.g. Bob)
+  --account-info-first-name <name>           [REQUIRED] first name of the agent (string, e.g. Bob)
+  --account-info-email-address <email>       [REQUIRED] email address of the agent (string, e.g. aaaa@google.com)
+  --account-info-head-url <url>              The head url of the agent (string, e.g. http://xxx)
+  --account-info-phone-number <phone>        phone number of the agent (string, e.g. 83834748)
+  --account-info-phone-code <phone>          phone code of the agent (string, e.g. 000001)
+  --account-info-phone-country <phone>       phone country of the agent (string, e.g. 000001)
+  --account-info-tag-ids <id>                tags of the agent (array, e.g. 1,2,3)
+  --account-info-sending-email <email>       sendingEmail (string)
+  --account-info-domain <value>              domain (string)
+  --account-info-allow-change-domain <bool>  allowChangeDomain (true|false)
+  --account-info-role-name <name>            roleName (string, e.g. role of the agent)
+  --account-info-group-id <id>               groupId (number)
+  --account-info-role-id <id>                roleId (number)
+  --account-info-seat-type-name <name>       the seat type code of the agent (string, e.g. Full Time Agent)
+  --work-info-street-address <addr>          Street Address (string, e.g. 123 Main St)
+  --work-info-city <value>                   City (string, e.g. New York)
+  --work-info-country <value>                Country (string, e.g. US)
+  --work-info-state <value>                  State (string, e.g. NY)
+  --work-info-zipcode <value>                Zipcode (string, e.g. 10001)
+  --work-info-license-id <id>               licenseId of the agent (string, e.g. xxx)
+  --work-info-company-name <name>            Company Name (string, e.g. xxx)
+  --work-info-company-address <addr>         Company Address (string, e.g. xxx)
+  --work-info-position <value>               position (string, e.g. xxx)
+  --work-info-personal-website <value>       Personal Website (string, e.g. xxx)
+  --work-info-personal-attachments <value>   personalAttachments (JSON array)
+  --work-info-personal-disclaimers <value>   personalDisclaimers (JSON array)
+  --work-info-personal-introduction <value>  Personal Introduction (string, e.g. xxx)
+  --social-medias-items <value>              items (JSON array)
+  --personal-photos-urls <url>               urls (array)
+  --has-back-office <bool>                   hasBackOffice (true|false)
+  --agent-pid <id>                           agentPid (string)
+  --full-sync <bool>                         fullSync (true|false)
+  --should-sync <bool>                       shouldSync (true|false)
+  --check-roster-num <bool>                  checkRosterNum (true|false)
+  --fields <cols>                            Comma-separated columns to display
+  --json                                     Output as JSON
+  --format <fmt>                             Output format: text, json, csv, yaml
+  -h, --help                                 display help for command
+```

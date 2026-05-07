@@ -1,0 +1,119 @@
+---
+title: "Authentication"
+description: "lofty-cli supports four authentication methods. They are evaluated in priority order at every command invocation: the first one that yields a valid access token wins."
+icon: "key"
+---
+
+`lofty-cli` supports four authentication methods. They are evaluated **in priority order** at every command invocation: the first one that yields a valid access token wins. Pick the method that fits how you are running the CLI.
+
+| # | Method | Best for | Configured via |
+| --- | --- | --- | --- |
+| 1 | **Token URL** | CI/CD, automation that already has a session ID | `LOFTY_TOKEN_URL` + `LOFTY_SESSION_ID` |
+| 2 | **Browser OAuth (PKCE)** | Interactive use on a developer machine | `lofty-cli auth login-browser` |
+| 3 | **OAuth 2.0 client credentials** | Server-to-server integrations | `LOFTY_CLIENT_ID` + `LOFTY_CLIENT_SECRET` + `LOFTY_CUSTOMER_KEY` |
+| 4 | **Direct access token** | One-off testing, container env injection | `LOFTY_ACCESS_TOKEN` (+ optional `LOFTY_REFRESH_TOKEN`) |
+
+<Note>
+  Tokens obtained by methods 1, 2, and 3 are cached locally and refreshed automatically when they expire.
+</Note>
+
+## Method 1 -- Token URL (highest priority)
+
+Use this when an upstream system can mint a session ID and exchange it for tokens through a custom endpoint.
+
+```bash
+export LOFTY_TOKEN_URL="https://your-auth-server.example.com/token"
+export LOFTY_SESSION_ID="ses_xxx"
+lofty-cli auth login-session
+```
+
+You can also pass the values inline, which overrides the environment variables for that invocation:
+
+```bash
+lofty-cli auth login-session --tokenurl https://... --sessionid ses_xxx
+```
+
+Tokens are cached at `~/.config/tokens/lofty-session-cache.json` and refreshed transparently.
+
+## Method 2 -- Browser OAuth (recommended for humans)
+
+The simplest method when you are working from a laptop. The CLI launches your default browser, you log in once, and the resulting token is stored locally.
+
+```bash
+lofty-cli auth login-browser
+```
+
+The flow uses OAuth 2.0 with [PKCE](https://oauth.net/2/pkce/) — no client secret is needed on your machine.
+
+## Method 3 -- OAuth client credentials
+
+Use this for server-to-server scenarios where there is no human to complete a browser flow.
+
+### Step 1 -- register a vendor application
+
+Sign in to the [Lofty Vendor Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) to obtain a `client_id` and `client_secret`.
+
+### Step 2 -- export the vendor credentials
+
+```bash
+export LOFTY_CLIENT_ID="your-client-id"
+export LOFTY_CLIENT_SECRET="your-client-secret"
+```
+
+### Step 3 -- provide the customer key
+
+The customer key represents the Lofty user whose data you are accessing. Find it in the Lofty CRM under **Settings > Integrations > API**.
+
+```bash
+export LOFTY_CUSTOMER_KEY="your-customer-key"
+```
+
+Then exchange for a token:
+
+```bash
+lofty-cli auth login
+```
+
+## Method 4 -- Direct access token
+
+When another system has already obtained an access token (e.g. a CI job that ran `auth login` upstream), inject it directly:
+
+```bash
+export LOFTY_ACCESS_TOKEN="eyJhbGciOi..."
+export LOFTY_REFRESH_TOKEN="dGhpcyBpcyBh..."   # optional
+```
+
+No `auth login*` command is required; the token is used as-is.
+
+## Verifying authentication
+
+| Command | Purpose |
+| --- | --- |
+| `lofty-cli auth status` | Show which method resolved and where credentials came from |
+| `lofty-cli auth test` | Make a real API call (typically `GET /me`) to confirm the token works |
+| `lofty-cli auth show` | Print the active customer key (masked by default) |
+
+## Logging out
+
+```bash
+lofty-cli auth logout
+```
+
+This deletes the Token URL cache, the PKCE token, the OAuth refresh cache, and the saved customer key. It does **not** revoke server-side sessions — for that, rotate the credential at its source.
+
+## Where credentials live on disk
+
+| Path | Created by | Contents |
+| --- | --- | --- |
+| `~/.config/lofty-cli/customer-key` | `auth set` | Plain-text customer key (chmod 600) |
+| `~/.config/tokens/lofty-session-cache.json` | `auth login-session` | Token URL response |
+| `~/.config/tokens/lofty-pkce-cache.json` | `auth login-browser` | Browser OAuth tokens |
+| `~/.config/tokens/lofty-oauth-cache.json` | `auth login` | Client-credentials tokens |
+
+<Warning>
+  Never commit any of these files to source control. Use `auth logout` or remove the directory to wipe state.
+</Warning>
+
+## Troubleshooting
+
+If `auth test` fails, see **[Troubleshooting](/cli/troubleshooting)** for the common causes (clock skew, expired refresh token, wrong customer key, missing scope).

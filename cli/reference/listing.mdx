@@ -1,0 +1,67 @@
+---
+title: "lofty-cli listing"
+description: "Reference for the lofty-cli listing command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli listing [options] [command]
+
+Manage listing
+
+Options:
+  -h, --help           display help for command
+
+Commands:
+  list [options]       Get Listings
+  published [options]  Get published listings
+  search [options]     Search listings
+  help [command]       display help for command
+```
+
+## `lofty-cli listing list`
+
+```bash
+Usage: lofty-cli listing list [options]
+
+Get Listings
+
+Options:
+  --user-id <id>                userId (number)
+  --listing-id <id>             listingId (string)
+  --next-page-key <value>       nextPageKey (string)
+  --sold-next-page-key <value>  soldNextPageKey (string)
+  --mls-listing-ids <id>        mlsListingIds (string)
+  --street <value>              street (string)
+  --limit <n>                   limit (number)
+  --sold-listing-id <id>        soldListingId (string)
+  --office-listings <bool>      officeListings (true|false)
+  --agent-listings <bool>       agentListings (true|false)
+  --building-name <name>        buildingName (string)
+  --building-address <addr>     buildingAddress (string)
+  --show-condition <bool>       showCondition (true|false)
+  --fields <cols>               Comma-separated columns to display
+  --json                        Output as JSON
+  --format <fmt>                Output format: text, json, csv, yaml
+  -h, --help                    display help for command
+```
+
+## `lofty-cli listing published`
+
+```bash
+Usage: lofty-cli listing published [options]
+
+Get published listings
+
+Options:
+  --type <type>    [REQUIRED] LuxVT|AptCom|AllOnMarket (string)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli listing search`
+
+Run `lofty-cli listing search --help` for full usage details.

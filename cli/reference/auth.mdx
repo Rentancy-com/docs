@@ -1,0 +1,181 @@
+---
+title: "lofty-cli auth"
+description: "Reference for the lofty-cli auth command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli auth [options] [command]
+
+Manage API authentication
+
+Options:
+  -h, --help               display help for command
+
+Commands:
+  set <customer-key>       Save your customer key (API key)
+  show [options]           Display current customer key (masked by default)
+  remove                   Delete the saved customer key and OAuth cache
+  login                    Obtain an OAuth access_token using customer key +
+                           vendor credentials
+  status                   Show current authentication status
+  login-session [options]  Authenticate via Token URL using session ID (Level 0)
+  login-browser            Authorize via browser using OAuth PKCE flow (like
+                           Claude CLI)
+  logout                   Clear all locally stored authentication credentials
+                           (Token URL cache, PKCE token, OAuth cache, customer
+                           key)
+  test                     Verify authentication by making a test API call
+  help [command]           display help for command
+```
+
+## `lofty-cli auth set`
+
+```bash
+Usage: lofty-cli auth set [options] <customer-key>
+
+Save your customer key (API key)
+
+Arguments:
+  customer-key  Your Lofty customer key
+
+Options:
+  -h, --help    display help for command
+
+Example:
+  lofty-cli auth set eyJhbGciOiJIUzI1NiJ9...
+```
+
+## `lofty-cli auth show`
+
+```bash
+Usage: lofty-cli auth show [options]
+
+Display current customer key (masked by default)
+
+Options:
+  --raw       Show the full unmasked key
+  -h, --help  display help for command
+
+Example:
+  lofty-cli auth show
+  lofty-cli auth show --raw
+```
+
+## `lofty-cli auth remove`
+
+```bash
+Usage: lofty-cli auth remove [options]
+
+Delete the saved customer key and OAuth cache
+
+Options:
+  -h, --help  display help for command
+
+Example:
+  lofty-cli auth remove
+```
+
+## `lofty-cli auth login`
+
+```bash
+Usage: lofty-cli auth login [options]
+
+Obtain an OAuth access_token using customer key + vendor credentials
+
+Options:
+  -h, --help  display help for command
+
+Requires environment variables:
+  LOFTY_CLIENT_ID       Vendor client ID
+  LOFTY_CLIENT_SECRET   Vendor client secret
+
+Example:
+  lofty-cli auth login
+```
+
+## `lofty-cli auth status`
+
+```bash
+Usage: lofty-cli auth status [options]
+
+Show current authentication status
+
+Options:
+  -h, --help  display help for command
+
+Example:
+  lofty-cli auth status
+```
+
+## `lofty-cli auth login-session`
+
+```bash
+Usage: lofty-cli auth login-session [options]
+
+Authenticate via Token URL using session ID (Level 0)
+
+Options:
+  --tokenurl <url>  Token URL (overrides LOFTY_TOKEN_URL env var)
+  --sessionid <id>  Session ID (overrides LOFTY_SESSION_ID env var)
+  -h, --help        display help for command
+
+Requires environment variables (or CLI flags):
+  LOFTY_TOKEN_URL    URL to obtain tokens from
+  LOFTY_SESSION_ID   Session ID to authenticate with
+
+Example:
+  lofty-cli auth login-session
+  lofty-cli auth login-session --tokenurl https://example.com/token --sessionid abc123
+```
+
+## `lofty-cli auth login-browser`
+
+```bash
+Usage: lofty-cli auth login-browser [options]
+
+Authorize via browser using OAuth PKCE flow (like Claude CLI)
+
+Options:
+  -h, --help  display help for command
+
+This opens a browser for authorization. If browser cannot be opened,
+a URL is printed for manual copy-paste.
+
+Example:
+  lofty-cli auth login-browser
+```
+
+## `lofty-cli auth logout`
+
+```bash
+Usage: lofty-cli auth logout [options]
+
+Clear all locally stored authentication credentials (Token URL cache, PKCE
+token, OAuth cache, customer key)
+
+Options:
+  -h, --help  display help for command
+
+Removes all locally stored authentication credentials.
+This includes PKCE token, OAuth cache, and customer key.
+Environment variables already exported in your current shell are not removed.
+
+Example:
+  lofty-cli auth logout
+```
+
+## `lofty-cli auth test`
+
+```bash
+Usage: lofty-cli auth test [options]
+
+Verify authentication by making a test API call
+
+Options:
+  -h, --help  display help for command
+
+Example:
+  lofty-cli auth test
+```

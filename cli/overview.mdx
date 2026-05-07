@@ -1,0 +1,48 @@
+---
+title: "Lofty CLI"
+description: "lofty-cli is the official command-line interface for the Lofty CRM Open API. It exposes every resource of the API -- leads, transactions, communication, listings, tasks, and more -- as a composable Unix-style tool you can use in shells, scripts, and CI pipelines."
+icon: "terminal"
+---
+
+`lofty-cli` is the official command-line interface for the [Lofty CRM](https://www.lofty.com) Open API. It exposes every resource of the API — leads, transactions, communication, listings, tasks, and more — as a composable Unix-style tool you can use in shells, scripts, and CI pipelines.
+
+The CLI is **distributed via npm** as [`@loftyai/lofty-cli`](https://www.npmjs.com/package/@loftyai/lofty-cli) and is built on top of the same [API Reference](/api-reference/leads/overview) you can browse on this site.
+
+## What can I do with it?
+
+- Manage CRM data without writing a single line of SDK code: `lofty-cli leads list`, `lofty-cli leads create --body '{...}'`, `lofty-cli transactions get --id ...`
+
+- Pipe results to `jq`, `awk`, `csvkit`, or your own scripts using the `--json`, `--csv`, or `--yaml` output formats
+
+- Drive automation in CI/CD by exchanging a session ID for short-lived tokens
+
+- Prototype integrations interactively before committing to an SDK
+
+## When to use the CLI vs the raw API
+
+| Use the CLI when | Use the raw API when |
+| --- | --- |
+| You're scripting one-off tasks or running ad-hoc queries | You're embedding Lofty into a long-running application |
+| You want consistent output formatting (JSON / CSV / YAML) | You need fine-grained control of HTTP headers and retries |
+| You need authentication boilerplate handled for you | You already have an SDK / HTTP client in your stack |
+| You're operating from a terminal, Makefile, or shell pipeline | You're building a UI or service that calls the API directly |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Install the CLI" icon="download" href="/cli/install">
+    Get the latest version from npm.
+  </Card>
+
+  <Card title="Authenticate your account" icon="key" href="/cli/authentication">
+    Pick the auth method that fits your use case.
+  </Card>
+
+  <Card title="Run your first command" icon="bolt" href="/cli/quickstart">
+    Fetch a list of leads end-to-end.
+  </Card>
+
+  <Card title="Browse the command reference" icon="book" href="/cli/reference">
+    Every command, subcommand, option, and flag.
+  </Card>
+</CardGroup>

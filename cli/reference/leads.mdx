@@ -1,0 +1,294 @@
+---
+title: "lofty-cli leads"
+description: "Reference for the lofty-cli leads command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli leads [options] [command]
+
+Manage leads
+
+Options:
+  -h, --help                        display help for command
+
+Commands:
+  get [options] <lead-id>           Get a lead by Id
+  update [options] <lead-id>        Update a lead
+  delete [options] <lead-id>        Delete a lead
+  brokermint-lead [options]         Update a lead from brokermint
+  list|search [options]             Search for leads
+  create [options]                  Create a new lead
+  property [options] <lead-id>      Place a property
+  inquiry [options] <lead-id>       Place an inquiry
+  assign [options] <lead-id>        Assign a lead
+  add-activity [options] <lead-id>  Add activity
+  search-assignee [options]         Search for assignee by lead info
+  activities [options] <lead-id>    Search for activities
+  help [command]                    display help for command
+```
+
+## `lofty-cli leads get`
+
+```bash
+Usage: lofty-cli leads get [options] <lead-id>
+
+Get a lead by Id
+
+Options:
+  --with-trash <bool>  Whether to query deleted lead. (true|false)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```
+
+## `lofty-cli leads update`
+
+Run `lofty-cli leads update --help` for full usage details.
+
+## `lofty-cli leads delete`
+
+```bash
+Usage: lofty-cli leads delete [options] <lead-id>
+
+Delete a lead
+
+Options:
+  --reason <value>  [REQUIRED] The reason to trash this lead (string)
+  --fields <cols>   Comma-separated columns to display
+  --json            Output as JSON
+  --format <fmt>    Output format: text, json, csv, yaml
+  -h, --help        display help for command
+```
+
+## `lofty-cli leads brokermint-lead`
+
+```bash
+Usage: lofty-cli leads brokermint-lead [options]
+
+Update a lead from brokermint
+
+Options:
+  --email <email>        email (string)
+  --first-name <name>    firstName (string)
+  --last-name <name>     lastName (string)
+  --contact-type <type>  contactType (string)
+  --external-id <id>     externalId (string)
+  --address <addr>       address (string)
+  --city <value>         city (string)
+  --state <value>        state (string)
+  --zip <value>          zip (string)
+  --phone <phone>        phone (string)
+  --bm-private <bool>    bmPrivate (true|false)
+  --lead-source <value>  leadSource (string)
+  --fields <cols>        Comma-separated columns to display
+  --json                 Output as JSON
+  --format <fmt>         Output format: text, json, csv, yaml
+  -h, --help             display help for command
+```
+
+## `lofty-cli leads list|search`
+
+```bash
+Usage: lofty-cli leads list|search [options]
+
+Search for leads
+
+Options:
+  -h, --help  display help for command
+```
+
+Run `lofty-cli leads list --help` for full option details.
+
+## `lofty-cli leads create`
+
+Run `lofty-cli leads create --help` for full usage details.
+
+## `lofty-cli leads property`
+
+```bash
+Usage: lofty-cli leads property [options] <lead-id>
+
+Place a property
+
+Options:
+  --price <n>               The price Applies to lead routing only if the
+                            leadType field is Seller(1) (number, e.g. 100000)
+  --state <value>           The state Applies to lead routing only if the
+                            leadType field is Seller(1) (string, e.g.
+                            California)
+  --city <value>            The city Applies to lead routing only if the
+                            leadType field is Seller(1) (string, e.g. New York)
+  --street-address <addr>   The street address Applies to lead routing only if
+                            the leadType field is Seller(1) (string, e.g. 22348
+                            Regnart RD)
+  --zip-code <value>        The zip code Applies to lead routing only if the
+                            leadType field is Seller(1) (string, e.g. 25401)
+  --county <value>          The county Applies to lead routing only if the
+                            leadType field is Seller(1) (string)
+  --property-type <type>    Property type: Single Family Home, Multi-Family,
+                            Condo, Townhouse, Mobile ... (string, e.g.
+                            Single Family Home)
+  --bedrooms <n>            The bed rooms. (number, e.g. 3)
+  --bathrooms <value>       The bath rooms. (number, e.g. 2)
+  --square-feet <n>         The square feet. (number, e.g. 100)
+  --lot-size <value>        The lot size (acreage). (number, e.g. 26.33)
+  --parking-space <n>       The parking space. (number, e.g. 1)
+  --floors <n>              The floors. (number, e.g. 1)
+  --mail-address <bool>     Mailing address (true|false)
+  --id <id>                 id (number)
+  --lead-user-id <id>       leadUserId (number)
+  --listing-id <id>         listingId (string)
+  --auto-listing-id <id>    autoListingId (number)
+  --label <value>           label (string)
+  --note <value>            note (string)
+  --listing-status <value>  listingStatus (string)
+  --label-list <value>      labelList (string)
+  --picture-url <url>       pictureUrl (string)
+  --site-listing-url <url>  siteListingUrl (string)
+  --label-type <type>       labelType (string)
+  --price-max <n>           The max price Applies to lead routing only if the
+                            leadType field is Seller(1) (number, e.g. 10000000)
+  --price-min <n>           The min price Applies to lead routing only if the
+                            leadType field is Seller(1) (number, e.g. 100000)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```
+
+## `lofty-cli leads inquiry`
+
+Run `lofty-cli leads inquiry --help` for full usage details.
+
+## `lofty-cli leads assign`
+
+```bash
+Usage: lofty-cli leads assign [options] <lead-id>
+
+Assign a lead
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli leads add-activity`
+
+```bash
+Usage: lofty-cli leads add-activity [options] <lead-id>
+
+Add activity
+
+Options:
+  --type <type>                     [REQUIRED] Specifies the type of activity
+                                    being logged for the lead. Accepted
+                                    Values: Search, Browse, Favorite
+                                    (string, e.g. Search)
+  --text <value>                    Search Text. Required when type is 'Search'
+                                    (string, e.g. Search)
+  --link <url>                      Url for web page. Required when type is
+                                    'Browse' (string, e.g. https://lofty.com)
+  --picture <value>                 Preview picture url. Required when type is
+                                    'Browse' or 'Favorite' (string, e.g.
+                                    https://lofty.com/default.jpg)
+  --listing-price <n>               The price Applies to lead routing only if
+                                    the leadType field is Seller(1) (number,
+                                    e.g. 100000)
+  --listing-state <value>           The state Applies to lead routing only if
+                                    the leadType field is Seller(1) (string,
+                                    e.g. California)
+  --listing-city <value>            The city Applies to lead routing only if the
+                                    leadType field is Seller(1) (string, e.g.
+                                    New York)
+  --listing-street-address <addr>   The street address Applies to lead routing
+                                    only if the leadType field is Seller(1)
+                                    (string, e.g. 22348 Regnart RD)
+  --listing-zip-code <value>        The zip code Applies to lead routing only if
+                                    the leadType field is Seller(1) (string,
+                                    e.g. 25401)
+  --listing-county <value>          The county Applies to lead routing only if
+                                    the leadType field is Seller(1) (string)
+  --listing-property-type <type>    Property type: Single Family Home,
+                                    Multi-Family, Condo, Townhouse,
+                                    Mobile ... (string, e.g. Single Family
+                                    Home)
+  --listing-bedrooms <n>            The bed rooms. (number, e.g. 3)
+  --listing-bathrooms <value>       The bath rooms. (number, e.g. 2)
+  --listing-square-feet <n>         The square feet. (number, e.g. 100)
+  --listing-lot-size <value>        The lot size (acreage). (number, e.g. 26.33)
+  --listing-parking-space <n>       The parking space. (number, e.g. 1)
+  --listing-floors <n>              The floors. (number, e.g. 1)
+  --listing-mail-address <bool>     Mailing address (true|false)
+  --listing-id <id>                 id (number)
+  --listing-lead-user-id <id>       leadUserId (number)
+  --listing-listing-id <id>         listingId (string)
+  --listing-auto-listing-id <id>    autoListingId (number)
+  --listing-label <value>           label (string)
+  --listing-note <value>            note (string)
+  --listing-listing-status <value>  listingStatus (string)
+  --listing-label-list <value>      labelList (string)
+  --listing-picture-url <url>       pictureUrl (string)
+  --listing-site-listing-url <url>  siteListingUrl (string)
+  --listing-label-type <type>       labelType (string)
+  --listing-price-max <n>           The max price Applies to lead routing only
+                                    if the leadType field is Seller(1) (number,
+                                    e.g. 10000000)
+  --listing-price-min <n>           The min price Applies to lead routing only
+                                    if the leadType field is Seller(1) (number,
+                                    e.g. 100000)
+  --created <n>                     created time in milliseconds. Recommended to
+                                    always provide a valid timestamp; defaults
+                                    ... (number, e.g. 1747272300000)
+  --scheduled-date <value>          Scheduled date about this showing request
+                                    (string)
+  --page-name <name>                The page name of the lead's
+                                    submission(re-inquiry) page (string, e.g.
+                                    Blog Registration)
+  --fields <cols>                   Comma-separated columns to display
+  --json                            Output as JSON
+  --format <fmt>                    Output format: text, json, csv, yaml
+  -h, --help                        display help for command
+```
+
+## `lofty-cli leads search-assignee`
+
+```bash
+Usage: lofty-cli leads search-assignee [options]
+
+Search for assignee by lead info
+
+Options:
+  --first-name <name>  [REQUIRED] The first name of the lead (string, e.g. Bob)
+  --email <email>      [REQUIRED] The email address associated with the lead
+                       (string, e.g. 123456789@gmail.com)
+  --last-name <name>   The last name of the lead (string, e.g. Li)
+  --phone <phone>      The phone number associated with the lead. (No more than
+                       20 characters per phone) (string, e.g. 1234567890)
+  --birthday <value>   The birthday of the lead(pattern:MMM d, yyyy) (string,
+                       e.g. Jun 5, 2001)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```
+
+## `lofty-cli leads activities`
+
+```bash
+Usage: lofty-cli leads activities [options] <lead-id>
+
+Search for activities
+
+Options:
+  --cur-page <n>   The page number of the returning data. One page has 100 data.
+                   Default value is 0. (number)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

@@ -1,0 +1,78 @@
+---
+title: "lofty-cli alerts"
+description: "Reference for the lofty-cli alerts command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli alerts [options] [command]
+
+Manage alerts
+
+Options:
+  -h, --help                display help for command
+
+Commands:
+  get [options] <id>        Get Alert Detail
+  ids [options] <lead-id>   Get Alert Id List
+  emails [options] <id>     Get Mail Detail
+  email-ids [options] <id>  Get Mail Id List
+  help [command]            display help for command
+```
+
+## `lofty-cli alerts get`
+
+```bash
+Usage: lofty-cli alerts get [options] <id>
+
+Get Alert Detail
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli alerts ids`
+
+```bash
+Usage: lofty-cli alerts ids [options] <lead-id>
+
+Get Alert Id List
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli alerts emails`
+
+```bash
+Usage: lofty-cli alerts emails [options] <id>
+
+Get Mail Detail
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli alerts email-ids`
+
+```bash
+Usage: lofty-cli alerts email-ids [options] <id>
+
+Get Mail Id List
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

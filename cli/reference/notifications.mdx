@@ -1,0 +1,72 @@
+---
+title: "lofty-cli notifications"
+description: "Reference for the lofty-cli notifications command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli notifications [options] [command]
+
+Manage notifications
+
+Options:
+  -h, --help                    display help for command
+
+Commands:
+  send-task-reminder [options]  Send app push for task/appointment reminder
+  send-to-agent [options]       Send system SMS to agent
+  post-send-to-agent [options]  Send system email to agent
+  help [command]                display help for command
+```
+
+## `lofty-cli notifications send-task-reminder`
+
+```bash
+Usage: lofty-cli notifications send-task-reminder [options]
+
+Send app push for task/appointment reminder
+
+Options:
+  --task-id <id>   [REQUIRED] Task ID or Appointment ID (number, e.g. 123456)
+  --type <type>    [REQUIRED] Task type. APPOINTMENT or TASK. (string: TASK |
+                   APPOINTMENT, e.g. TASK)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli notifications send-to-agent`
+
+```bash
+Usage: lofty-cli notifications send-to-agent [options]
+
+Send system SMS to agent
+
+Options:
+  --content <content>  [REQUIRED] SMS content to send to the agent's phone
+                       number (string, e.g. You have a new lead assigned.)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```
+
+## `lofty-cli notifications post-send-to-agent`
+
+```bash
+Usage: lofty-cli notifications post-send-to-agent [options]
+
+Send system email to agent
+
+Options:
+  --subject <subject>  [REQUIRED] Email subject (string, e.g. You have a new
+                       lead assigned.)
+  --content <content>  [REQUIRED] Email body content (HTML supported) (string,
+                       e.g. <p>Hello, you have a new lead...</p>)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```

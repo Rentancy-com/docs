@@ -1,0 +1,103 @@
+---
+title: "lofty-cli notes"
+description: "Reference for the lofty-cli notes command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli notes [options] [command]
+
+Manage notes
+
+Options:
+  -h, --help                  display help for command
+
+Commands:
+  get [options] <note-id>     Get note by Id
+  update [options] <note-id>  Update a note
+  delete [options] <note-id>  Delete a note
+  list [options]              Search for notes
+  create [options]            Add a note
+  help [command]              display help for command
+```
+
+## `lofty-cli notes get`
+
+```bash
+Usage: lofty-cli notes get [options] <note-id>
+
+Get note by Id
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli notes update`
+
+```bash
+Usage: lofty-cli notes update [options] <note-id>
+
+Update a note
+
+Options:
+  --content <content>  [REQUIRED] Note content (string, e.g. example_note)
+  --lead-id <id>       [REQUIRED] The ID of the lead this note is related to
+                       (number, e.g. 563172647619608)
+  --is-pin <bool>      Pin this note or not (true|false)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```
+
+## `lofty-cli notes delete`
+
+```bash
+Usage: lofty-cli notes delete [options] <note-id>
+
+Delete a note
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli notes list`
+
+```bash
+Usage: lofty-cli notes list [options]
+
+Search for notes
+
+Options:
+  --lead-id <id>                [REQUIRED] ID of Lead (number)
+  --include-system-note <bool>  Include System note or not (true|false)
+  --fields <cols>               Comma-separated columns to display
+  --json                        Output as JSON
+  --format <fmt>                Output format: text, json, csv, yaml
+  -h, --help                    display help for command
+```
+
+## `lofty-cli notes create`
+
+```bash
+Usage: lofty-cli notes create [options]
+
+Add a note
+
+Options:
+  --content <content>  [REQUIRED] Note content (string, e.g. example_note)
+  --lead-id <id>       [REQUIRED] The ID of the lead this note is related to
+                       (number, e.g. 563172647619608)
+  --is-pin <bool>      Pin this note or not (true|false)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```

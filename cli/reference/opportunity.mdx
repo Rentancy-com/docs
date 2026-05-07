@@ -1,0 +1,44 @@
+---
+title: "lofty-cli opportunity"
+description: "Reference for the lofty-cli opportunity command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli opportunity [options] [command]
+
+Manage opportunity
+
+Options:
+  -h, --help                   display help for command
+
+Commands:
+  send-notification [options]  POST send-notification
+  help [command]               display help for command
+```
+
+## `lofty-cli opportunity send-notification`
+
+```bash
+Usage: lofty-cli opportunity send-notification [options]
+
+POST send-notification
+
+Options:
+  --lead-id <id>              [REQUIRED] the id of lead (number, e.g. 1)
+  --notification-type <type>  [REQUIRED] the notificationType contains flow:
+                              48-Viewed a listing 3 times; 50-Searched; 52-Saved
+                              a listing; 4... (number, e.g. 48)
+  --description <value>       description and link is a combo, only if you fill
+                              both of them, they will show on the notification
+                              (string, e.g. San Francisco, CA 94102)
+  --link <url>                description and link is a combo, only if you fill
+                              both of them, they will show on the notification
+                              (string)
+  --message <value>           the message show on notification (string)
+  --fields <cols>             Comma-separated columns to display
+  --json                      Output as JSON
+  --format <fmt>              Output format: text, json, csv, yaml
+  -h, --help                  display help for command
+```

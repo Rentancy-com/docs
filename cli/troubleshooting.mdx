@@ -1,0 +1,136 @@
+---
+title: "Troubleshooting"
+description: "If something does not work as expected, run the failing command with --verbose first. It prints the resolved auth method, the outgoing URL, and any error details to stderr."
+icon: "bug"
+---
+
+If something does not work as expected, run the failing command with `--verbose` first — it prints the resolved auth method, the outgoing URL, and any error details to stderr. Most issues fall into one of the buckets below.
+
+## Authentication
+
+### `401 Unauthorized` from every command
+
+Check which credential path the CLI is using:
+
+```bash
+lofty-cli auth status --verbose
+```
+
+Common causes:
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| No credentials found | None of the four auth methods are configured | Pick one method from **[Authentication](/cli/authentication)** |
+| Token expired and refresh failed | Refresh token was revoked or stale | `lofty-cli auth logout` then re-authenticate |
+| `LOFTY_CUSTOMER_KEY` is set but wrong | Key copied with surrounding whitespace | Re-copy from **Settings > Integrations > API** in the Lofty CRM |
+| OAuth flow fails with `invalid_client` | `LOFTY_CLIENT_ID` / `LOFTY_CLIENT_SECRET` mismatch | Reissue the credential in the [Vendor Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) |
+
+### Browser flow opens but never completes
+
+`lofty-cli auth login-browser` listens on a free local port. Anti-virus, VPNs, or terminal multiplexers that block loopback may interfere. Try one of:
+
+- Run the command in a plain terminal (outside `tmux` or remote SSH)
+
+- Use **Method 3 — OAuth client credentials** instead, which does not require a browser
+
+- On a remote machine, run `lofty-cli auth login` (client credentials) or set `LOFTY_ACCESS_TOKEN` directly
+
+## Rate limiting
+
+A `429 Too Many Requests` response means you have exceeded the API rate budget.
+
+The CLI does **not** retry automatically. Wrap your invocations in a backoff loop if you are running large bulk jobs:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+OFFSET=0
+LIMIT=100
+
+while true; do
+  if ! lofty-cli leads list --offset "$OFFSET" --limit "$LIMIT" --json; then
+    echo "Request failed, waiting 30s before retry..." >&2
+    sleep 30
+    continue
+  fi
+  OFFSET=$((OFFSET + LIMIT))
+done
+```
+
+## Pagination cut-offs
+
+If you only see the first page of results, you are hitting the default page size. Use `--offset` and `--limit` (where supported) or stream pages until empty:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+OFFSET=0
+LIMIT=100
+
+while true; do
+  PAGE=$(lofty-cli leads list --offset "$OFFSET" --limit "$LIMIT" --json)
+  COUNT=$(echo "$PAGE" | jq 'length')
+  echo "$PAGE"
+  [ "$COUNT" -lt "$LIMIT" ] && break
+  OFFSET=$((OFFSET + LIMIT))
+done
+```
+
+## ID precision in shell pipelines
+
+Lofty IDs are 64-bit integers. `jq` and most shells preserve precision for `--json` output, but `bc`, `awk`, and JavaScript (when piped through `node -e`) do **not**.
+
+When you must hand an ID to JavaScript, treat it as a string from the start:
+
+```bash
+ID=$(lofty-cli leads list --json | jq -r '.[0].leadId')   # ID is a string
+node -e "console.log('Lead:', process.argv[1])" "$ID"
+```
+
+<Note>
+  See [JavaScript / TypeScript Integration](/javascript-integration) for full guidance on handling 64-bit IDs.
+</Note>
+
+## Network and TLS
+
+### `getaddrinfo ENOTFOUND` or `EAI_AGAIN`
+
+DNS cannot resolve `api.lofty.com`. Confirm:
+
+```bash
+curl -sSf https://api.lofty.com/health
+```
+
+If `curl` also fails, the issue is your network (corporate proxy, VPN, DNS).
+
+### TLS certificate errors
+
+If your environment intercepts TLS (corporate proxy with a custom CA), set:
+
+```bash
+export NODE_EXTRA_CA_CERTS=/path/to/your/ca-bundle.pem
+```
+
+<Warning>
+  Do **not** disable TLS verification for production traffic.
+</Warning>
+
+## Debug output
+
+`--verbose` is the universal escape hatch:
+
+```bash
+lofty-cli leads list --verbose 2> debug.log
+```
+
+`stderr` carries debug; `stdout` stays clean for piping. Attach the log to any support request along with the failing command and CLI version (`lofty-cli --version`).
+
+## Still stuck?
+
+- Re-check **[Authentication](/cli/authentication)** for the credential precedence rules
+
+- Reproduce the request directly with `curl` against the endpoint shown in `--verbose`
+
+- Ask in the internal `#openapi` channel and include `lofty-cli --version`, the failing command, and the `--verbose` log

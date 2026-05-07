@@ -1,0 +1,205 @@
+---
+title: "lofty-cli calendar"
+description: "Reference for the lofty-cli calendar command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli calendar [options] [command]
+
+Manage calendar
+
+Options:
+  -h, --help                        display help for command
+
+Commands:
+  update [options] <calendar-id>    Update a calendar entry
+  delete [options] <calendar-id>    Delete a calendar entry
+  list [options]                    Query calendar entries
+  create [options]                  Create a calendar entry
+  unfinish [options] <calendar-id>  Mark a calendar entry as not completed
+  finish [options] <calendar-id>    Mark a calendar entry as completed
+  available [options]               List available meeting slots
+  help [command]                    display help for command
+```
+
+## `lofty-cli calendar update`
+
+```bash
+Usage: lofty-cli calendar update [options] <calendar-id>
+
+Update a calendar entry
+
+Options:
+  --content <content>       Updated content/description (string)
+  --start-at <value>        Updated start time in ISO8601 format. Preferred over
+                            startAtMs when both are provided. (string)
+  --end-at <value>          Updated end time in ISO8601 format. Preferred over
+                            endAtMs when both are provided. (string)
+  --start-at-ms <n>         Updated start time as Unix timestamp in
+                            milliseconds. Used when startAt is not provided.
+                            (number)
+  --end-at-ms <n>           Updated end time as Unix timestamp in milliseconds.
+                            Used when endAt is not provided. (number)
+  --time-zone-code <value>  Updated timezone code (string)
+  --reminder-type <type>    Updated reminder type (string)
+  --reminder-time <value>   Updated reminder time (string)
+  --lead-id <id>            Updated lead ID (number)
+  --address <addr>          Updated address (for APPOINTMENT) (string)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```
+
+## `lofty-cli calendar delete`
+
+```bash
+Usage: lofty-cli calendar delete [options] <calendar-id>
+
+Delete a calendar entry
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli calendar list`
+
+```bash
+Usage: lofty-cli calendar list [options]
+
+Query calendar entries
+
+Options:
+  --lead-id <id>              Lead ID (optional, filter by specific lead)
+                              (string, e.g. 123456)
+  --start-time <value>        Start time, ISO 8601 with offset. At least one of
+                              startTime or endTime is required. (string, e.g.
+                              2026-01-01T00:00:00+08:00)
+  --end-time <value>          End time, ISO 8601 with offset. At least one of
+                              startTime or endTime is required. (string, e.g.
+                              2026-12-31T23:59:59+08:00)
+  --start-time-ms <value>     Start time as Unix timestamp in milliseconds. Used
+                              when startTime is not provided. (string, e.g.
+                              1704038400000)
+  --end-time-ms <value>       End time as Unix timestamp in milliseconds. Used
+                              when endTime is not provided. (string, e.g.
+                              1735660799000)
+  --time-zone-code <value>    Timezone code (IANA format, e.g.,
+                              America/Los_Angeles) (string, e.g.
+                              America/Los_Angeles)
+  --include-finished <value>  Include finished calendars (string, e.g. false)
+  --page <value>              Page number (starts from 0) (string, e.g. 0)
+  --page-size <value>         Page size (max 500) (string, e.g. 20)
+  --sort <value>              Sort field (e.g., startTime) (string, e.g.
+                              startTime)
+  --desc <value>              Sort in descending order (string, e.g. true)
+  --source-type <type>        Filter by source type codes. Multiple values
+                              allowed. (string, e.g. 1,2)
+  --fields <cols>             Comma-separated columns to display
+  --json                      Output as JSON
+  --format <fmt>              Output format: text, json, csv, yaml
+  -h, --help                  display help for command
+```
+
+## `lofty-cli calendar create`
+
+```bash
+Usage: lofty-cli calendar create [options]
+
+Create a calendar entry
+
+Options:
+  --type <type>             [REQUIRED] Calendar type: TASK or APPOINTMENT
+                            (string, e.g. TASK)
+  --content <content>       [REQUIRED] Content/Description of the calendar event
+                            (string, e.g. Follow up with client about...)
+  --lead-id <id>            [REQUIRED] Lead ID associated with this calendar
+                            event (number, e.g. 563172647619608)
+  --time-zone-code <value>  [REQUIRED] Timezone code (string, e.g.
+                            America/Los_Angeles)
+  --start-at <value>        Start time in ISO8601 format with timezone.
+                            Preferred over startAtMs when both are provided.
+                            (string, e.g. 2026-03-01T14:00:00-08:00)
+  --end-at <value>          End time in ISO8601 format. Preferred over endAtMs
+                            when both are provided. (string, e.g.
+                            2026-03-01T15:00:00-08:00)
+  --start-at-ms <n>         Start time as Unix timestamp in milliseconds. Used
+                            when startAt is not provided. (number, e.g.
+                            1740866400000)
+  --end-at-ms <n>           End time as Unix timestamp in milliseconds. Used
+                            when endAt is not provided. (number, e.g.
+                            1740870000000)
+  --task-way <value>        Task way type: Call, Email, Text, Other (only for
+                            TASK) (string, e.g. Call)
+  --assigned-role <value>   Assigned role: Agent or Assistant (only for TASK)
+                            (string, e.g. Agent)
+  --address <addr>          Location/Address (only for APPOINTMENT) (string,
+                            e.g. 123 Main St, Los Angeles, CA)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```
+
+## `lofty-cli calendar unfinish`
+
+```bash
+Usage: lofty-cli calendar unfinish [options] <calendar-id>
+
+Mark a calendar entry as not completed
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli calendar finish`
+
+```bash
+Usage: lofty-cli calendar finish [options] <calendar-id>
+
+Mark a calendar entry as completed
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli calendar available`
+
+```bash
+Usage: lofty-cli calendar available [options]
+
+List available meeting slots
+
+Options:
+  --start-time <value>      Start time in ISO 8601 format with offset. Preferred
+                            over startTimeMs when both are provided. (string,
+                            e.g. 2026-01-15T09:00:00-08:00)
+  --end-time <value>        End time in ISO 8601 format with offset. Preferred
+                            over endTimeMs when both are provided. (string,
+                            e.g. 2026-03-15T09:00:00-08:00)
+  --start-time-ms <value>   Start time as Unix timestamp in milliseconds. Used
+                            when startTime is not provided. (number, e.g.
+                            1768496400000)
+  --end-time-ms <value>     End time as Unix timestamp in milliseconds. Used
+                            when endTime is not provided. (number, e.g.
+                            1773680400000)
+  --time-zone-code <value>  IANA timezone identifier. When omitted, the caller's
+                            configured timezone is used. (string, e.g.
+                            America/Los_Angeles)
+  --limit <n>               Maximum number of slots to return. (number, e.g. 10)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```

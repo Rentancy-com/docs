@@ -1,0 +1,88 @@
+---
+title: "Install the Lofty CLI"
+description: "This page walks through installing lofty-cli and verifying the installation. After you finish, head to Authenticate your account to start making API calls."
+icon: "download"
+---
+
+This page walks through installing `lofty-cli` and verifying the installation. After you finish, head to **[Authenticate your account](/cli/authentication)** to start making API calls.
+
+## Prerequisites
+
+| Requirement | Minimum version | Notes |
+| --- | --- | --- |
+| Node.js | **18.0** | Required to run the CLI binary distributed on npm |
+| npm (or pnpm / bun / yarn) | any recent | npm 9+ recommended |
+| A Lofty account | — | Either a customer account (for API keys) or a vendor account (for OAuth) |
+
+Verify Node is available:
+
+```bash
+node --version
+# v20.11.1 (or any 18.0+)
+```
+
+<Tip>
+  If Node is missing, install it via [nvm](https://github.com/nvm-sh/nvm) or your package manager.
+</Tip>
+
+## Install the latest version
+
+```bash
+npm install -g @loftyai/lofty-cli
+```
+
+Confirm the install resolved correctly:
+
+```bash
+lofty-cli --version
+# Prints the version, e.g. 0.3.30
+```
+
+<Note>
+  If `lofty-cli: command not found` appears, your global npm `bin` directory is not on your `PATH`. Run `npm config get prefix` and add `<prefix>/bin` to your shell profile.
+</Note>
+
+## Upgrade
+
+```bash
+npm install -g @loftyai/lofty-cli@latest
+```
+
+The CLI also performs a lightweight background check at startup and prints a notice when a newer version is available. The check never blocks command execution.
+
+## Uninstall
+
+```bash
+npm uninstall -g @loftyai/lofty-cli
+```
+
+<Warning>
+  Local credentials and caches under `~/.config/lofty-cli/` and `~/.config/tokens/` are **not** removed automatically — delete them manually if you want a clean slate.
+</Warning>
+
+## Alternative: per-project install
+
+If you prefer not to install globally, add the CLI as a project dependency and invoke it via `npx`:
+
+```bash
+npm install --save-dev @loftyai/lofty-cli
+npx lofty-cli --help
+```
+
+This is useful when different projects need different CLI versions, or when running the CLI inside CI without a global install step.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Authenticate your account" icon="key" href="/cli/authentication">
+    Required before any API call.
+  </Card>
+
+  <Card title="Quickstart" icon="bolt" href="/cli/quickstart">
+    Common end-to-end examples.
+  </Card>
+
+  <Card title="Command reference" icon="book" href="/cli/reference">
+    Full list of resources and subcommands.
+  </Card>
+</CardGroup>

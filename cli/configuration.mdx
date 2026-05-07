@@ -1,0 +1,82 @@
+---
+title: "Configuration"
+description: "lofty-cli is configured through environment variables, on-disk config files, and per-invocation flags. Everything has a sensible default -- you only need to override what is relevant to your environment."
+icon: "gear"
+---
+
+`lofty-cli` is configured through environment variables, on-disk config files, and per-invocation flags. Everything has a sensible default — you only need to override what is relevant to your environment.
+
+## Environment variables
+
+| Variable | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `LOFTY_BASE_URL` | No | `https://api.lofty.com` | Override the API host (e.g. for a staging environment) |
+| `LOFTY_TOKEN_URL` | For Token URL auth | — | Endpoint that exchanges a session ID for tokens |
+| `LOFTY_SESSION_ID` | For Token URL auth | — | Session ID submitted to `LOFTY_TOKEN_URL` |
+| `LOFTY_ACCESS_TOKEN` | No | — | Direct access token (skips other auth methods) |
+| `LOFTY_REFRESH_TOKEN` | No | — | Refresh token paired with `LOFTY_ACCESS_TOKEN` |
+| `LOFTY_CLIENT_ID` | For OAuth | — | Vendor client ID from the Vendor Portal |
+| `LOFTY_CLIENT_SECRET` | For OAuth | — | Vendor client secret |
+| `LOFTY_CUSTOMER_KEY` | For OAuth | — | Customer key for the Lofty user being represented |
+| `NO_COLOR` | No | unset | Disables ANSI colors (also see `--no-color`) |
+| `DEBUG` | No | unset | Set to any value to mirror `--verbose` |
+
+See **[Authentication](/cli/authentication)** for the full priority order between these variables.
+
+## Global flags
+
+These flags are accepted by **every** command:
+
+| Flag | Effect |
+| --- | --- |
+| `--json` | Equivalent to `--format json` |
+| `--format <fmt>` | Output format: `text` (default), `json`, `csv`, `yaml` |
+| `--verbose` | Enable debug logging to stderr (does not pollute stdout) |
+| `--no-color` | Disable ANSI color in output |
+| `--no-header` | Omit table / CSV headers — useful when piping |
+| `-V`, `--version` | Print the CLI version |
+| `-h`, `--help` | Show help for any command at any depth |
+
+See **[Output formats](/cli/output-formats)** for examples of each format.
+
+## On-disk files
+
+| Path | Managed by | Purpose |
+| --- | --- | --- |
+| `~/.config/lofty-cli/customer-key` | `auth set` / `auth remove` | Persistent customer key |
+| `~/.config/tokens/*.json` | `auth login*` commands | Cached access / refresh tokens |
+| `aliases.yaml` (in the package) | Maintainers | Maps short option names to long ones (e.g. `-q` to `--query`) |
+
+<Tip>
+  If you want a fully ephemeral run (e.g. inside a container), set every credential via environment variables and never invoke `auth set` — no files will be written.
+</Tip>
+
+## Aliases
+
+Many commands accept short option aliases for ergonomics. The full mapping ships inside the package; run a command with `--help` to see what is available, for example:
+
+```bash
+lofty-cli leads list --help
+```
+
+Aliases never conflict with long options — you can mix them in the same invocation.
+
+## Output character encoding
+
+The CLI emits UTF-8 unconditionally. On Windows terminals, set the code page once per session if your output looks garbled:
+
+```cmd
+chcp 65001
+```
+
+## Locking the CLI version
+
+For reproducible automation, install a specific version rather than `@latest`:
+
+```bash
+npm install -g @loftyai/lofty-cli@0.3.30
+```
+
+<Note>
+  Pinning is especially recommended for CI: a minor version bump can introduce new flags or change defaults.
+</Note>

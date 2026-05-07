@@ -1,0 +1,172 @@
+---
+title: "lofty-cli communication"
+description: "Reference for the lofty-cli communication command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli communication [options] [command]
+
+Manage communication
+
+Options:
+  -h, --help                     display help for command
+
+Commands:
+  send-sms [options]             Send SMS message
+  send-email [options]           Send Email message
+  agent-communication [options]  Search for communication by agent
+  texts [options]                Search for text history
+  emails [options]               Search for email history
+  calls [options]                Search for call history
+  calls-v2 [options]             Search for call history v2
+  help [command]                 display help for command
+```
+
+## `lofty-cli communication send-sms`
+
+```bash
+Usage: lofty-cli communication send-sms [options]
+
+Send SMS message
+
+Options:
+  --content <content>     [REQUIRED] SMS content (string, e.g. Hello, this is a
+                          test message)
+  --lead-id <id>          [REQUIRED] Lead ID. When phoneNumber and phoneCode are
+                          not provided or no matching phone is found, the lead's
+                          default phone is used. (number, e.g. 563172647619608)
+  --phone-number <phone>  Recipient phone number (string, e.g. 5865865860)
+  --phone-code <phone>    Recipient phone code (string, e.g. 1)
+  --fields <cols>         Comma-separated columns to display
+  --json                  Output as JSON
+  --format <fmt>          Output format: text, json, csv, yaml
+  -h, --help              display help for command
+```
+
+## `lofty-cli communication send-email`
+
+```bash
+Usage: lofty-cli communication send-email [options]
+
+Send Email message
+
+Options:
+  --subject <subject>  [REQUIRED] Email subject (string, e.g. Welcome to our
+                       service)
+  --content <content>  [REQUIRED] Email content (string, e.g. Hello, this is a
+                       test email)
+  --lead-id <id>       [REQUIRED] Lead ID. When toEmail is not provided or no
+                       matching email is found for the lead, the lead's default
+                       email is used. (number, e.g. 563172647619608)
+  --to-email <email>   Recipient email address. (string, e.g.
+                       recipient@example.com)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```
+
+## `lofty-cli communication agent-communication`
+
+```bash
+Usage: lofty-cli communication agent-communication [options]
+
+Search for communication by agent
+
+Options:
+  --type <type>         [REQUIRED] CALL, EMAIL OR TEXT (string: CALL | TEXT |
+                        EMAIL, e.g. CALL)
+  --start-time <value>  [REQUIRED] startTimestamp (number, e.g. 946710000000)
+  --end-time <value>    [REQUIRED] endTimestamp (The maximum time interval for a
+                        single query is 24 hours) (number, e.g. 946710000000)
+  --offset <n>          offset default Value 0 (number, e.g. 0)
+  --limit <n>           limit default Value 10,max value 1000 (number, e.g. 50)
+  --team-view <bool>    search team lead's communication, default false
+                        (true|false)
+  --fields <cols>       Comma-separated columns to display
+  --json                Output as JSON
+  --format <fmt>        Output format: text, json, csv, yaml
+  -h, --help            display help for command
+```
+
+## `lofty-cli communication texts`
+
+```bash
+Usage: lofty-cli communication texts [options]
+
+Search for text history
+
+Options:
+  --lead-id <id>     [REQUIRED] ID of Lead (number)
+  --offset <value>   offset default Value 0 (number)
+  --limit <value>    limit default Value 10, max value 1000 (number)
+  --current-id <id>  This parameter is used for page turning. When searching by
+                     ID is invoked, the interface starts from the given ID.
+                     (number)
+  --fields <cols>    Comma-separated columns to display
+  --json             Output as JSON
+  --format <fmt>     Output format: text, json, csv, yaml
+  -h, --help         display help for command
+```
+
+## `lofty-cli communication emails`
+
+```bash
+Usage: lofty-cli communication emails [options]
+
+Search for email history
+
+Options:
+  --lead-id <id>     [REQUIRED] ID of Lead (number)
+  --offset <value>   offset default Value 0 (number)
+  --limit <value>    limit default Value 10, max value 1000 (number)
+  --current-id <id>  This parameter is used for page turning. When searching by
+                     ID is invoked, the interface starts from the given ID.
+                     (number)
+  --fields <cols>    Comma-separated columns to display
+  --json             Output as JSON
+  --format <fmt>     Output format: text, json, csv, yaml
+  -h, --help         display help for command
+```
+
+## `lofty-cli communication calls`
+
+```bash
+Usage: lofty-cli communication calls [options]
+
+Search for call history
+
+Options:
+  --lead-id <id>     [REQUIRED] ID of Lead (number)
+  --offset <value>   offset default Value 0 (number)
+  --limit <value>    limit default Value 10, max value 1000 (number)
+  --current-id <id>  This parameter is used for page turning. When searching by
+                     ID is invoked, the interface starts from the given ID.
+                     (number)
+  --fields <cols>    Comma-separated columns to display
+  --json             Output as JSON
+  --format <fmt>     Output format: text, json, csv, yaml
+  -h, --help         display help for command
+```
+
+## `lofty-cli communication calls-v2`
+
+```bash
+Usage: lofty-cli communication calls-v2 [options]
+
+Search for call history v2
+
+Options:
+  --lead-id <id>     [REQUIRED] ID of Lead (number)
+  --offset <value>   offset default Value 0 (number)
+  --limit <value>    limit default Value 10, max value 1000 (number)
+  --current-id <id>  This parameter is used for page turning. When searching by
+                     ID is invoked, the interface starts from the given ID.
+                     (number)
+  --fields <cols>    Comma-separated columns to display
+  --json             Output as JSON
+  --format <fmt>     Output format: text, json, csv, yaml
+  -h, --help         display help for command
+```

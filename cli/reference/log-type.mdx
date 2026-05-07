@@ -1,0 +1,101 @@
+---
+title: "lofty-cli log-type"
+description: "Reference for the lofty-cli log-type command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli log-type [options] [command]
+
+Manage log-type
+
+Options:
+  -h, --help                      display help for command
+
+Commands:
+  list [options]                  Search for log call/email/text
+  create [options]                Add a log call/email/text
+  get [options] <log-type-id>     Get log call/email/text by Id
+  delete [options] <log-type-id>  Delete a log type
+  help [command]                  display help for command
+```
+
+## `lofty-cli log-type list`
+
+```bash
+Usage: lofty-cli log-type list [options]
+
+Search for log call/email/text
+
+Options:
+  --lead-id <id>     [REQUIRED] ID of Lead (number)
+  --log-type <type>  [REQUIRED] query type value: logCall,logEmail,logText
+                     (string)
+  --offset <value>   offset default Value 0 (number)
+  --limit <value>    limit default Value 10, max value 1000 (number)
+  --current-id <id>  This parameter is used for page turning. When searching by
+                     ID is invoked, the interface starts from the given ID.
+                     (number)
+  --sort <value>     sort field: createTime (default) or id (string)
+  --order <value>    sort order: asc (default) or desc (string)
+  --fields <cols>    Comma-separated columns to display
+  --json             Output as JSON
+  --format <fmt>     Output format: text, json, csv, yaml
+  -h, --help         display help for command
+```
+
+## `lofty-cli log-type create`
+
+```bash
+Usage: lofty-cli log-type create [options]
+
+Add a log call/email/text
+
+Options:
+  --lead-id <id>                 [REQUIRED] The ID of the lead this log type is
+                                 related to (number, e.g. 563172647619608)
+  --log-type <type>              [REQUIRED] values:logCall,logEmail,logText
+                                 (string, e.g. logCall)
+  --content <content>            [REQUIRED] log type content (string, e.g.
+                                 example log content)
+  --lead-phone-number <phone>    The value of the lead phone number (string,
+                                 e.g. 586****860)
+  --calling-outcome <value>      Talked,VoiceMessage,NoAnswer,BadNumber,DNCNumber,DNCContact
+                                 (string, e.g. VoiceMessage)
+  --outbound-or-inbound <value>  Outbound or inbound communication (string, e.g.
+                                 outbound,inbound)
+  --is-pin <bool>                Pin this activity or not (true|false)
+  --fields <cols>                Comma-separated columns to display
+  --json                         Output as JSON
+  --format <fmt>                 Output format: text, json, csv, yaml
+  -h, --help                     display help for command
+```
+
+## `lofty-cli log-type get`
+
+```bash
+Usage: lofty-cli log-type get [options] <log-type-id>
+
+Get log call/email/text by Id
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli log-type delete`
+
+```bash
+Usage: lofty-cli log-type delete [options] <log-type-id>
+
+Delete a log type
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

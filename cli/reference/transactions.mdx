@@ -1,0 +1,267 @@
+---
+title: "lofty-cli transactions"
+description: "Reference for the lofty-cli transactions command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli transactions [options] [command]
+
+Manage transactions
+
+Options:
+  -h, --help                                        display help for command
+
+Commands:
+  get [options] <lead-id> <transaction-id>          Get transaction by leadId AND transactionId
+  update [options] <lead-id> <transaction-id>       Update a transaction
+  brokermint-transaction [options]                  Update a transaction from brokermint
+  create [options] <lead-id>                        Add a transaction
+  update-address [options] <lead-id>                Update address of transaction's property
+  custom-fields [options]                           Get transaction all custom fields
+  list [options] <lead-id>                          Get transactions by leadId
+  get-address [options] <lead-id> <transaction-id>  Get address of transaction's property by transactionId
+  search [options]                                  Search transactions
+  help [command]                                    display help for command
+```
+
+## `lofty-cli transactions get`
+
+```bash
+Usage: lofty-cli transactions get [options] <lead-id> <transaction-id>
+
+Get transaction by leadId AND transactionId
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli transactions update`
+
+```bash
+Usage: lofty-cli transactions update [options] <lead-id> <transaction-id>
+
+Update a transaction
+
+Options:
+  --created <n>                     [REQUIRED] created time in milliseconds
+                                    (number, e.g. 1518078026000)
+  --updated <value>                 [REQUIRED] updated time in milliseconds (not
+                                    support updating) (number, e.g.
+                                    1518078026000)
+  --transaction-name <name>         [REQUIRED] Property Address/Transaction Name
+                                    (string, e.g. 123 Main St)
+  --transaction-id <id>             transactionId (number)
+  --lead-name <name>                Lead's name whom the transaction is assigned
+                                    to (not support updating) (string, e.g. Bob)
+  --assigned-agent <n>              Lead's assigned agent (not support updating)
+                                    (number)
+  --transaction-type <type>         The type of Transaction:Purchase, Listing
+                                    (string, e.g. [Purchase,Listing])
+  --home-price <value>              The home price of transaction (number, e.g.
+                                    1000000.0)
+  --transaction-status <value>      The status of transaction (string, e.g.
+                                    Pre-contract)
+  --expected-close-date <value>     The expected close date of transaction
+                                    (number, e.g. 1508580010000)
+  --close-date <value>              The closed date of transaction (number, e.g.
+                                    1508580010000)
+  --commission-rate <value>         The commission rate of transaction (number,
+                                    e.g. 3)
+  --gci <value>                     The GCI of transaction (number, e.g. 5000.0)
+  --team-revenue <value>            The team revenue of transaction (number,
+                                    e.g. 1000.0)
+  --agent-revenue <value>           The agent revenue of transaction (number,
+                                    e.g. 4000.0)
+  --appointment-date <value>        appointmentDate (number)
+  --agreement-signed-date <value>   agreementSignedDate (number)
+  --offer-date <value>              offerDate (number)
+  --contract-date <value>           contractDate (number)
+  --appraisal-date <value>          appraisalDate (number)
+  --home-inspection-date <value>    homeInspectionDate (number)
+  --escrow-date <value>             escrowDate (number)
+  --expiration <n>                  expiration (number)
+  --custom-fields <value>           Custom field full coverage update or
+                                    insertion (JSON array)
+  --commissions-pre-split <value>   preSplit (JSON array)
+  --commissions-split <value>       split (JSON array)
+  --commissions-post-split <value>  postSplit (JSON array)
+  --fields <cols>                   Comma-separated columns to display
+  --json                            Output as JSON
+  --format <fmt>                    Output format: text, json, csv, yaml
+  -h, --help                        display help for command
+```
+
+## `lofty-cli transactions brokermint-transaction`
+
+```bash
+Usage: lofty-cli transactions brokermint-transaction [options]
+
+Update a transaction from brokermint
+
+Options:
+  --id <id>                  id (number)
+  --agent-id <id>            agentId (number)
+  --agent-name <name>        agentName (string)
+  --address <addr>           address (string)
+  --city <value>             city (string)
+  --state <value>            state (string)
+  --zip <value>              zip (string)
+  --status <value>           status (string)
+  --transaction-type <type>  transactionType (string)
+  --price <value>            price (number)
+  --representing <value>     representing (string)
+  --acceptance-date <value>  acceptanceDate (string)
+  --expiration-date <value>  expirationDate (string)
+  --closed-at <value>        closedAt (string)
+  --closing-date <value>     closingDate (string)
+  --fields <cols>            Comma-separated columns to display
+  --json                     Output as JSON
+  --format <fmt>             Output format: text, json, csv, yaml
+  -h, --help                 display help for command
+```
+
+## `lofty-cli transactions create`
+
+```bash
+Usage: lofty-cli transactions create [options] <lead-id>
+
+Add a transaction
+
+Options:
+  --created <n>                     [REQUIRED] created time in milliseconds
+                                    (number, e.g. 1518078026000)
+  --updated <value>                 [REQUIRED] updated time in milliseconds (not
+                                    support updating) (number, e.g.
+                                    1518078026000)
+  --transaction-name <name>         [REQUIRED] Property Address/Transaction Name
+                                    (string, e.g. 123 Main St)
+  --transaction-id <id>             transactionId (number)
+  --lead-name <name>                Lead's name whom the transaction is assigned
+                                    to (not support updating) (string, e.g. Bob)
+  --assigned-agent <n>              Lead's assigned agent (not support updating)
+                                    (number)
+  --transaction-type <type>         The type of Transaction:Purchase, Listing
+                                    (string, e.g. [Purchase,Listing])
+  --home-price <value>              The home price of transaction (number, e.g.
+                                    1000000.0)
+  --transaction-status <value>      The status of transaction (string, e.g.
+                                    Pre-contract)
+  --expected-close-date <value>     The expected close date of transaction
+                                    (number, e.g. 1508580010000)
+  --close-date <value>              The closed date of transaction (number, e.g.
+                                    1508580010000)
+  --commission-rate <value>         The commission rate of transaction (number,
+                                    e.g. 3)
+  --gci <value>                     The GCI of transaction (number, e.g. 5000.0)
+  --team-revenue <value>            The team revenue of transaction (number,
+                                    e.g. 1000.0)
+  --agent-revenue <value>           The agent revenue of transaction (number,
+                                    e.g. 4000.0)
+  --appointment-date <value>        appointmentDate (number)
+  --agreement-signed-date <value>   agreementSignedDate (number)
+  --offer-date <value>              offerDate (number)
+  --contract-date <value>           contractDate (number)
+  --appraisal-date <value>          appraisalDate (number)
+  --home-inspection-date <value>    homeInspectionDate (number)
+  --escrow-date <value>             escrowDate (number)
+  --expiration <n>                  expiration (number)
+  --custom-fields <value>           Custom field full coverage update or
+                                    insertion (JSON array)
+  --commissions-pre-split <value>   preSplit (JSON array)
+  --commissions-split <value>       split (JSON array)
+  --commissions-post-split <value>  postSplit (JSON array)
+  --fields <cols>                   Comma-separated columns to display
+  --json                            Output as JSON
+  --format <fmt>                    Output format: text, json, csv, yaml
+  -h, --help                        display help for command
+```
+
+## `lofty-cli transactions update-address`
+
+```bash
+Usage: lofty-cli transactions update-address [options] <lead-id>
+
+Update address of transaction's property
+
+Options:
+  --transaction-id <id>    [REQUIRED] transactionId (number)
+  --unit <value>           The unit (string, e.g. 1)
+  --label <value>          The label (string, e.g. Investment)
+  --state <value>          The state (string, e.g. CA)
+  --city <value>           The city (string, e.g. Los Angeles)
+  --zip-code <value>       The zip code (string, e.g. 90012)
+  --street-address <addr>  The street address (string, e.g. 100 W 1st St)
+  --county <value>         The county (string, e.g. Log Angeles)
+  --fields <cols>          Comma-separated columns to display
+  --json                   Output as JSON
+  --format <fmt>           Output format: text, json, csv, yaml
+  -h, --help               display help for command
+```
+
+## `lofty-cli transactions custom-fields`
+
+```bash
+Usage: lofty-cli transactions custom-fields [options]
+
+Get transaction all custom fields
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli transactions list`
+
+```bash
+Usage: lofty-cli transactions list [options] <lead-id>
+
+Get transactions by leadId
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli transactions get-address`
+
+```bash
+Usage: lofty-cli transactions get-address [options] <lead-id> <transaction-id>
+
+Get address of transaction's property by transactionId
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli transactions search`
+
+```bash
+Usage: lofty-cli transactions search [options]
+
+Search transactions
+
+Options:
+  --page-size <n>      Page size; must be between 1 and 100. (number, e.g. 20)
+  --page-num <n>       Page number (0-based); must be >= 0. (number, e.g. 0)
+  --query-key <value>  Search keyword. Performs a contains-style fuzzy match
+                       (first 15 characters only) against transaction
+                       ... (string, e.g. 123)
+  --lead-id <id>       Optional. Restrict results to transactions belonging to
+                       this lead. (number, e.g. 100001)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```

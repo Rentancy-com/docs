@@ -1,0 +1,127 @@
+---
+title: "lofty-cli lead-routing"
+description: "Reference for the lofty-cli lead-routing command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli lead-routing [options] [command]
+
+Manage lead-routing
+
+Options:
+  -h, --help                       display help for command
+
+Commands:
+  update-rule [options] <type>     Update routing rule
+  get-default [options] <type>     Get default rule
+  update-default [options] <type>  Update default routing rule
+  rules [options] <type>           Get Routing List
+  roles [options]                  Get Assign Role List
+  members [options] <type>         Get Assign Member List
+  help [command]                   display help for command
+```
+
+## `lofty-cli lead-routing update-rule`
+
+```bash
+Usage: lofty-cli lead-routing update-rule [options] <type>
+
+Update routing rule
+
+Options:
+  --id <id>                                  [REQUIRED] Rule id (number)
+  --active-hours-active-days <value>         Active day list, between 1 and 7 (array, e.g. 1,2)
+  --active-hours-hours-start <n>             Active hours start, between 0 and 23 (number)
+  --active-hours-hours-end <n>               Active hours end, between 0 and 23 (number)
+  --routing-strategy-strategy-type <type>    Strategy type (number)
+  --routing-strategy-group-id <id>           Only lead pond are affected (number)
+  --routing-strategy-group-name <name>       Edit method don't need this params (string)
+  --routing-strategy-touch-minutes <n>       Only next up and blast alert are affected (number)
+  --routing-strategy-member-weights <value>  Except for the lead pond type (JSON string)
+  --fields <cols>                            Comma-separated columns to display
+  --json                                     Output as JSON
+  --format <fmt>                             Output format: text, json, csv, yaml
+  -h, --help                                 display help for command
+```
+
+## `lofty-cli lead-routing get-default`
+
+```bash
+Usage: lofty-cli lead-routing get-default [options] <type>
+
+Get default rule
+
+Options:
+  --role-id <id>   Role id, This parameter is required when type == 4 (number)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli lead-routing update-default`
+
+```bash
+Usage: lofty-cli lead-routing update-default [options] <type>
+
+Update default routing rule
+
+Options:
+  --role-id <id>            Role id, This parameter is required when type == 4
+                            (number)
+  --strategy-type <type>    Strategy type (number)
+  --touch-minutes <n>       Only next up and blast alert are affected (number)
+  --assignee-agent-id <id>  Only default assignee are affected (number)
+  --assignee-group-id <id>  Only default assignee and routing type is AGENT_LEAD
+                            are affected (number)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```
+
+## `lofty-cli lead-routing rules`
+
+```bash
+Usage: lofty-cli lead-routing rules [options] <type>
+
+Get Routing List
+
+Options:
+  --role-id <id>   Role id, This parameter is required when type == 4 (number)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli lead-routing roles`
+
+```bash
+Usage: lofty-cli lead-routing roles [options]
+
+Get Assign Role List
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli lead-routing members`
+
+```bash
+Usage: lofty-cli lead-routing members [options] <type>
+
+Get Assign Member List
+
+Options:
+  --role-id <id>   roleId (number)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

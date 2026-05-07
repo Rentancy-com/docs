@@ -1,0 +1,130 @@
+---
+title: "lofty-cli agent-org"
+description: "Reference for the lofty-cli agent-org command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli agent-org [options] [command]
+
+Manage agent-org
+
+Options:
+  -h, --help                     display help for command
+
+Commands:
+  update-office [options]        Update Agent Office
+  add-office [options]           Add Agent Office
+  update-company [options]       Update Agent Company
+  get [options]                  Get User Organization
+  permission-profiles [options]  Get Permission Profiles
+  help [command]                 display help for command
+```
+
+## `lofty-cli agent-org update-office`
+
+```bash
+Usage: lofty-cli agent-org update-office [options]
+
+Update Agent Office
+
+Options:
+  --id <id>                  id (number)
+  --parent-id <id>           parentId (number)
+  --website-owner-id <id>    websiteOwnerId (number)
+  --name <name>              name (string)
+  --phone <phone>            phone (string)
+  --phone-code <phone>       phoneCode (string)
+  --phone-country <phone>    phoneCountry (string)
+  --email <email>            email (string)
+  --city <value>             city (string)
+  --state <value>            state (string)
+  --zipcode <value>          zipcode (string)
+  --street-address <addr>    streetAddress (string)
+  --allow-manage-sub <bool>  allowManageSub (true|false)
+  --fields <cols>            Comma-separated columns to display
+  --json                     Output as JSON
+  --format <fmt>             Output format: text, json, csv, yaml
+  -h, --help                 display help for command
+```
+
+## `lofty-cli agent-org add-office`
+
+```bash
+Usage: lofty-cli agent-org add-office [options]
+
+Add Agent Office
+
+Options:
+  --id <id>                  id (number)
+  --parent-id <id>           parentId (number)
+  --website-owner-id <id>    websiteOwnerId (number)
+  --name <name>              name (string)
+  --phone <phone>            phone (string)
+  --phone-code <phone>       phoneCode (string)
+  --phone-country <phone>    phoneCountry (string)
+  --email <email>            email (string)
+  --city <value>             city (string)
+  --state <value>            state (string)
+  --zipcode <value>          zipcode (string)
+  --street-address <addr>    streetAddress (string)
+  --allow-manage-sub <bool>  allowManageSub (true|false)
+  --fields <cols>            Comma-separated columns to display
+  --json                     Output as JSON
+  --format <fmt>             Output format: text, json, csv, yaml
+  -h, --help                 display help for command
+```
+
+## `lofty-cli agent-org update-company`
+
+```bash
+Usage: lofty-cli agent-org update-company [options]
+
+Update Agent Company
+
+Options:
+  --team-id <id>           teamId (number)
+  --name <name>            name (string)
+  --phone <phone>          phone (string)
+  --phone-code <phone>     phoneCode (string)
+  --phone-country <phone>  phoneCountry (string)
+  --email <email>          email (string)
+  --city <value>           city (string)
+  --state <value>          state (string)
+  --zipcode <value>        zipcode (string)
+  --street-address <addr>  streetAddress (string)
+  --header <value>         header (string)
+  --fields <cols>          Comma-separated columns to display
+  --json                   Output as JSON
+  --format <fmt>           Output format: text, json, csv, yaml
+  -h, --help               display help for command
+```
+
+## `lofty-cli agent-org get`
+
+```bash
+Usage: lofty-cli agent-org get [options]
+
+Get User Organization
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli agent-org permission-profiles`
+
+```bash
+Usage: lofty-cli agent-org permission-profiles [options]
+
+Get Permission Profiles
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

@@ -1,0 +1,180 @@
+---
+title: "lofty-cli tasks-appointments"
+description: "Reference for the lofty-cli tasks-appointments command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli tasks-appointments [options] [command]
+
+Manage tasks-appointments
+
+Options:
+  -h, --help                    display help for command
+
+Commands:
+  get [options] <task-id>       Get a task by ID
+  update [options] <task-id>    Update a task or appointment
+  delete [options] <task-id>    Delete a task or appointment
+  list [options]                List tasks of a lead
+  create [options]              Add a task or appointment
+  unfinish [options] <task-id>  Mark a task as not completed
+  finish [options] <task-id>    Mark a task as completed
+  my-tasks [options]            List tasks assigned to the caller
+  help [command]                display help for command
+```
+
+## `lofty-cli tasks-appointments get`
+
+```bash
+Usage: lofty-cli tasks-appointments get [options] <task-id>
+
+Get a task by ID
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli tasks-appointments update`
+
+```bash
+Usage: lofty-cli tasks-appointments update [options] <task-id>
+
+Update a task or appointment
+
+Options:
+  --content <content>       Description of the task (string, e.g. Send an email
+                            to my lead)
+  --start-at <value>        When this task/appointment should start. ISO8601
+                            format in specified timezone. (string, e.g.
+                            2026-03-01T15:00:00-08:00)
+  --end-at <value>          When this task/appointment should end. ISO8601
+                            format in specified timezone. (string, e.g.
+                            2026-03-01T16:00:00-08:00)
+  --time-zone-code <value>  Timezone code for this task/appointment (string,
+                            e.g. America/Los_Angeles)
+  --address <addr>          Address/location for appointment type tasks (string,
+                            e.g. 123 Main St, Los Angeles, CA)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```
+
+## `lofty-cli tasks-appointments delete`
+
+```bash
+Usage: lofty-cli tasks-appointments delete [options] <task-id>
+
+Delete a task or appointment
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli tasks-appointments list`
+
+```bash
+Usage: lofty-cli tasks-appointments list [options]
+
+List tasks of a lead
+
+Options:
+  --lead-id <id>   [REQUIRED] ID of the lead whose tasks and appointments to
+                   return. (number, e.g. 100001)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli tasks-appointments create`
+
+```bash
+Usage: lofty-cli tasks-appointments create [options]
+
+Add a task or appointment
+
+Options:
+  --content <content>       [REQUIRED] Description of the task (string, e.g.
+                            Send an email to my lead)
+  --lead-id <id>            [REQUIRED] The ID of the lead this task is related
+                            to (number, e.g. 563172647619608)
+  --type <type>             [REQUIRED] The type of the task. Could be Other,
+                            Call, Email, Text, Appointment (string, e.g.
+                            Call)
+  --assigned-role <value>   [REQUIRED] Role the task should be assigned to
+                            (Agent or Assistant) (string, e.g. Agent)
+  --end-at <value>          [REQUIRED] When this task/appointment should end.
+                            ISO8601 format in specified timezone. (string,
+                            e.g. 2026-03-01T16:00:00-08:00)
+  --start-at <value>        When this task/appointment should start. ISO8601
+                            format in specified timezone. (string, e.g.
+                            2026-03-01T15:00:00-08:00)
+  --time-zone-code <value>  Timezone code for this task/appointment (string,
+                            e.g. America/Los_Angeles)
+  --address <addr>          Address/location for appointment type tasks (string,
+                            e.g. 123 Main St, Los Angeles, CA)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```
+
+## `lofty-cli tasks-appointments unfinish`
+
+```bash
+Usage: lofty-cli tasks-appointments unfinish [options] <task-id>
+
+Mark a task as not completed
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli tasks-appointments finish`
+
+```bash
+Usage: lofty-cli tasks-appointments finish [options] <task-id>
+
+Mark a task as completed
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli tasks-appointments my-tasks`
+
+```bash
+Usage: lofty-cli tasks-appointments my-tasks [options]
+
+List tasks assigned to the caller
+
+Options:
+  --user-id <id>            User ID to query tasks for. Defaults to the current
+                            authenticated user if not provided. (number)
+  --current-id <id>         Cursor-based pagination anchor. Pass the last
+                            returned item's id to fetch the next page. Default 0
+                            (start from beginning). (number)
+  --limit <value>           Page size, 1-100. Default 10. (number)
+  --time-zone-code <value>  IANA timezone code (e.g. 'America/New_York'). If not
+                            provided, falls back to the user's configured
+                            timezone. (string)
+  --fields <cols>           Comma-separated columns to display
+  --json                    Output as JSON
+  --format <fmt>            Output format: text, json, csv, yaml
+  -h, --help                display help for command
+```

@@ -1,0 +1,81 @@
+---
+title: "lofty-cli members"
+description: "Reference for the lofty-cli members command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli members [options] [command]
+
+Manage members
+
+Options:
+  -h, --help                    display help for command
+
+Commands:
+  get-user [options] <user-id>  Get user by Id
+  list [options]                Get team members
+  get [options] <account>       Get member by account
+  me [options]                  Get current user's info
+  help [command]                display help for command
+```
+
+## `lofty-cli members get-user`
+
+```bash
+Usage: lofty-cli members get-user [options] <user-id>
+
+Get user by Id
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli members list`
+
+```bash
+Usage: lofty-cli members list [options]
+
+Get team members
+
+Options:
+  --group-ids <id>  Group Ids of responded members (array)
+  --offset <n>      Start index of the responded members (number)
+  --limit <n>       Quantitative limitation of responded members (number)
+  --fields <cols>   Comma-separated columns to display
+  --json            Output as JSON
+  --format <fmt>    Output format: text, json, csv, yaml
+  -h, --help        display help for command
+```
+
+## `lofty-cli members get`
+
+```bash
+Usage: lofty-cli members get [options] <account>
+
+Get member by account
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli members me`
+
+```bash
+Usage: lofty-cli members me [options]
+
+Get current user's info
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

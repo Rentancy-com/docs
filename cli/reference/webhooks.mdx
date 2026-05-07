@@ -1,0 +1,70 @@
+---
+title: "lofty-cli webhooks"
+description: "Reference for the lofty-cli webhooks command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli webhooks [options] [command]
+
+Manage webhooks
+
+Options:
+  -h, --help                       display help for command
+
+Commands:
+  create [options]                 Add a new webhook
+  list [options]                   Get all webhook from current team
+  delete [options] <subscribe-id>  Delete a webhook
+  help [command]                   display help for command
+```
+
+## `lofty-cli webhooks create`
+
+```bash
+Usage: lofty-cli webhooks create [options]
+
+Add a new webhook
+
+Options:
+  --list-id <id>        [REQUIRED] The list that you want to subscribe. ListId:
+                        agent info(1), lead info(2), lead activity(3), alert(4),
+                        transaction... (number)
+  --callback-url <url>  [REQUIRED] The url link that you receive information
+                        (string, e.g. http://xxx.test.com)
+  --limit <n>           limitation of webhook notifications in 30 mins for each,
+                        max is 5000 (number, e.g. 100)
+  --fields <cols>       Comma-separated columns to display
+  --json                Output as JSON
+  --format <fmt>        Output format: text, json, csv, yaml
+  -h, --help            display help for command
+```
+
+## `lofty-cli webhooks list`
+
+```bash
+Usage: lofty-cli webhooks list [options]
+
+Get all webhook from current team
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli webhooks delete`
+
+```bash
+Usage: lofty-cli webhooks delete [options] <subscribe-id>
+
+Delete a webhook
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

@@ -1,0 +1,123 @@
+---
+title: "Quickstart"
+description: "Common lofty-cli recipes you can copy and run today. Each example assumes you have already completed Install and Authentication."
+icon: "bolt"
+---
+
+Common `lofty-cli` recipes you can copy and run today. Each example assumes you have already completed **[Install](/cli/install)** and **[Authentication](/cli/authentication)**.
+
+## 1. List leads
+
+```bash
+lofty-cli leads list
+```
+
+Limit to fields you actually need:
+
+```bash
+lofty-cli leads list --return-fields leadId,firstName,lastName,stage
+```
+
+Fuzzy-search by name, phone, or email — the server matches all three:
+
+```bash
+lofty-cli leads list --query "John Smith"
+```
+
+## 2. Get one record by ID
+
+```bash
+lofty-cli leads get --id 1234567890123 --format yaml
+```
+
+## 3. Create a record from JSON
+
+Pass the request body as inline JSON:
+
+```bash
+lofty-cli leads create --body '{"firstName":"Jane","lastName":"Doe","email":"jane@example.com"}'
+```
+
+For larger payloads, source the body from a file:
+
+```bash
+lofty-cli leads create --body @lead-payload.json
+```
+
+## 4. Pipe to `jq` for ad-hoc analytics
+
+```bash
+# Count leads by stage
+lofty-cli leads list --json \
+  | jq -r '.[].stage' \
+  | sort | uniq -c | sort -rn
+```
+
+## 5. Bulk export to CSV
+
+```bash
+lofty-cli leads list --format csv > leads-$(date +%Y%m%d).csv
+```
+
+Append more pages without repeating the header:
+
+```bash
+lofty-cli leads list --offset 1000 --format csv --no-header >> leads-$(date +%Y%m%d).csv
+```
+
+## 6. Use the CLI from a script with strict error handling
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+LEAD_ID=$(lofty-cli leads list --json | jq -r '.[0].leadId')
+echo "First lead ID: $LEAD_ID"
+
+lofty-cli leads get --id "$LEAD_ID" --format yaml
+```
+
+## 7. Run from CI/CD
+
+Configure environment variables once on the runner:
+
+```bash
+export LOFTY_CLIENT_ID="your-client-id"
+export LOFTY_CLIENT_SECRET="your-client-secret"
+export LOFTY_CUSTOMER_KEY="your-customer-key"
+```
+
+Then any command works without an interactive `auth login`:
+
+```bash
+lofty-cli auth test
+lofty-cli leads list --json
+```
+
+## 8. Discover commands you do not know
+
+The CLI is fully self-describing. Walk the help tree until you find what you need:
+
+```bash
+lofty-cli --help                      # all top-level resources
+lofty-cli leads --help                # subcommands of `leads`
+lofty-cli leads list --help           # options for `leads list`
+```
+
+Or browse the **[Command Reference](/cli/reference)** on this site.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference/leads/overview">
+    Cross-reference commands with the live API spec.
+  </Card>
+
+  <Card title="Output formats" icon="table-columns" href="/cli/output-formats">
+    Piping patterns for JSON, CSV, YAML, and text.
+  </Card>
+
+  <Card title="Troubleshooting" icon="bug" href="/cli/troubleshooting">
+    Common fixes when something fails unexpectedly.
+  </Card>
+</CardGroup>

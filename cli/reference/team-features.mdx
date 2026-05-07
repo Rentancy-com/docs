@@ -1,0 +1,83 @@
+---
+title: "lofty-cli team-features"
+description: "Reference for the lofty-cli team-features command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli team-features [options] [command]
+
+Manage team-features
+
+Options:
+  -h, --help                     display help for command
+
+Commands:
+  create-custom-field [options]  Add new custom field
+  tags [options]                 Search existing tag
+  custom-fields [options]        Search custom field
+  lead-ponds [options]           List lead pond
+  lead-pond [options] <id>       Search lead pond
+  help [command]                 display help for command
+```
+
+## `lofty-cli team-features create-custom-field`
+
+Run `lofty-cli team-features create-custom-field --help` for full usage details.
+
+## `lofty-cli team-features tags`
+
+```bash
+Usage: lofty-cli team-features tags [options]
+
+Search existing tag
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli team-features custom-fields`
+
+```bash
+Usage: lofty-cli team-features custom-fields [options]
+
+Search custom field
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli team-features lead-ponds`
+
+```bash
+Usage: lofty-cli team-features lead-ponds [options]
+
+List lead pond
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli team-features lead-pond`
+
+```bash
+Usage: lofty-cli team-features lead-pond [options] <id>
+
+Search lead pond
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

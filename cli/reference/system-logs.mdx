@@ -1,0 +1,38 @@
+---
+title: "lofty-cli system-logs"
+description: "Reference for the lofty-cli system-logs command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli system-logs [options] [command]
+
+Manage system-logs
+
+Options:
+  -h, --help      display help for command
+
+Commands:
+  list [options]  Search for system logs
+  help [command]  display help for command
+```
+
+## `lofty-cli system-logs list`
+
+```bash
+Usage: lofty-cli system-logs list [options]
+
+Search for system logs
+
+Options:
+  --lead-id <id>        [REQUIRED] ID of Lead (number)
+  --start-time <value>  The timestamp of start (number)
+  --end-time <value>    The timestamp of end (number)
+  --page-number <n>     Page number, first is 0 (number)
+  --page-size <n>       Page size (number)
+  --fields <cols>       Comma-separated columns to display
+  --json                Output as JSON
+  --format <fmt>        Output format: text, json, csv, yaml
+  -h, --help            display help for command
+```

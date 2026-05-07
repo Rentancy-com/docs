@@ -1,0 +1,273 @@
+---
+title: "lofty-cli sales-agents"
+description: "Reference for the lofty-cli sales-agents command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli sales-agents [options] [command]
+
+Manage sales-agents
+
+Options:
+  -h, --help                        display help for command
+
+Commands:
+  mute [options] <lead-id>          Mute a working lead
+  settings [options]                Query Sales Agent settings
+  put-settings [options]            Update Sales Agent settings
+  add [options]                     Batch add leads to Sales Agent working pool
+  send-sms-to-agent [options]       Send SMS to agent via AI number
+  create [options]                  Batch create plan tasks for leads
+  list [options]                    Query working leads (paginated)
+  working-lead [options] <lead-id>  Check if lead is a working lead
+  quota [options]                   Get current user's Sales Agent quota
+  current [options]                 Get current user's Sales Agent
+  by-lead [options]                 Get Sales Agent by lead ID
+  mute-status [options]             Get Sales Agent lead mute status
+  lead [options] <lead-id>          Get plan tasks by lead ID
+  help [command]                    display help for command
+```
+
+## `lofty-cli sales-agents mute`
+
+```bash
+Usage: lofty-cli sales-agents mute [options] <lead-id>
+
+Mute a working lead
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents settings`
+
+```bash
+Usage: lofty-cli sales-agents settings [options]
+
+Query Sales Agent settings
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents put-settings`
+
+```bash
+Usage: lofty-cli sales-agents put-settings [options]
+
+Update Sales Agent settings
+
+Options:
+  --id <id>                         [REQUIRED] Sales Agent ID (required, must be
+                                    greater than 0) (number, e.g. 12345)
+  --assistant-name <name>           Assistant name (string, e.g. Anna)
+  --virtual-number <value>          Virtual phone number (string, e.g.
+                                    +1234567890)
+  --virtual-number-country <value>  Virtual number country (string, e.g. US)
+  --call-transfer-type <type>       Call transfer type: Disabled,
+                                    ToAssignedAgent (string, e.g. Disabled)
+  --fixed-number <value>            Fixed phone number (string, e.g.
+                                    +1234567890)
+  --agent-experience <value>        Agent experience description (string, e.g.
+                                    10 years in real estate)
+  --rental-business <bool>          Whether agent handles rental business
+                                    (true|false)
+  --website-channel <bool>          Whether website channel is enabled
+                                    (true|false)
+  --text-channel <bool>             Whether text channel is enabled (true|false)
+  --email-channel <bool>            Whether email channel is enabled
+                                    (true|false)
+  --start-active-hour <n>           Active start hour (0-23) (number, e.g. 8)
+  --end-active-hour <n>             Active end hour (0-23) (number, e.g. 20)
+  --active-days <value>             Active days of week (0=Sun, 6=Sat), empty
+                                    means all days (array, e.g. 1,2)
+  --lead-types <type>               Lead types filter, empty means all (array,
+                                    e.g. 1,2)
+  --lead-sources <value>            Lead source IDs filter, empty means all
+                                    (array, e.g. 1001,1002)
+  --lead-pipelines <value>          Lead pipeline IDs filter, empty means all
+                                    (array, e.g. 2001,2002)
+  --agent-ids <id>                  Agent IDs with access, contains -1 means all
+                                    (array, e.g. 101,102)
+  --office-ids <id>                 Office IDs with access, contains -1 means
+                                    all (array, e.g. 201,202)
+  --lead-pond-ids <id>              Lead pond IDs with access, contains -1 means
+                                    all (array, e.g. 301,302)
+  --new-lead-enable <bool>          Whether new lead follow-up is enabled
+                                    (true|false)
+  --visitors-enable <bool>          Whether visitor follow-up is enabled
+                                    (true|false)
+  --follow-up-role <value>          Follow up role: AI or Agent (string, e.g.
+                                    AI)
+  --fields <cols>                   Comma-separated columns to display
+  --json                            Output as JSON
+  --format <fmt>                    Output format: text, json, csv, yaml
+  -h, --help                        display help for command
+```
+
+## `lofty-cli sales-agents add`
+
+```bash
+Usage: lofty-cli sales-agents add [options]
+
+Batch add leads to Sales Agent working pool
+
+Options:
+  --lead-ids <id>            [REQUIRED] Lead IDs to add to Sales Agent working
+                             pool (max 100) (array, e.g.
+                             563172647619608,563172647619609)
+  --create-plan-task <bool>  Whether to create plan tasks for each lead after
+                             adding to working pool (true|false)
+  --fields <cols>            Comma-separated columns to display
+  --json                     Output as JSON
+  --format <fmt>             Output format: text, json, csv, yaml
+  -h, --help                 display help for command
+```
+
+## `lofty-cli sales-agents send-sms-to-agent`
+
+```bash
+Usage: lofty-cli sales-agents send-sms-to-agent [options]
+
+Send SMS to agent via AI number
+
+Options:
+  --content <content>  [REQUIRED] SMS content to send to the agent's phone
+                       number (string, e.g. You have a new lead assigned.)
+  --fields <cols>      Comma-separated columns to display
+  --json               Output as JSON
+  --format <fmt>       Output format: text, json, csv, yaml
+  -h, --help           display help for command
+```
+
+## `lofty-cli sales-agents create`
+
+```bash
+Usage: lofty-cli sales-agents create [options]
+
+Batch create plan tasks for leads
+
+Options:
+  --lead-ids <id>  [REQUIRED] Lead IDs to create plan tasks for (max 100)
+                   (array, e.g. 563172647619608,563172647619609)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents list`
+
+```bash
+Usage: lofty-cli sales-agents list [options]
+
+Query working leads (paginated)
+
+Options:
+  --ai-stage <value>  AI follow-up stage filter (HIGH_PRIORITY, AI_PROSPECTING,
+                      AI_MONITORING) (string, e.g. AI_PROSPECTING)
+  --limit <value>     Page size (max 100) (string, e.g. 20)
+  --offset <value>    Start index of the responded leads (string, e.g. 0)
+  --sort <value>      Sort field (Default, CreateTime, UpdateTime) (string, e.g.
+                      UpdateTime)
+  --desc <value>      Descending sort (true) or ascending sort (false) (string,
+                      e.g. true)
+  --fields <cols>     Comma-separated columns to display
+  --json              Output as JSON
+  --format <fmt>      Output format: text, json, csv, yaml
+  -h, --help          display help for command
+```
+
+## `lofty-cli sales-agents working-lead`
+
+```bash
+Usage: lofty-cli sales-agents working-lead [options] <lead-id>
+
+Check if lead is a working lead
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents quota`
+
+```bash
+Usage: lofty-cli sales-agents quota [options]
+
+Get current user's Sales Agent quota
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents current`
+
+```bash
+Usage: lofty-cli sales-agents current [options]
+
+Get current user's Sales Agent
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents by-lead`
+
+```bash
+Usage: lofty-cli sales-agents by-lead [options]
+
+Get Sales Agent by lead ID
+
+Options:
+  --lead-id <id>   [REQUIRED] Lead ID (number, e.g. 563172647619608)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents mute-status`
+
+```bash
+Usage: lofty-cli sales-agents mute-status [options]
+
+Get Sales Agent lead mute status
+
+Options:
+  --lead-id <id>   [REQUIRED] Lead ID (number, e.g. 563172647619608)
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli sales-agents lead`
+
+```bash
+Usage: lofty-cli sales-agents lead [options] <lead-id>
+
+Get plan tasks by lead ID
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```

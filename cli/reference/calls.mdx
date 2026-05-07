@@ -1,0 +1,67 @@
+---
+title: "lofty-cli calls"
+description: "Reference for the lofty-cli calls command and its subcommands."
+---
+
+## Overview
+
+```bash
+Usage: lofty-cli calls [options] [command]
+
+Manage calls
+
+Options:
+  -h, --help                         display help for command
+
+Commands:
+  list [options]                     Search for calls
+  get [options] <call-id>            Get a call by Id
+  recording-url [options] <call-id>  View your call recording
+  help [command]                     display help for command
+```
+
+## `lofty-cli calls list`
+
+```bash
+Usage: lofty-cli calls list [options]
+
+Search for calls
+
+Options:
+  --lead-id <id>    [REQUIRED] Finds calls related to a lead ID (number)
+  --limit <value>   Number of results to return (number)
+  --offset <value>  Specifies the number of rows to skip, before starting to
+                    return results (number)
+  --fields <cols>   Comma-separated columns to display
+  --json            Output as JSON
+  --format <fmt>    Output format: text, json, csv, yaml
+  -h, --help        display help for command
+```
+
+## `lofty-cli calls get`
+
+```bash
+Usage: lofty-cli calls get [options] <call-id>
+
+Get a call by Id
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
+
+## `lofty-cli calls recording-url`
+
+```bash
+Usage: lofty-cli calls recording-url [options] <call-id>
+
+View your call recording
+
+Options:
+  --fields <cols>  Comma-separated columns to display
+  --json           Output as JSON
+  --format <fmt>   Output format: text, json, csv, yaml
+  -h, --help       display help for command
+```
