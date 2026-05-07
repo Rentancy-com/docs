@@ -1010,7 +1010,7 @@
           "Lead Routing"
         ],
         "summary": "Update a routing rule",
-        "description": "Updates a routing rule identified by its ID. Validates activeHours and routingStrategy:",
+        "description": "Updates a routing rule identified by its ID.",
         "operationId": "editRule",
         "parameters": [
           {
