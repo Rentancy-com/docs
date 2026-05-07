@@ -188,7 +188,7 @@
                 ]
               },
               {
-                "group": "Legacy (V1)",
+                "group": "Legacy",
                 "pages": [
                   "api-reference/tasks/v1/list-tasks",
                   "api-reference/tasks/v1/create-task",
