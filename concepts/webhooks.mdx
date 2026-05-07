@@ -1,32 +1,11 @@
 ---
 title: "Webhooks"
-description: "Subscribe to Lofty webhook events to receive HTTP callbacks when leads, transactions, tasks, calls, and other CRM data changes in real time."
+description: "Subscribe to real-time event notifications from Lofty via HTTP callbacks."
 ---
 
-Webhooks let your application receive real-time notifications when data changes in a Lofty account. Instead of polling the API for updates, you register an HTTPS endpoint, and Lofty sends an HTTP POST with a JSON payload each time a subscribed event occurs.
+Webhooks deliver real-time HTTP POST notifications to your endpoint when data changes in a Lofty account. Instead of polling the API, register an HTTPS callback URL and Lofty pushes a JSON payload on each subscribed event.
 
-## Supported event types
-
-When you subscribe, you specify a `listId` that identifies the event type you want to receive.
-
-| listId | Event type | Triggers |
-| --- | --- | --- |
-| 1 | Agent Info | Agent created or updated |
-| 2 | Lead Info | Lead created, updated, or deleted |
-| 3 | Lead Activity | Lead site activity (browse, favorite, search) |
-| 4 | Listing Alert | Listing alert changed |
-| 5 | Transaction | Transaction created, updated, or deleted |
-| 6 | Call | Call event (manual and logged only; excludes auto) |
-| 7 | Email | Email event (manual and logged only; excludes auto) |
-| 8 | Text | Text message event (manual and logged only; excludes auto) |
-| 9 | Note | Note created, updated, or deleted |
-| 10 | Task | Task created, updated, finished, or deleted |
-| 11 | Appointment | Appointment created, updated, finished, or deleted |
-| 12 | Pipeline Change | Lead pipeline stage changed |
-
-## How to subscribe
-
-Send a `POST` request to `/v1.0/webhook` with the event type, your callback URL, and an optional batch size limit.
+## Subscribe
 
 ```bash
 POST https://api.lofty.com/v1.0/webhook
@@ -41,125 +20,464 @@ POST https://api.lofty.com/v1.0/webhook
 ```
 
 | Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `listId` | int32 | Yes | Event type to subscribe to (see table above) |
-| `callbackUrl` | string | Yes | HTTPS URL that receives event payloads |
-| `limit` | int32 | No | Max events per batch (default 100, max 5000) |
+|---|---|---|---|
+| `listId` | integer | Yes | Event type (1–12, see table below) |
+| `callbackUrl` | string | Yes | HTTPS endpoint to receive payloads |
+| `limit` | integer | No | Max events per batch (default 100, max 5000) |
 
 <Warning>
-The `callbackUrl` must use HTTPS and must be reachable from the Lofty backend. HTTP endpoints are not accepted.
+The `callbackUrl` must use HTTPS. HTTP endpoints are rejected.
 </Warning>
 
-A successful subscription returns a `subscribeId` that you use to manage or delete the subscription later.
+## Manage subscriptions
 
-## How to list subscriptions
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/v1.0/webhook` | Create a subscription |
+| `GET` | `/v1.0/webhooks` | List active subscriptions |
+| `DELETE` | `/v1.0/webhook/{subscribeId}` | Delete a subscription |
 
-Retrieve all active webhook subscriptions for your team:
+## Delivery timing
 
-```bash
-GET https://api.lofty.com/v1.0/webhooks
-```
+Events are typically delivered within **1 minute**. During high traffic, delivery may be delayed but will always occur within **5 minutes**.
 
-The response includes each subscription's `subscribeId`, `listId`, `callbackUrl`, and `limit`.
+## Notification recipients
 
-## How to delete a subscription
+1. Lofty checks which users in the lead's team have subscribed to the event type.
+2. **Hidden leads** — only the assigned agent receives the notification.
+3. **Other leads** — the assigned agent and Company Owner/Admin receive the notification. All other subscribers are excluded.
 
-To stop receiving events for a subscription, delete it using the `subscribeId`:
+## Common fields
 
-```bash
-DELETE https://api.lofty.com/v1.0/webhook/{subscribeId}
-```
+All payloads include:
 
-## Delivery timing and notification rules
+| Field | Type | Description |
+|---|---|---|
+| `teamId` | integer | Team ID where the event occurred |
+| `listId` | integer | Event type ID (1–12) |
 
-Lofty typically delivers webhook events within **1 minute** of the triggering action. During high-traffic periods, delivery may be delayed but will always occur within **5 minutes**.
+## Event types
 
-Notification recipients follow these rules:
+| listId | Event | Triggers |
+|---|---|---|
+| 1 | Agent Info | Agent created or updated |
+| 2 | Lead Info | Lead created, updated, or deleted |
+| 3 | Lead Activity | Lead site activity (browse, favorite, search) |
+| 4 | Listing Alert | Listing alert changed |
+| 5 | Transaction | Transaction created, updated, or deleted |
+| 6 | Call | Call event (MANUAL and LOGGED only, excludes AUTO) |
+| 7 | Email | Email event (MANUAL and LOGGED only, excludes AUTO) |
+| 8 | Text | Text message event (MANUAL and LOGGED only, excludes AUTO) |
+| 9 | Note | Note created, updated, or deleted |
+| 10 | Task | Task created, updated, finished, or deleted |
+| 11 | Appointment | Appointment created, updated, finished, or deleted |
+| 12 | Pipeline Change | Lead pipeline stage changed |
 
-1. Lofty checks which users on the lead's team have subscribed to the event type.
-2. For **hidden leads**, only the assigned agent receives the notification.
-3. For all other leads, the assigned agent and company owners/admins receive the notification. Other subscribers do not.
+---
 
-## Request format
+## Event payloads
 
-Lofty sends a `POST` request to your `callbackUrl` with `Content-Type: application/json`. The payload contains an array of event objects. The payload structure varies by event type — refer to the [create webhook reference](/api-reference/webhooks/create-webhook) for an example payload.
+### 1. Agent Info
 
-A typical Lead Info event payload looks like:
+Triggered when an agent is created or updated.
 
 ```json
 {
-  "listId": 2,
-  "events": [
+  "teamId": 123456,
+  "listId": 1,
+  "updatedAgent": [
     {
-      "eventType": "LEAD_UPDATED",
-      "leadId": 563172647619608,
-      "teamId": 13233324,
-      "timestamp": 1748000000000,
-      "data": {
-        "leadId": 563172647619608,
-        "firstName": "Alex",
-        "lastName": "Johnson",
-        "stage": "Hot Lead"
+      "agentUserId": 789,
+      "updateTime": 1736935800000
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `updatedAgent` | array | List of updated agent records |
+| `updatedAgent[].agentUserId` | integer | User ID of the updated agent |
+| `updatedAgent[].updateTime` | integer | Epoch milliseconds of the update |
+
+### 2. Lead Info
+
+Triggered when a lead is created, updated, or deleted. Only the relevant action fields are present.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 2,
+  "createdLead": [
+    { "leadId": 456, "updateTime": 1736935800000 }
+  ],
+  "updatedLead": [
+    { "leadId": 457, "updateTime": 1736935860000 }
+  ],
+  "deletedLead": [
+    { "leadId": 458, "updateTime": 1736935920000 }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdLead` | array | Created leads (present on create) |
+| `updatedLead` | array | Updated leads (present on update) |
+| `deletedLead` | array | Deleted leads (present on delete) |
+| `[].leadId` | integer | Lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the change |
+
+### 3. Lead Activity
+
+Triggered when a lead performs site activity (SiteBrowse, SiteFavorite, SiteSearch, etc.).
+
+```json
+{
+  "teamId": 123456,
+  "listId": 3,
+  "updatedLead": [
+    { "leadId": 456, "updateTime": 1736935800000 }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `updatedLead` | array | Leads with new activity |
+| `updatedLead[].leadId` | integer | Lead ID |
+| `updatedLead[].updateTime` | integer | Epoch milliseconds of the activity |
+
+### 4. Listing Alert
+
+Triggered when a listing alert changes.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 4,
+  "alertId": 789
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `alertId` | integer | ID of the changed alert |
+
+### 5. Transaction
+
+Triggered when a transaction is created, updated, or deleted. Only the relevant action fields are present.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 5,
+  "createdTransaction": [
+    {
+      "leadId": 456,
+      "transactionId": 789,
+      "updateTime": 1736935800000
+    }
+  ],
+  "updatedTransaction": [
+    {
+      "leadId": 457,
+      "transactionId": 790,
+      "updateTime": 1736935860000,
+      "updatedField": { "fieldName": "newValue" },
+      "updatedFields": [{ "fieldName": "newValue" }]
+    }
+  ],
+  "deletedTransaction": [
+    {
+      "leadId": 458,
+      "transactionId": 791,
+      "updateTime": 1736935920000
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdTransaction` | array | Created transactions (present on create) |
+| `updatedTransaction` | array | Updated transactions (present on update) |
+| `deletedTransaction` | array | Deleted transactions (present on delete) |
+| `[].leadId` | integer | Associated lead ID |
+| `[].transactionId` | integer | Transaction ID |
+| `[].updateTime` | integer | Epoch milliseconds of the change |
+| `[].updatedField` | object | Changed field key-value pair (nullable) |
+| `[].updatedFields` | array | List of changed field key-value pairs (nullable) |
+
+### 6. Call
+
+Triggered on a call event.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 6,
+  "createdCall": [
+    {
+      "callId": 101,
+      "leadId": 456,
+      "updateTime": 1736935800000,
+      "agentId": 789,
+      "communicationType": "MANUAL"
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdCall` | array | Call event records |
+| `[].callId` | integer | Event ID (`MANUAL`) or timeline ID (`LOGGED`) |
+| `[].leadId` | integer | Associated lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the call |
+| `[].agentId` | integer | Agent user ID |
+| `[].communicationType` | string | `MANUAL` or `LOGGED` |
+
+### 7. Email
+
+Triggered on an email event.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 7,
+  "createdEmail": [
+    {
+      "emailId": 101,
+      "leadId": 456,
+      "updateTime": 1736935800000,
+      "agentId": 789,
+      "communicationType": "MANUAL"
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdEmail` | array | Email event records |
+| `[].emailId` | integer | Event ID (`MANUAL`) or timeline ID (`LOGGED`) |
+| `[].leadId` | integer | Associated lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the event |
+| `[].agentId` | integer | Agent user ID |
+| `[].communicationType` | string | `MANUAL` or `LOGGED` |
+
+### 8. Text
+
+Triggered on a text/SMS event.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 8,
+  "createdText": [
+    {
+      "textId": 101,
+      "leadId": 456,
+      "updateTime": 1736935800000,
+      "agentId": 789,
+      "communicationType": "MANUAL"
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdText` | array | Text message event records |
+| `[].textId` | integer | Event ID (`MANUAL`) or timeline ID (`LOGGED`) |
+| `[].leadId` | integer | Associated lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the event |
+| `[].agentId` | integer | Agent user ID |
+| `[].communicationType` | string | `MANUAL` or `LOGGED` |
+
+<Note>
+**communicationType values** — `MANUAL`: agent-initiated communication. `LOGGED`: communication recorded after the fact. `AUTO` events are excluded from webhooks.
+</Note>
+
+### 9. Note
+
+Triggered when a note is created, updated, or deleted. Only the relevant action fields are present.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 9,
+  "createdNote": [
+    {
+      "noteId": 101,
+      "leadId": 456,
+      "updateTime": 1736935800000,
+      "noteType": "Manual",
+      "agentId": 789
+    }
+  ],
+  "updatedNote": {
+    "noteId": 102,
+    "leadId": 457,
+    "updateTime": 1736935860000,
+    "noteType": "Manual",
+    "agentId": 789
+  },
+  "deletedNote": {
+    "noteId": 103,
+    "leadId": 458,
+    "updateTime": 1736935920000,
+    "noteType": "Manual",
+    "agentId": 789
+  }
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdNote` | array | Created notes (present on create) |
+| `updatedNote` | object | Updated note (present on update) |
+| `deletedNote` | object | Deleted note (present on delete) |
+| `[].noteId` | integer | Note ID |
+| `[].leadId` | integer | Associated lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the change |
+| `[].noteType` | string | `Manual`, `System`, or `AI` |
+| `[].agentId` | integer | Agent user ID |
+
+### 10. Task
+
+Triggered when a task is created, updated, finished, or deleted. Multiple action fields may appear in a single payload.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 10,
+  "createdTask": [
+    { "taskId": 101, "leadId": 456, "updateTime": 1736935800000 }
+  ],
+  "updatedTask": [
+    { "taskId": 102, "leadId": 457, "updateTime": 1736935860000 }
+  ],
+  "finishedTask": [
+    { "taskId": 103, "leadId": 458, "updateTime": 1736935920000 }
+  ],
+  "deletedTask": [
+    { "taskId": 104, "leadId": 459, "updateTime": 1736935980000 }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdTask` | array | Created tasks (present on create) |
+| `updatedTask` | array | Updated tasks (present on update) |
+| `finishedTask` | array | Finished tasks (present on finish) |
+| `deletedTask` | array | Deleted tasks (present on delete) |
+| `[].taskId` | integer | Task ID |
+| `[].leadId` | integer | Associated lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the change |
+
+### 11. Appointment
+
+Triggered when an appointment is created, updated, finished, or deleted. Multiple action fields may appear in a single payload.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 11,
+  "createdAppt": [
+    { "apptId": 101, "leadId": 456, "updateTime": 1736935800000 }
+  ],
+  "updatedAppt": [
+    { "apptId": 102, "leadId": 457, "updateTime": 1736935860000 }
+  ],
+  "finishedAppt": [
+    { "apptId": 103, "leadId": 458, "updateTime": 1736935920000 }
+  ],
+  "deletedAppt": [
+    { "apptId": 104, "leadId": 459, "updateTime": 1736935980000 }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `createdAppt` | array | Created appointments (present on create) |
+| `updatedAppt` | array | Updated appointments (present on update) |
+| `finishedAppt` | array | Finished appointments (present on finish) |
+| `deletedAppt` | array | Deleted appointments (present on delete) |
+| `[].apptId` | integer | Appointment ID |
+| `[].leadId` | integer | Associated lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the change |
+
+### 12. Pipeline Change
+
+Triggered when a lead's pipeline stage changes.
+
+```json
+{
+  "teamId": 123456,
+  "listId": 12,
+  "updatedLeadstage": [
+    {
+      "leadId": 456,
+      "updateTime": 1736935800000,
+      "changeInfo": {
+        "oldstage": "New Lead",
+        "newstage": "Contacted"
       }
     }
   ]
 }
 ```
 
-<Note>
-Lead IDs in webhook payloads are 64-bit integers. JavaScript clients must handle them carefully to avoid silent precision loss. See the [JavaScript and TypeScript Integration Guide](/javascript-integration).
-</Note>
+| Field | Type | Description |
+|---|---|---|
+| `updatedLeadstage` | array | Pipeline stage change records |
+| `[].leadId` | integer | Lead ID |
+| `[].updateTime` | integer | Epoch milliseconds of the stage change |
+| `[].changeInfo.oldstage` | string | Previous pipeline stage name |
+| `[].changeInfo.newstage` | string | New pipeline stage name |
 
-## Building a webhook receiver
+---
 
-Here is a minimal Node.js/Express server that receives Lofty webhook events:
+## Best practices
+
+**Respond immediately.** Return `200 OK` before processing. Move logic to a background job. Lofty may retry if no `200` is received.
+
+**Handle duplicates.** The same event may be delivered more than once. Use event IDs and timestamps for idempotency.
+
+**Validate payloads.** Check that `listId` matches your expected event type before processing.
+
+**Use HTTPS.** Plain HTTP endpoints are rejected.
+
+<Tip>
+Use [ngrok](https://ngrok.com) during development to tunnel webhooks to your local machine.
+</Tip>
+
+## Example receiver
 
 ```javascript
 const express = require('express');
 const app = express();
-
 app.use(express.json());
 
 app.post('/webhooks/lofty', (req, res) => {
-  // Respond with 200 immediately to acknowledge receipt
   res.sendStatus(200);
-
   const { listId, events } = req.body;
-
-  // Process events asynchronously after responding
   processEvents(listId, events).catch(console.error);
 });
 
 async function processEvents(listId, events) {
   for (const event of events) {
-    console.log(`Received event type ${listId}:`, event);
-    // Add your business logic here
+    console.log(`Event type ${listId}:`, event);
   }
 }
 
-app.listen(3000, () => console.log('Webhook receiver listening on port 3000'));
+app.listen(3000);
 ```
 
-## Best practices
-
-**Respond quickly.** Your endpoint must return a `200 OK` response as fast as possible. Move any processing to a background job or async handler. If Lofty does not receive a `200` response, it may retry the delivery.
-
-**Design for idempotency.** Lofty may deliver the same event more than once — for example, if your endpoint was temporarily unavailable during the first attempt. Use the event's unique identifier or timestamp to detect and skip duplicate deliveries.
-
-**Validate the payload.** Check that the `listId` in the payload matches your expected event type before processing. Reject or log unexpected payloads.
-
-**Use HTTPS.** Your endpoint must use HTTPS. Never expose a plain HTTP endpoint for production webhook traffic.
-
-**Handle errors gracefully.** If event processing fails after you've already responded `200`, log the failure and handle it through your own retry or alerting mechanism. Lofty has already delivered the event and considers it complete once you return `200`.
-
-<Tip>
-During development, tools like [ngrok](https://ngrok.com) can tunnel Lofty webhooks to your local machine so you can test your receiver without deploying.
-</Tip>
-
-## Endpoint overview
-
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `POST` | `/v1.0/webhook` | Subscribe to a webhook event type |
-| `GET` | `/v1.0/webhooks` | List all active webhook subscriptions |
-| `DELETE` | `/v1.0/webhook/{subscribeId}` | Delete a webhook subscription |
+<Note>
+All IDs in webhook payloads are 64-bit integers. JavaScript clients must handle them carefully — see [JS / TS Integration](/javascript-integration).
+</Note>
