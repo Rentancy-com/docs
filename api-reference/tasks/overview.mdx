@@ -18,14 +18,9 @@ All endpoints require a valid Bearer token in the `Authorization` header. See [A
 | `GET` | `/v2.0/tasks/{taskId}` | Get a task by ID |
 | `PUT` | `/v2.0/tasks/{taskId}` | Update a task or appointment |
 | `DELETE` | `/v2.0/tasks/{taskId}` | Delete a task or appointment |
-
-### Lifecycle
-
-| Method | Path | Description |
-|---|---|---|
 | `POST` | `/v2.0/tasks/{taskId}/finish` | Mark a task as completed |
 | `POST` | `/v2.0/tasks/{taskId}/unfinish` | Reopen a completed task |
-| `GET` | `/v2.0/tasks/my-tasks` | List tasks assigned to the current user |
+| `GET` | `/v2.0/tasks/my-tasks` | List tasks and appointments assigned to the current user |
 
 ### Calendar
 
