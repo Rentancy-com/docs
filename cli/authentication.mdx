@@ -49,30 +49,32 @@ The flow uses OAuth 2.0 with [PKCE](https://oauth.net/2/pkce/) — no client sec
 
 Use this for server-to-server scenarios where there is no human to complete a browser flow. This implements the [OAuth 2.0 Client Credentials Grant](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) with an additional resource owner identifier.
 
-### Step 1 -- register an OAuth application
+<Steps>
+  <Step title="Register an OAuth application">
+    Sign in to the [Lofty Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) to create an application and obtain your `client_id` and `client_secret`.
+  </Step>
 
-Sign in to the [Lofty Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) to create an application and obtain your `client_id` and `client_secret`.
+  <Step title="Configure client credentials">
+    ```bash
+    export LOFTY_CLIENT_ID="your-client-id"
+    export LOFTY_CLIENT_SECRET="your-client-secret"
+    ```
+  </Step>
 
-### Step 2 -- configure client credentials
+  <Step title="Specify the target account">
+    The customer key identifies which Lofty account's data the CLI will access (the resource owner). Each Lofty user has a unique API key — find it in the Lofty CRM under **Settings > Integrations > API**.
 
-```bash
-export LOFTY_CLIENT_ID="your-client-id"
-export LOFTY_CLIENT_SECRET="your-client-secret"
-```
+    ```bash
+    export LOFTY_CUSTOMER_KEY="your-customer-key"
+    ```
+  </Step>
 
-### Step 3 -- specify the target account
-
-The customer key identifies which Lofty account's data the CLI will access (the resource owner). Each Lofty user has a unique API key — find it in the Lofty CRM under **Settings > Integrations > API**.
-
-```bash
-export LOFTY_CUSTOMER_KEY="your-customer-key"
-```
-
-Then exchange for an access token:
-
-```bash
-lofty-cli auth login
-```
+  <Step title="Exchange for an access token">
+    ```bash
+    lofty-cli auth login
+    ```
+  </Step>
+</Steps>
 
 <Note>
 Unlike a standard Client Credentials Grant where the client acts on its own behalf, Lofty requires `LOFTY_CUSTOMER_KEY` to specify which account to access. The token is scoped to that account's data and permissions.
