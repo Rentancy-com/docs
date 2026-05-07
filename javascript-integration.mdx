@@ -1,0 +1,132 @@
+---
+title: "JavaScript and TypeScript Integration Guide"
+description: "Safely handle 64-bit integer IDs from the Lofty API in JavaScript and TypeScript to prevent silent precision loss in your application."
+---
+
+All entity IDs returned by the Lofty API are 64-bit integers. JavaScript's `Number` type uses IEEE 754 double-precision floating point, which can only safely represent integers up to 2^53-1 (9,007,199,254,740,991). Lofty IDs can exceed this range. When they do, JavaScript silently rounds the value to the nearest representable number — a different integer — without throwing an error or warning. Your application will store, compare, and transmit the wrong ID.
+
+## The problem
+
+When you call `JSON.parse()` on a response body containing a large integer ID, the parser converts it to a JavaScript `Number`. If the value exceeds `Number.MAX_SAFE_INTEGER`, it gets corrupted:
+
+```javascript
+// WRONG — precision loss
+const response = await fetch('https://api.lofty.com/v1.0/leads', {
+  headers: { Authorization: 'Bearer YOUR_ACCESS_TOKEN' }
+});
+
+const lead = await response.json();
+console.log(lead.id); // 563172647619608 may be silently rounded to a different value
+```
+
+The original JSON from the server might contain `563172647619623`, but after `response.json()` parses it, you could be holding `563172647619608` — an ID that points to a different lead or doesn't exist at all. There is no exception, no warning, and no indication that the value changed.
+
+## Solutions
+
+<CodeGroup>
+
+```javascript Using BigInt
+// Parse the response as text first, then replace large integers before parsing
+// This example uses a regex to wrap large numeric IDs in quotes as strings
+
+const response = await fetch('https://api.lofty.com/v1.0/leads', {
+  headers: { Authorization: 'Bearer YOUR_ACCESS_TOKEN' }
+});
+
+const text = await response.text();
+
+// Convert to BigInt after extracting the raw string value
+// Use json-bigint (see next tab) for a more robust solution
+const raw = JSON.parse(text.replace(/"id"\s*:\s*(\d+)/g, '"id":"$1"'));
+
+const leadId = BigInt(raw.data.list[0].id);
+console.log(leadId); // 563172647619623n — exact, no precision loss
+
+// Only use BigInt arithmetic when you need to manipulate the value
+const nextId = leadId + 1n;
+```
+
+```javascript Using json-bigint
+// Install: npm install json-bigint
+// json-bigint parses large integers as BigInt automatically
+
+import JSONbig from 'json-bigint';
+
+const response = await fetch('https://api.lofty.com/v1.0/leads', {
+  headers: { Authorization: 'Bearer YOUR_ACCESS_TOKEN' }
+});
+
+const text = await response.text();
+const data = JSONbig({ useNativeBigInt: true }).parse(text);
+
+const lead = data.data.list[0];
+console.log(lead.id);        // 563172647619623n — BigInt, exact value
+console.log(typeof lead.id); // "bigint"
+```
+
+```typescript Treating IDs as strings (TypeScript)
+// Define your types with IDs as strings to force safe handling throughout your app
+
+interface Lead {
+  id: string; // Store as string — never number
+  name: string;
+  email: string;
+  phone: string;
+}
+
+// Use a reviver function with JSON.parse to convert IDs to strings at parse time
+function parseWithStringIds(text: string): unknown {
+  return JSON.parse(text, (key, value, context) => {
+    // context.source is the raw string from the JSON input (Node 18+, modern browsers)
+    if (typeof value === 'number' && context?.source) {
+      return context.source; // Return the raw string instead of the parsed number
+    }
+    return value;
+  });
+}
+
+const response = await fetch('https://api.lofty.com/v1.0/leads', {
+  headers: { Authorization: 'Bearer YOUR_ACCESS_TOKEN' as string }
+});
+
+const text = await response.text();
+const result = parseWithStringIds(text) as { data: { list: Lead[] } };
+
+const lead = result.data.list[0];
+console.log(lead.id);        // "563172647619623" — exact string, no precision loss
+console.log(typeof lead.id); // "string"
+```
+
+</CodeGroup>
+
+## Best practices
+
+**Store and compare IDs as strings.** Once you've safely parsed an ID out of the response, keep it as a string or `BigInt` for its entire lifetime in your application. When you need to compare two IDs, compare them as strings:
+
+```javascript
+// Safe comparison
+if (lead.id === selectedId) { ... }
+
+// Also safe with BigInt
+if (lead.id === BigInt(selectedId)) { ... }
+
+// UNSAFE — converting to Number for comparison defeats the purpose
+if (Number(lead.id) === Number(selectedId)) { ... }
+```
+
+**Only use BigInt when doing arithmetic.** If you need to perform arithmetic on an ID (uncommon, but possible in pagination or range queries), parse it to `BigInt`. Convert back to a string before serializing or sending the value back to the API.
+
+**Never use `parseInt()` on IDs.** `parseInt()` converts its argument through a `Number` first, which means precision loss happens before you even try to parse it.
+
+<Tip>
+  `parseInt()` and `Number()` both use JavaScript's `Number` type internally. Neither is safe for Lofty IDs. Always treat IDs as opaque strings unless you specifically need to do integer arithmetic — and if you do, use `BigInt`.
+</Tip>
+
+**When sending IDs back to the API** (in request bodies or query parameters), serialize them as their original string or `BigInt.toString()` value. The API accepts numeric strings in places where IDs are expected.
+
+```javascript
+// Sending an ID in a request body — safe
+const body = JSON.stringify({
+  leadId: lead.id.toString(), // works for both string and BigInt
+});
+```

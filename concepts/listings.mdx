@@ -1,0 +1,108 @@
+---
+title: "MLS Listings and Property Search with Lofty"
+description: "Search active and sold MLS listings, retrieve published listings for a site feed, and associate properties with leads using the Lofty REST API."
+---
+
+Listings in Lofty represent MLS properties that agents and their clients can browse, search, and save. The API gives you two ways to access listing data — a flexible search endpoint and a published listings feed — and lets you associate specific properties directly with a lead record.
+
+## What listings represent
+
+A listing in Lofty corresponds to a property available on the MLS. Each listing carries the property's address, price, physical attributes (beds, baths, square footage), MLS identifiers, and listing metadata such as days on site and listing type.
+
+Lofty stores both **active** and **sold** listings. The V2 search endpoint lets you query across both. The published listings endpoint returns the set of listings your team has published to a site feed in XML format, typically used to power public-facing property search pages.
+
+## Two ways to access listings
+
+### Search listings (V2)
+
+`POST /v2.0/listings/search` is the primary endpoint for programmatic listing discovery. It supports filtering by location, price range, beds, baths, square footage, property type, days on site, and more. You can also scope results to your own listings, office listings, or all listings you have access to.
+
+```bash
+POST https://api.lofty.com/v2.0/listings/search
+```
+
+```json
+{
+  "searchScope": "all",
+  "soldFlag": false,
+  "filterConditions": {
+    "location": { "city": ["Seattle"] },
+    "price": "500000,1500000",
+    "beds": "3,",
+    "baths": "2,",
+    "propertyType": ["Single Family", "Condo"]
+  },
+  "sortFields": ["PRICE_ASC"],
+  "pageSize": 20,
+  "pageNum": 1
+}
+```
+
+Filter condition format depends on the field type:
+
+| Filter type | Format | Example |
+| --- | --- | --- |
+| Location (suggestion) | `{ "city": ["City Name"] }` | `{ "city": ["Austin"] }` |
+| Price range (inputBox) | `"min,max"` | `"300000,800000"` |
+| Min only | `"min,"` | `"2,"` (2+ beds) |
+| Max only | `",max"` | `",30"` (within last 30 days) |
+| Multi-select | `["Label1", "Label2"]` | `["Condo", "Townhouse"]` |
+| Single select | `["Label"]` | `["For Sale"]` |
+
+Available sort values include `MLS_LIST_DATE_L_DESC`, `PRICE_DESC`, `PRICE_ASC`, `BEDROOMS_DESC`, `BATHS_DESC`, `BUILT_YEAR_DESC`, `SQFT_DESC`, `RELEVANCE`, and `QUALITY_DESC`.
+
+### Published listings (V1)
+
+`GET /v1.0/getPublishedListings` returns listings your team has published to a public site feed in XML format. This endpoint is intended for powering site search pages and content syndication rather than programmatic data processing.
+
+```bash
+GET https://api.lofty.com/v1.0/getPublishedListings
+```
+
+For searching listings by agent, office, or MLS ID with a simpler query structure, use:
+
+```bash
+GET https://api.lofty.com/v1.0/listing
+```
+
+<Tip>
+Use `POST /v2.0/listings/search` for new integrations that need flexible filtering, pagination, and sort control. Use `GET /v1.0/getPublishedListings` only when you specifically need the XML site feed format.
+</Tip>
+
+## Key listing fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `listingId` | string | Lofty listing ID |
+| `mlsListingId` | string | MLS listing ID (e.g., `ML82040728`) |
+| `listingStreetName` | string | Street address |
+| `listingCity` | string | City |
+| `listingState` | string | State abbreviation |
+| `listingZipcode` | string[] | ZIP code(s) |
+| `price` | string | Listing price |
+| `beds` | float | Number of bedrooms |
+| `baths` | float | Number of bathrooms |
+| `sqft` | float | Square footage |
+| `builtYear` | int32 | Year built |
+| `county` | string | County name |
+| `area` | string | Area/submarket name |
+
+## Associating a property with a lead
+
+When a lead expresses interest in a specific property, you can attach that property to their record. This drives Lofty's listing alert and inquiry workflows.
+
+```bash
+POST https://api.lofty.com/v1.0/leads/{leadId}/property
+```
+
+Use this endpoint to record a property a lead has viewed, inquired about, or favorited. You can also place a formal inquiry on a lead using `POST /v1.0/leads/{leadId}/inquiry`, which triggers the inquiry workflow within Lofty.
+
+## Endpoint overview
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/v2.0/listings/search` | Search active or sold listings with filters |
+| `GET` | `/v1.0/getPublishedListings` | Get published listings as XML (site feed) |
+| `GET` | `/v1.0/listing` | Search listings by agent, office, or MLS ID |
+| `POST` | `/v1.0/leads/{leadId}/property` | Associate a property with a lead |
+| `POST` | `/v1.0/leads/{leadId}/inquiry` | Place an inquiry on a lead |

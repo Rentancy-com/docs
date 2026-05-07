@@ -1,0 +1,83 @@
+---
+title: "Lead Routing Rules — Lofty Routing API"
+description: "Read and update lead routing rules for your Lofty team. Configure auto-assignment strategies and default fallback rules using /v1.0/routing/rule/{type}."
+---
+
+Lead routing rules in Lofty determine how incoming leads are automatically assigned to agents. You can read your current routing configuration and update rules programmatically via the API.
+
+## List routing rules
+
+```
+GET https://api.lofty.com/v1.0/routing/rule/list/{type}
+```
+
+<ParamField path="type" type="string" required>
+  Routing business type. Determines which set of rules to return (e.g., agent lead routing vs. assistant lead routing).
+</ParamField>
+
+<ParamField query="roleId" type="integer">
+  Role ID. Required when `type` is `4` (ASSISTANT_LEAD).
+</ParamField>
+
+```bash
+curl "https://api.lofty.com/v1.0/routing/rule/list/1" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+## Update a routing rule
+
+```
+PUT https://api.lofty.com/v1.0/routing/rule/{type}
+```
+
+<ParamField path="type" type="string" required>
+  Routing business type to update rules for.
+</ParamField>
+
+Key body fields include `activeDays` (list of 1–7, deduplicated server-side), `hoursStart` / `hoursEnd` (0–23), and `routingStrategy.strategyType` (must match the business type).
+
+```bash
+curl -X PUT "https://api.lofty.com/v1.0/routing/rule/1" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ruleId": "rule_abc123",
+    "activeDays": [1, 2, 3, 4, 5],
+    "hoursStart": 8,
+    "hoursEnd": 18,
+    "routingStrategy": {
+      "strategyType": "ROUND_ROBIN"
+    }
+  }'
+```
+
+## Default (supplement) routing rule
+
+The supplement rule is the fallback applied when no other routing rule matches a lead.
+
+**Get the supplement rule:**
+```bash
+curl "https://api.lofty.com/v1.0/routing/rule/supplement/1" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+**Update the supplement rule:**
+```bash
+curl -X PUT "https://api.lofty.com/v1.0/routing/rule/supplement/1" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "routingStrategy": {
+      "strategyType": "DEFAULT_ASSIGNEE",
+      "assigneeAgentId": 111222333444555
+    }
+  }'
+```
+
+<Note>
+  Updating routing rules requires the `MANAGE_LEAD_DISTRIBUTION` or `MANAGE_LEAD_DISTRIBUTION_DEPARTMENT` permission on your OAuth token.
+</Note>
+
+<Warning>
+  `BLAST_ALERT` and `Next_Up` routing strategies are not allowed for `ASSISTANT_LEAD` type supplement rules.
+</Warning>

@@ -1,0 +1,110 @@
+---
+title: "Transaction Management in the Lofty API"
+description: "Transactions represent real estate deals linked to a lead. Create, update, and track deals through your pipeline with custom fields and property addresses."
+---
+
+A transaction in Lofty represents a real estate deal — a purchase, listing, lease, or other arrangement — associated with a specific lead. Transactions track deal financials, pipeline status, close dates, commission, and the property address, and they move through a configurable pipeline as the deal progresses.
+
+## What is a transaction?
+
+Each transaction belongs to exactly one lead and is managed by an assigned agent. When you create a transaction, you give it a name (typically the property address or deal identifier), a type, and an initial status. From there, you update it as the deal moves through your team's configured pipeline stages.
+
+Transactions support custom fields, letting teams capture deal-specific data beyond the standard schema. You can retrieve your team's custom field definitions before creating or updating transactions.
+
+## Key transaction fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `transactionId` | int64 | Unique transaction ID (read-only) |
+| `leadId` | int64 | Lead this transaction belongs to |
+| `transactionName` | string | Property address or deal name (required on create) |
+| `transactionType` | string | `Purchase`, `Listing`, `Lease`, or `Other` |
+| `transactionStatus` | string | Pipeline status name (must match your team's pipeline config) |
+| `homePrice` | number | Deal price |
+| `expectedCloseDate` | int64 | Expected close date (Unix ms) |
+| `closeDate` | int64 | Actual close date (Unix ms) |
+| `commissionRate` | number | Commission rate as a percentage (e.g., `3` for 3%) |
+| `gci` | number | Gross Commission Income |
+| `teamRevenue` | number | Portion of GCI attributed to the team |
+| `agentRevenue` | number | Portion of GCI attributed to the agent |
+| `assignedAgent` | int64 | User ID of the assigned agent |
+| `created` | int64 | Creation timestamp (Unix ms, read-only) |
+| `updated` | int64 | Last-modified timestamp (Unix ms, read-only) |
+
+## Transaction lifecycle
+
+Transactions move through a pipeline you configure in Lofty. The typical progression is:
+
+1. **Created** — You create the transaction with `POST /v1.0/leads/{leadId}/transaction`. Supply a `transactionName`, `transactionType`, and initial `transactionStatus`.
+2. **In-progress** — As the deal advances, you update the status with `PUT /v1.0/leads/{leadId}/transaction/{transactionId}`. The status value must match one of the statuses configured in your team's pipeline for the given `transactionType`.
+3. **Closed** — Set `closeDate` and update the status to reflect the closed or cancelled state.
+
+<Warning>
+Both `transactionType` and `transactionStatus` are case-sensitive and must match your team's pipeline configuration exactly. Unmatched values silently fall back to the first pipeline or first status — they do not produce an error. Always validate these values against your pipeline configuration before submitting.
+</Warning>
+
+## Creating a transaction
+
+Transactions are created under a specific lead. The `transactionName` field is required and must not be blank or contain `<` or `>` characters.
+
+```bash
+POST https://api.lofty.com/v1.0/leads/{leadId}/transaction
+```
+
+```json
+{
+  "transactionName": "456 Oak Avenue",
+  "transactionType": "Purchase",
+  "transactionStatus": "Pre-contract",
+  "homePrice": 875000,
+  "expectedCloseDate": 1780000000000,
+  "commissionRate": 3
+}
+```
+
+## Custom fields
+
+Your team can define custom fields on transactions to capture deal-specific data. Before creating or updating transactions with custom fields, retrieve the field definitions:
+
+```bash
+GET https://api.lofty.com/v1.0/transaction/customfields
+```
+
+This returns the list of custom field definitions for your team, including field names, types, and IDs. Use these definitions to populate custom field values correctly when creating or updating a transaction.
+
+## Property address
+
+Each transaction can have a property address attached to it separately from the `transactionName`. This is useful when you need to store a structured address alongside the deal name.
+
+```bash
+# Update the property address on a transaction
+POST https://api.lofty.com/v1.0/leads/{leadId}/transaction/property/address
+
+# Retrieve the current property address
+GET https://api.lofty.com/v1.0/leads/{leadId}/transaction/{transactionId}/property/address
+```
+
+## Searching transactions (V2)
+
+The V2 transactions endpoint lets you search across transactions without filtering by a specific lead. This is useful for building pipeline dashboards or reports that span multiple leads.
+
+```bash
+GET https://api.lofty.com/v2.0/transactions
+```
+
+<Tip>
+Use `GET /v2.0/transactions` when building team-level reporting or pipeline views. Use `GET /v1.0/leads/{leadId}/transactions` when you need all transactions for a specific lead.
+</Tip>
+
+## Endpoint overview
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/v1.0/leads/{leadId}/transactions` | List all transactions for a lead |
+| `POST` | `/v1.0/leads/{leadId}/transaction` | Create a transaction on a lead |
+| `GET` | `/v1.0/leads/{leadId}/transaction/{transactionId}` | Get a transaction by ID |
+| `PUT` | `/v1.0/leads/{leadId}/transaction/{transactionId}` | Partially update a transaction |
+| `GET` | `/v2.0/transactions` | Search transactions across leads |
+| `GET` | `/v1.0/transaction/customfields` | List transaction custom field definitions |
+| `POST` | `/v1.0/leads/{leadId}/transaction/property/address` | Set the property address on a transaction |
+| `GET` | `/v1.0/leads/{leadId}/transaction/{transactionId}/property/address` | Get the property address for a transaction |

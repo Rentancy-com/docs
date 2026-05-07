@@ -1,0 +1,124 @@
+---
+title: "Assign a Lead to an Agent — Lofty API"
+description: "Assign a Lofty lead to one or more agents by role using the single-lead assignment endpoint, or preview routing assignees without creating a lead."
+---
+
+The Lofty API provides two endpoints for assignment operations:
+
+- **`POST /v1.0/leads/{leadId}/assignment`** — Assign a specific lead to one or more agents by role.
+- **`POST /v1.0/leads/assignee`** — Preview which agents would be selected by routing rules for a hypothetical lead, without creating a record.
+
+<Note>
+  If you supply `assignedUserId` when creating or updating a lead, routing rules are bypassed entirely. Use these endpoints when you want to apply or preview role-based assignment after the lead already exists.
+</Note>
+
+---
+
+## POST /v1.0/leads/{leadId}/assignment
+
+Assigns one or more agents to an existing lead by role. The request body is an array of assignee objects — one per role you want to set.
+
+### Path parameters
+
+<ParamField path="leadId" type="integer" required>
+  The ID of the lead to assign (64-bit integer).
+</ParamField>
+
+### Request body
+
+The body is an array of assignee objects.
+
+<ParamField body="role" type="string" required>
+  The role to assign. Accepted values: `Agent`, `Assistant`, `Lender`.
+</ParamField>
+
+<ParamField body="assignee" type="string">
+  The account (email address) of the user to assign to this role.
+</ParamField>
+
+### Example request
+
+```bash
+curl -X POST https://api.lofty.com/v1.0/leads/563172647619608/assignment \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '[
+    { "role": "Agent", "assignee": "agent@brokerage.com" },
+    { "role": "Lender", "assignee": "lender@brokerage.com" }
+  ]'
+```
+
+### Response
+
+Returns HTTP `200 OK` with an empty body on success.
+
+---
+
+## POST /v1.0/leads/assignee
+
+Returns the agents that routing rules would select for a hypothetical lead, without creating a lead record. Use this endpoint to preview or validate assignment logic before importing leads.
+
+`firstName` and `email` are required. The response lists one entry per role matched by routing rules.
+
+### Request body
+
+<ParamField body="firstName" type="string" required>
+  The first name of the hypothetical lead.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  The email address of the hypothetical lead.
+</ParamField>
+
+<ParamField body="lastName" type="string">
+  The last name of the hypothetical lead.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  The phone number of the hypothetical lead. Maximum 20 characters.
+</ParamField>
+
+<ParamField body="birthday" type="string">
+  The lead's date of birth. Format: `MMM d, yyyy`.
+</ParamField>
+
+### Example request
+
+```bash
+curl -X POST https://api.lofty.com/v1.0/leads/assignee \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Jane",
+    "email": "jane.smith@example.com",
+    "lastName": "Smith",
+    "phone": "3105550142"
+  }'
+```
+
+### Example response
+
+```json
+[
+  {
+    "leadId": null,
+    "leadUserId": null,
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "customRoleAssignees": [
+      {
+        "roleId": 1,
+        "role": "Agent",
+        "assigneeId": 100234,
+        "assignee": "agent@brokerage.com",
+        "agentFullName": "Alex Rivera",
+        "permissionProfileName": "Standard Agent"
+      }
+    ]
+  }
+]
+```
+
+<Note>
+  Routing rules are evaluated at the team or office level depending on your configuration. If no rules match the supplied lead attributes, the response array may be empty.
+</Note>

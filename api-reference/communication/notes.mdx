@@ -1,0 +1,102 @@
+---
+title: "Notes API — Create, List, Update, and Delete Lead Notes"
+description: "Manage notes on leads using the Lofty API. List, create, update, and delete notes with GET and POST /v1.0/notes and /v1.0/notes/{noteId}."
+---
+
+Notes allow agents to attach free-text comments to leads in Lofty. You can list all notes on a lead, add new ones, update existing notes, or delete them.
+
+## List notes
+
+```
+GET https://api.lofty.com/v1.0/notes
+```
+
+<ParamField query="leadId" type="integer" required>
+  ID of the lead whose notes to return.
+</ParamField>
+
+<ParamField query="includeSystemNote" type="boolean">
+  When `true`, includes system-generated notes alongside user-created notes. Defaults to `false`.
+</ParamField>
+
+```bash
+curl "https://api.lofty.com/v1.0/notes?leadId=563172647619608" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+## Create a note
+
+```
+POST https://api.lofty.com/v1.0/notes
+```
+
+<ParamField body="leadId" type="integer" required>
+  ID of the lead to attach the note to.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Note content. Must not be blank. Silently truncated to 2000 characters.
+</ParamField>
+
+<ParamField body="isPin" type="boolean" required>
+  Whether to pin this note to the top of the lead's notes list.
+</ParamField>
+
+```bash
+curl -X POST "https://api.lofty.com/v1.0/notes" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 563172647619608,
+    "content": "Called Jane — interested in 3br properties under $600k. Follow up next Tuesday.",
+    "isPin": false
+  }'
+```
+
+Response: `{ "noteId": "note_123456789" }`
+
+## Update a note
+
+```
+PUT https://api.lofty.com/v1.0/notes/{noteId}
+```
+
+<ParamField path="noteId" type="string" required>
+  ID of the note to update.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Updated note content. Must not be blank.
+</ParamField>
+
+<ParamField body="isPin" type="boolean" required>
+  Updated pin state. Must not be null.
+</ParamField>
+
+```bash
+curl -X PUT "https://api.lofty.com/v1.0/notes/note_123456789" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "Called Jane — interested in 3br properties under $600k. Follow up Thursday.",
+    "isPin": true
+  }'
+```
+
+## Delete a note
+
+```
+DELETE https://api.lofty.com/v1.0/notes/{noteId}
+```
+
+<ParamField path="noteId" type="string" required>
+  ID of the note to delete.
+</ParamField>
+
+```bash
+curl -X DELETE "https://api.lofty.com/v1.0/notes/note_123456789" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+Returns an empty 200 response on success.

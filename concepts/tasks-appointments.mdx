@@ -1,0 +1,158 @@
+---
+title: "Tasks and Appointments in the Lofty API"
+description: "Tasks are to-do items for agents; appointments are scheduled meetings. Both share a unified taskId namespace and are managed through the V2 API."
+---
+
+Tasks and appointments help agents stay organized and follow up with leads at the right time. Tasks are action items — a call to make, an email to send, a follow-up to complete. Appointments are scheduled meetings with a specific start time, end time, and location. Both are associated with a lead and tracked through the same API surface.
+
+## Shared taskId namespace
+
+Tasks and appointments in Lofty share the same `taskId` namespace. This means a task and an appointment can never have the same numeric ID, and when you reference an item by ID on any V2 endpoint, the API resolves it correctly regardless of whether it is a task or an appointment.
+
+<Note>
+The V2 endpoints (`/v2.0/tasks/...` and `/v2.0/calendar/...`) operate on the same underlying ID space. A `taskId` returned from a task creation endpoint is the same identifier you would use to fetch or update that record through the calendar endpoints.
+</Note>
+
+## Tasks
+
+A task is a to-do item assigned to an agent or assistant, linked to a specific lead. Use tasks to represent the action an agent needs to take next — scheduling a call, sending a listing, or following up after a showing.
+
+### Key task fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | int64 | Task ID (shared namespace with appointments) |
+| `leadId` | int64 | Lead associated with this task |
+| `content` | string | Task description |
+| `type` | string | Task type: `Call`, `Email`, `Text`, `Other` |
+| `assignedRole` | string | Assigned role: `Agent` or `Assistant` |
+| `startAt` | string | Start time in ISO 8601 format with timezone |
+| `endAt` | string | End time / deadline in ISO 8601 format |
+| `timeZoneCode` | string | IANA timezone code (e.g., `America/Los_Angeles`) |
+| `finishFlag` | boolean | Whether the task is completed |
+| `overdueFlag` | boolean | Whether the task is past its deadline and still open |
+
+### Creating a task (V2)
+
+```bash
+POST https://api.lofty.com/v2.0/tasks
+```
+
+```json
+{
+  "content": "Follow up about the Maple Street listing",
+  "leadId": 563172647619608,
+  "type": "Call",
+  "assignedRole": "Agent",
+  "startAt": "2026-06-01T10:00:00-07:00",
+  "endAt": "2026-06-01T10:30:00-07:00",
+  "timeZoneCode": "America/Los_Angeles"
+}
+```
+
+## Appointments
+
+An appointment is a scheduled event with a defined start time, end time, and optional location. Unlike tasks, appointments represent a meeting or showing rather than a generic action item.
+
+### Key appointment fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | int64 | Appointment ID (shared namespace with tasks) |
+| `leadId` | int64 | Lead associated with this appointment |
+| `descr` | string | Appointment description |
+| `address` | string | Location of the appointment |
+| `deadline` | int64 | Start time as Unix timestamp in milliseconds |
+| `endTime` | int64 | End time as Unix timestamp in milliseconds |
+| `allDay` | boolean | Whether the appointment spans the full day |
+| `finishFlag` | boolean | Whether the appointment is completed |
+| `assignToUid` | int64 | User ID the appointment is assigned to |
+
+To list appointments for a lead, use `GET /v1.0/appts`.
+
+## V1 vs V2 API
+
+Lofty exposes tasks through both V1 and V2 endpoints. The V2 API adds support for `Appointment` as a task type, uses ISO 8601 timestamps with timezone, and is the recommended path for new integrations.
+
+| Feature | V1 (`/v1.0/tasks`) | V2 (`/v2.0/tasks`) |
+| --- | --- | --- |
+| Task types | `Call`, `Email`, `Text`, `Other` | All V1 types + `Appointment` |
+| Timestamp format | `yyyy-MM-dd HH:mm:ss` UTC | ISO 8601 with timezone |
+| Finish/unfinish actions | Via `finishFlag` on update | Dedicated `/finish` and `/unfinish` endpoints |
+| Preferred for new builds | No | Yes |
+
+<Tip>
+Use the V2 endpoints for all new integrations. The V1 task endpoints remain available but do not support appointments as a task type.
+</Tip>
+
+## Finish and unfinish workflow
+
+When an agent completes a task or appointment, you mark it finished. If needed, you can revert that status. The V2 API provides dedicated endpoints for this rather than requiring a full update:
+
+```bash
+# Mark a task or appointment as completed
+POST https://api.lofty.com/v2.0/tasks/{taskId}/finish
+
+# Revert a completed task or appointment to open
+POST https://api.lofty.com/v2.0/tasks/{taskId}/unfinish
+```
+
+The same pattern is available through the calendar API:
+
+```bash
+POST https://api.lofty.com/v2.0/calendar/{calendarId}/finish
+POST https://api.lofty.com/v2.0/calendar/{calendarId}/unfinish
+```
+
+## Calendar API vs tasks API
+
+The V2 Calendar API (`/v2.0/calendar`) is an alternative surface for managing the same tasks and appointments, with additional capabilities:
+
+- **Available meeting slots** — `GET /v2.0/calendar/meetings/available` returns open time slots for scheduling.
+- **Composite calendar IDs** — Calendar entries have IDs of the form `<numericId>-task` or `<numericId>-appointment`. You must pass this full composite string to per-entry calendar endpoints.
+
+<Warning>
+Calendar IDs returned by `POST /v2.0/calendar` are composite strings like `12345-task` or `12345-appointment`. Always pass the full string — including the type suffix — when calling `PUT /v2.0/calendar/{calendarId}`, `DELETE /v2.0/calendar/{calendarId}`, or the finish/unfinish endpoints.
+</Warning>
+
+## Plan tasks
+
+Plan tasks are auto-generated action items created by Lofty's Sales Agent (AI Assistant) feature as part of automated follow-up plans. You can fetch plan tasks for a specific lead and batch-create them programmatically:
+
+```bash
+# Get plan tasks for a lead
+GET https://api.lofty.com/v2.0/plan-tasks/lead/{leadId}
+
+# Batch create plan tasks
+POST https://api.lofty.com/v2.0/plan-tasks/create
+```
+
+Plan tasks are associated with the Sales Agent workflow and are separate from agent-created tasks, though they share the same underlying data model.
+
+## Endpoint overview
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/v2.0/tasks` | List tasks for a lead |
+| `POST` | `/v2.0/tasks` | Create a task or appointment |
+| `GET` | `/v2.0/tasks/{taskId}` | Get a task or appointment by ID |
+| `PUT` | `/v2.0/tasks/{taskId}` | Update a task or appointment |
+| `DELETE` | `/v2.0/tasks/{taskId}` | Delete a task or appointment |
+| `POST` | `/v2.0/tasks/{taskId}/finish` | Mark as completed |
+| `POST` | `/v2.0/tasks/{taskId}/unfinish` | Revert to open |
+| `GET` | `/v2.0/tasks/my-tasks` | List tasks assigned to the current user |
+| `GET` | `/v1.0/tasks` | List tasks for a lead (V1) |
+| `POST` | `/v1.0/tasks` | Create a task (V1) |
+| `GET` | `/v1.0/tasks/{taskId}` | Get a task by ID (V1) |
+| `PUT` | `/v1.0/tasks/{taskId}` | Update a task (V1) |
+| `DELETE` | `/v1.0/tasks/{taskId}` | Delete a task (V1) |
+| `GET` | `/v1.0/appts` | List appointments for a lead |
+| `GET` | `/v2.0/calendar` | Query calendar entries |
+| `POST` | `/v2.0/calendar` | Create a calendar entry |
+| `GET` | `/v2.0/calendar/{calendarId}` | Get a calendar entry |
+| `PUT` | `/v2.0/calendar/{calendarId}` | Update a calendar entry |
+| `DELETE` | `/v2.0/calendar/{calendarId}` | Delete a calendar entry |
+| `POST` | `/v2.0/calendar/{calendarId}/finish` | Mark calendar entry as completed |
+| `POST` | `/v2.0/calendar/{calendarId}/unfinish` | Revert calendar entry to open |
+| `GET` | `/v2.0/plan-tasks/lead/{leadId}` | Get plan tasks for a lead |
+| `POST` | `/v2.0/plan-tasks/create` | Batch create plan tasks |

@@ -1,0 +1,59 @@
+---
+title: "Lofty Developer API: Build Real Estate Integrations"
+description: "Integrate your application with Lofty's real estate CRM. Access leads, listings, transactions, communications, and AI features through a simple REST API."
+---
+
+The Lofty Developer API gives you programmatic access to the Lofty real estate CRM platform. Whether you're building a custom integration, syncing lead data, automating workflows, or embedding listing search into your app, the API provides the tools you need.
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Make your first API call in minutes. Get authenticated and pull your first lead.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/authentication/overview">
+    Learn how to authenticate with OAuth 2.0 or an API Key.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/leads/overview">
+    Explore all 94 endpoints — leads, tasks, listings, transactions, and more.
+  </Card>
+  <Card title="Webhooks" icon="bolt" href="/concepts/webhooks">
+    Subscribe to real-time events and get notified when data changes in Lofty.
+  </Card>
+</CardGroup>
+
+## Get started in 4 steps
+
+<Steps>
+  <Step title="Create a developer account">
+    Sign up at the [Lofty Developer Platform](https://api.lofty.com/vendor/frontend/static/index.html#/login) and register your application.
+  </Step>
+  <Step title="Authenticate">
+    Use OAuth 2.0 (recommended) or an API Key to authenticate your requests. See [Authentication](/authentication/overview).
+  </Step>
+  <Step title="Make your first API call">
+    Follow the [Quick Start guide](/quickstart) to fetch leads, create tasks, or search listings.
+  </Step>
+  <Step title="Subscribe to webhooks">
+    Set up [webhook subscriptions](/concepts/webhooks) to receive real-time updates from Lofty.
+  </Step>
+</Steps>
+
+## Explore by feature
+
+<CardGroup cols={2}>
+  <Card title="Lead Management" icon="users" href="/guides/lead-management">
+    Create, update, assign, and track leads through your sales pipeline.
+  </Card>
+  <Card title="Listings" icon="house" href="/concepts/listings">
+    Search MLS listings and retrieve published properties from Lofty.
+  </Card>
+  <Card title="Communication" icon="message" href="/guides/communication">
+    Log calls, send emails and SMS, and retrieve communication history.
+  </Card>
+  <Card title="AI Features" icon="brain" href="/guides/ai-features">
+    Use AI-powered lead analysis, call summaries, and call scripts.
+  </Card>
+</CardGroup>
+
+<Note>
+  All entity IDs in the Lofty API are 64-bit integers. If you're using JavaScript or TypeScript, read the [JavaScript Integration guide](/javascript-integration) to avoid silent precision loss.
+</Note>

@@ -1,0 +1,78 @@
+---
+title: "GET /v2.0/tasks/{taskId} — Get a Task or Appointment"
+description: "Fetch a single task or appointment by ID using GET /v2.0/tasks/{taskId}. Returns lead context, agent assignment, due date, timing, type, and completion status."
+---
+
+Returns a single task or appointment by its ID. Tasks and appointments share the same `taskId` namespace — the endpoint resolves the type automatically. The caller must have manage permission on the lead that owns the task.
+
+<Note>
+  The legacy `GET /v1.0/tasks/{taskId}` returns the task alongside the lead's pipeline context. Prefer V2 for all new integrations.
+</Note>
+
+## Path parameters
+
+<ParamField path="taskId" type="integer" required>
+  ID of the task or appointment to retrieve.
+</ParamField>
+
+## Example request
+
+```bash
+curl https://api.lofty.com/v2.0/tasks/88001 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+## Response
+
+```json
+{
+  "task": {
+    "id": 88001,
+    "leadId": 563172647619608,
+    "leadName": "Jane Smith",
+    "leadEmail": "jane.smith@example.com",
+    "leadPhone": "3105550142",
+    "leadFirstName": "Jane",
+    "leadLastName": "Smith",
+    "content": "Follow up on pre-approval letter",
+    "type": "Call",
+    "assignedRole": "Agent",
+    "assignedUser": "agent@brokerage.com",
+    "assignedUserId": 100234,
+    "startAt": "2026-05-10T10:00:00GMT",
+    "endAt": "2026-05-10T10:30:00GMT",
+    "timeZoneCode": "America/Los_Angeles",
+    "allDay": false,
+    "finishFlag": false,
+    "overdueFlag": false,
+    "finishTime": null,
+    "createTime": "2026-05-07T08:00:00Z",
+    "lastUpdate": "2026-05-07T08:00:00Z",
+    "address": null,
+    "teamId": 5001,
+    "pipelineId": 3002,
+    "creatorId": 100234
+  }
+}
+```
+
+### Response fields
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | integer | Task ID |
+| `leadId` | integer | ID of the associated lead |
+| `leadName` | string | Full name of the associated lead |
+| `content` | string | Task description |
+| `type` | string | Task type: `Call`, `Email`, `Text`, `Other`, or `Appointment` |
+| `assignedRole` | string | Role assigned: `Agent` or `Assistant` |
+| `assignedUserId` | integer | User ID of the assigned agent |
+| `startAt` | string | Start time in ISO 8601 format |
+| `endAt` | string | End or due time in ISO 8601 format |
+| `timeZoneCode` | string | IANA timezone code |
+| `allDay` | boolean | Whether this is an all-day event |
+| `finishFlag` | boolean | `true` if the task is marked complete |
+| `overdueFlag` | boolean | `true` if the task is past due and not finished |
+| `finishTime` | string | Timestamp when the task was completed, or `null` |
+| `address` | string | Location for appointment type entries |

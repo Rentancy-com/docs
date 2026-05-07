@@ -1,0 +1,61 @@
+---
+title: "Lofty Developer API"
+description: "The Lofty Developer API provides REST access to leads, listings, transactions, communications, tasks, and webhooks in Lofty's real estate CRM platform."
+---
+
+The Lofty Developer API is a REST API that gives you programmatic access to the Lofty real estate CRM platform. If you're building a third-party integration, automating lead workflows, syncing CRM data, or embedding real estate functionality into your own application, this API is your entry point.
+
+## Base URL and versioning
+
+All API requests are made to the following base URL:
+
+```text
+https://api.lofty.com
+```
+
+The API exposes two versioned path prefixes:
+
+| Version | Path prefix | Notes |
+| --- | --- | --- |
+| v1.0 | `/v1.0/` | Current stable version for most endpoints |
+| v2.0 | `/v2.0/` | Available for select endpoints; check the API reference for availability |
+
+Always include the version prefix in your request URL. For example:
+
+```text
+GET https://api.lofty.com/v1.0/leads
+```
+
+<Warning>
+  All entity IDs in the Lofty API are **64-bit integers**. JavaScript's `Number` type cannot safely represent integers larger than 2^53-1 (9,007,199,254,740,991). Lofty IDs can exceed this range, causing silent precision loss if you parse them with `JSON.parse()` or `parseInt()`. See the [JavaScript and TypeScript Integration Guide](/javascript-integration) before building any JS or TS client.
+</Warning>
+
+## Authentication
+
+Lofty supports two authentication methods. You include credentials in the `Authorization` request header on every API call.
+
+**OAuth 2.0 (recommended)** — Designed for third-party integrations. You register an application in the Lofty Developer Portal, receive a Client ID and Client Secret, and exchange them for a short-lived access token. Each token is scoped to the specific API permissions you requested. This method is subject to security assessments and supports automatic token expiration.
+
+**API Key** — A static key tied to a specific Lofty user account, available under **Settings \> Integrations \> API** in the Lofty CRM. API keys do not expire automatically and are not subject to security review. They must remain internal and must not be shared with external vendors. Use this method only for internal tooling where you control both ends of the integration.
+
+<Note>
+  API services are actively developing to provide more complete functionality. Some endpoints or features may not yet be available. Check the [API reference](/api-reference/leads/overview) for current endpoint coverage.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Set up your developer account, get credentials, and make your first API call.
+  </Card>
+
+  <Card title="Authentication overview" icon="lock" href="/authentication/overview">
+    Learn the full details of OAuth 2.0 and API Key authentication.
+  </Card>
+
+  <Card title="Leads" icon="users" href="/concepts/leads">
+    Understand the lead object and how to create, retrieve, and manage leads.
+  </Card>
+
+  <Card title="Webhooks" icon="bolt" href="/concepts/webhooks">
+    Subscribe to real-time events and get notified when data changes in Lofty.
+  </Card>
+</CardGroup>

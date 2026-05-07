@@ -1,0 +1,124 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Lofty Developer API",
+  "theme": "luma",
+  "colors": {
+    "primary": "#3c5cdc",
+    "light": "#ffffff"
+  },
+  "logo": {
+    "light": "https://media.brand.dev/0cf02087-d34b-4909-899b-41d586d9e99c.svg",
+    "dark": "https://media.brand.dev/0cf02087-d34b-4909-899b-41d586d9e99c.svg"
+  },
+  "favicon": "https://media.brand.dev/0aeb1ee4-c521-4fbe-b536-f1df81215cbc.png",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/lofty"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "javascript-integration"
+            ]
+          },
+          {
+            "group": "Authentication",
+            "pages": [
+              "authentication/overview",
+              "authentication/oauth2",
+              "authentication/api-keys"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/leads",
+              "concepts/tasks-appointments",
+              "concepts/listings",
+              "concepts/transactions",
+              "concepts/webhooks"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/lead-management",
+              "guides/communication",
+              "guides/working-leads",
+              "guides/ai-features"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Leads",
+            "pages": [
+              "api-reference/leads/overview",
+              "api-reference/leads/list-leads",
+              "api-reference/leads/create-lead",
+              "api-reference/leads/get-lead",
+              "api-reference/leads/update-lead",
+              "api-reference/leads/delete-lead",
+              "api-reference/leads/assign-lead",
+              "api-reference/leads/activities",
+              "api-reference/leads/system-logs"
+            ]
+          },
+          {
+            "group": "Tasks & Calendar",
+            "pages": [
+              "api-reference/tasks/list-tasks",
+              "api-reference/tasks/create-task",
+              "api-reference/tasks/get-task",
+              "api-reference/tasks/update-task",
+              "api-reference/tasks/delete-task",
+              "api-reference/calendar/list-events",
+              "api-reference/calendar/create-event"
+            ]
+          },
+          {
+            "group": "Listings & Transactions",
+            "pages": [
+              "api-reference/listings/search-listings",
+              "api-reference/listings/get-published",
+              "api-reference/transactions/list-transactions",
+              "api-reference/transactions/create-transaction",
+              "api-reference/transactions/get-transaction"
+            ]
+          },
+          {
+            "group": "Communication",
+            "pages": [
+              "api-reference/communication/calls",
+              "api-reference/communication/emails",
+              "api-reference/communication/sms",
+              "api-reference/communication/notes"
+            ]
+          },
+          {
+            "group": "Webhooks & Team",
+            "pages": [
+              "api-reference/webhooks/list-webhooks",
+              "api-reference/webhooks/create-webhook",
+              "api-reference/webhooks/delete-webhook",
+              "api-reference/team/members",
+              "api-reference/team/routing"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

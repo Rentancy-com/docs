@@ -1,0 +1,70 @@
+---
+title: "Team Members — GET /v1.0/members"
+description: "List and look up team members in Lofty by group or email address. Use member data to populate agent selectors or validate assignees before routing leads."
+---
+
+The team members endpoints let you retrieve agents and members within your Lofty team. Use this to populate agent dropdowns in your integration, validate assignees, or look up a member by their login email.
+
+## List team members
+
+```
+GET https://api.lofty.com/v1.0/members
+```
+
+<ParamField query="groupIds" type="string">
+  Comma-separated office or group IDs to filter members by. When omitted, all visible team members are returned.
+</ParamField>
+
+<ParamField query="offset" type="integer">
+  Zero-based index of the first result. Values below `0` are silently reset to `0`.
+</ParamField>
+
+<ParamField query="limit" type="integer">
+  Number of results per page. Must not exceed the configured maximum.
+</ParamField>
+
+```bash
+curl "https://api.lofty.com/v1.0/members?limit=50" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+## Example response
+
+```json
+{
+  "_metadata": {
+    "total": 24,
+    "offset": 0,
+    "limit": 50
+  },
+  "members": [
+    {
+      "userId": "111222333444555",
+      "name": "Alex Johnson",
+      "email": "alex@realestate.com",
+      "role": "AGENT",
+      "groupId": "group_abc123",
+      "status": "ACTIVE"
+    }
+  ]
+}
+```
+
+## Get a member by email
+
+```
+GET https://api.lofty.com/v1.0/members/{account}
+```
+
+<ParamField path="account" type="string" required>
+  The login email address of the team member to retrieve. The member must have accepted their team invitation.
+</ParamField>
+
+```bash
+curl "https://api.lofty.com/v1.0/members/alex%40realestate.com" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+<Note>
+  URL-encode the email address when using it as a path parameter (replace `@` with `%40`).
+</Note>

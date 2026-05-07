@@ -1,0 +1,152 @@
+---
+title: "GET /v2.0/calendar — List Calendar Events"
+description: "Query tasks and appointments on a Lofty calendar by date range, lead, type, and completion status. Supports ISO 8601 and Unix timestamp inputs."
+---
+
+Returns a paginated list of calendar entries (tasks and appointments) for the authenticated caller. At least one of `startTime` or `endTime` must be supplied — requests missing both return `400 INVALID_PARAMETER`. Optionally filter by lead, source type, or completion status.
+
+<Note>
+  Use `GET /v2.0/calendar/meetings/available` to find open meeting slots within a time range rather than retrieving existing entries. See [Available meeting slots](#available-meeting-slots) below.
+</Note>
+
+## Query parameters
+
+<ParamField query="startTime" type="string">
+  Start of the time range in ISO 8601 format with UTC offset, e.g., `2026-05-01T00:00:00-07:00`. Takes precedence over `startTimeMs` when both are provided. At least one of `startTime` or `endTime` is required.
+</ParamField>
+
+<ParamField query="endTime" type="string">
+  End of the time range in ISO 8601 format with UTC offset, e.g., `2026-05-31T23:59:59-07:00`. Takes precedence over `endTimeMs` when both are provided. At least one of `startTime` or `endTime` is required.
+</ParamField>
+
+<ParamField query="startTimeMs" type="integer">
+  Start of the time range as a Unix timestamp in milliseconds. Used when `startTime` is not provided.
+</ParamField>
+
+<ParamField query="endTimeMs" type="integer">
+  End of the time range as a Unix timestamp in milliseconds. Used when `endTime` is not provided.
+</ParamField>
+
+<ParamField query="leadId" type="integer">
+  Filter results to entries associated with a specific lead.
+</ParamField>
+
+<ParamField query="timeZoneCode" type="string">
+  IANA timezone identifier for interpreting time values, e.g., `America/Los_Angeles`.
+</ParamField>
+
+<ParamField query="includeFinished" type="boolean">
+  When `true`, returns both finished and unfinished entries. Defaults to returning only unfinished entries.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number, starting from `0`. Defaults to `0`.
+</ParamField>
+
+<ParamField query="pageSize" type="integer">
+  Number of entries per page. Maximum 500.
+</ParamField>
+
+<ParamField query="sort" type="string">
+  Field to sort results by. Example: `startTime`.
+</ParamField>
+
+<ParamField query="desc" type="boolean">
+  When `true`, results are sorted in descending order.
+</ParamField>
+
+<ParamField query="sourceType" type="string">
+  Filter by source type code. Multiple values are allowed (repeat the parameter).
+</ParamField>
+
+## Example request
+
+```bash
+curl -G https://api.lofty.com/v2.0/calendar \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data-urlencode "startTime=2026-05-01T00:00:00-07:00" \
+  --data-urlencode "endTime=2026-05-31T23:59:59-07:00" \
+  --data-urlencode "timeZoneCode=America/Los_Angeles" \
+  --data-urlencode "page=0" \
+  --data-urlencode "pageSize=50"
+```
+
+## Response
+
+```json
+{
+  "data": {
+    "total": 12,
+    "page": 0,
+    "pageSize": 50,
+    "items": [
+      {
+        "id": "88001-task",
+        "type": "TASK",
+        "content": "Follow up on pre-approval letter",
+        "leadId": 563172647619608,
+        "leadName": "Jane Smith",
+        "startAt": "2026-05-10T10:00:00-07:00",
+        "endAt": "2026-05-10T10:30:00-07:00",
+        "timeZoneCode": "America/Los_Angeles",
+        "finishFlag": false,
+        "assignedRole": "Agent",
+        "address": null
+      },
+      {
+        "id": "88002-appointment",
+        "type": "APPOINTMENT",
+        "content": "Property showing — 123 Maple St",
+        "leadId": 563172647619608,
+        "leadName": "Jane Smith",
+        "startAt": "2026-05-12T14:00:00-07:00",
+        "endAt": "2026-05-12T15:00:00-07:00",
+        "timeZoneCode": "America/Los_Angeles",
+        "finishFlag": false,
+        "assignedRole": "Agent",
+        "address": "123 Maple St, Austin, TX 78701"
+      }
+    ]
+  }
+}
+```
+
+## Available meeting slots
+
+To find open time slots for scheduling a meeting, use the `meetings/available` endpoint:
+
+```bash
+curl -G https://api.lofty.com/v2.0/calendar/meetings/available \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  --data-urlencode "startTime=2026-05-10T08:00:00-07:00" \
+  --data-urlencode "endTime=2026-05-10T18:00:00-07:00" \
+  --data-urlencode "timeZoneCode=America/Los_Angeles" \
+  --data-urlencode "limit=10"
+```
+
+### Available slots query parameters
+
+<ParamField query="startTime" type="string">
+  Start of the search window in ISO 8601 format. Takes precedence over `startTimeMs`.
+</ParamField>
+
+<ParamField query="endTime" type="string">
+  End of the search window in ISO 8601 format. Takes precedence over `endTimeMs`.
+</ParamField>
+
+<ParamField query="startTimeMs" type="integer">
+  Start of the search window as a Unix timestamp in milliseconds.
+</ParamField>
+
+<ParamField query="endTimeMs" type="integer">
+  End of the search window as a Unix timestamp in milliseconds.
+</ParamField>
+
+<ParamField query="timeZoneCode" type="string">
+  IANA timezone identifier. Defaults to the caller's configured timezone when omitted.
+</ParamField>
+
+<ParamField query="limit" type="integer">
+  Maximum number of available slots to return.
+</ParamField>

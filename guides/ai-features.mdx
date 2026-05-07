@@ -1,0 +1,109 @@
+---
+title: "AI-Powered Features in the Lofty API"
+description: "Use Lofty's AI endpoints to analyze leads, summarize calls, generate call scripts, and prepare insights for more effective outreach."
+---
+
+Lofty's AI endpoints give you programmatic access to intelligent features built on top of lead and call data. You can retrieve AI-generated analysis of lead behavior, get summaries of recorded calls, generate personalized call scripts, and pre-compute insights to speed up downstream AI operations. This guide walks through each AI feature and shows you how to integrate them into your workflow.
+
+<Note>
+  All AI endpoints require appropriate OAuth permission scopes granted in the Developer Portal. Ensure your application has the necessary AI scopes before calling these endpoints. Requests made without the required scopes will return a `403 Forbidden` response.
+</Note>
+
+<Columns cols={2}>
+  <Card title="Lead analysis" icon="brain">
+    Generate and retrieve AI summaries of a lead's behavior, engagement patterns, and likely intent.
+  </Card>
+  <Card title="Call summary" icon="phone">
+    Automatically extract key points and action items from recorded calls with a lead.
+  </Card>
+  <Card title="Call script" icon="file-text">
+    Generate a personalized outreach script tailored to a lead's profile and interaction history.
+  </Card>
+  <Card title="Prepare insight" icon="bolt">
+    Pre-compute insights for a lead to accelerate subsequent AI operations like lead analysis.
+  </Card>
+</Columns>
+
+## Lead analysis
+
+Lead analysis returns an AI-generated summary of a lead's behavior and engagement with your team. Use the `GET` endpoint to retrieve an existing analysis, or the `POST` endpoint to generate a new one on demand.
+
+**Retrieve an existing analysis**
+
+```bash
+curl -X GET "https://api.lofty.com/v2.0/ai/lead-analysis?leadId=789012345678" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+**Generate a new analysis**
+
+```bash
+curl -X POST https://api.lofty.com/v2.0/ai/lead-analysis \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 789012345678
+  }'
+```
+
+The response includes an AI-generated summary covering the lead's engagement patterns, communication preferences, and recommended next steps based on their history in Lofty.
+
+<Tip>
+  Call [Prepare insight](#prepare-insight) before generating lead analysis. Pre-computing insights improves the quality and relevance of the analysis output.
+</Tip>
+
+## Call summary
+
+Call summaries extract structured information from recorded calls, including key discussion points and recommended action items. Use the `GET` endpoint to fetch an existing summary, or trigger generation with `POST`.
+
+**Retrieve an existing summary**
+
+```bash
+curl -X GET "https://api.lofty.com/v2.0/ai/call-summary?callId=call_abc123" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+**Generate a summary**
+
+```bash
+curl -X POST https://api.lofty.com/v2.0/ai/call-summary/generate \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "callId": "call_abc123"
+  }'
+```
+
+The response includes a structured summary with key points discussed during the call and a list of follow-up action items identified by the AI.
+
+## Call script
+
+The call script endpoint generates a personalized script for an upcoming call with a lead. The script is tailored to the lead's profile, communication history, and current pipeline stage.
+
+```bash
+curl -X POST https://api.lofty.com/v2.0/ai/call-script \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 789012345678
+  }'
+```
+
+The response returns a structured script with an opening, suggested talking points, objection handling guidance, and a recommended call-to-action based on the lead's history.
+
+## Prepare insight
+
+The prepare insight endpoint pre-computes AI insights for a lead and stores them for use by other AI endpoints. Calling this endpoint before lead analysis or before generating a call script gives the AI more context to work with, resulting in higher-quality output.
+
+```bash
+curl -X POST https://api.lofty.com/v2.0/ai/prepare-insight \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 789012345678
+  }'
+```
+
+Insight preparation runs asynchronously. The response confirms the request was accepted; the computed insights will be available to downstream AI endpoints once processing is complete.

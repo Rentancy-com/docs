@@ -1,0 +1,121 @@
+---
+title: "Working Leads: Managing Your Active Pipeline"
+description: "Add leads to an agent's active working pipeline, check who is working a lead, manage mute status, and query quota limits using the Lofty V2 API."
+---
+
+In Lofty, a _working lead_ is a lead that an agent is actively pursuing. The working leads set represents the agent's current pipeline—the subset of all assigned leads that require immediate attention and outreach. This guide covers how to list, add, and manage working leads, check quota limits, identify which agents are working a specific lead, and control mute status for leads in the queue.
+
+## List working leads
+
+Send a `GET` request to `/v2.0/working-leads` to retrieve the paginated list of leads currently in the authenticated agent's working set.
+
+```bash
+curl -X GET "https://api.lofty.com/v2.0/working-leads?page=1&pageSize=25" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+The response returns a paginated array of lead objects, each including the lead's ID, name, stage, and assignment details.
+
+## Add a lead to working leads
+
+Send a `POST` request to `/v2.0/working-leads/add` to add a lead to the authenticated agent's working set.
+
+```bash
+curl -X POST https://api.lofty.com/v2.0/working-leads/add \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 789012345678
+  }'
+```
+
+## Get the current agent's profile
+
+Send a `GET` request to `/v2.0/sales-agents/current` to retrieve the profile of the agent associated with the authenticated access token.
+
+```bash
+curl -X GET https://api.lofty.com/v2.0/sales-agents/current \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+The response includes the agent's ID, name, email, and role within the Lofty organization.
+
+## Check working lead quota
+
+Each agent has a maximum number of leads they can hold in their working set at one time. Send a `GET` request to `/v2.0/sales-agents/quota` to see the current agent's limit and how many slots are in use.
+
+```bash
+curl -X GET https://api.lofty.com/v2.0/sales-agents/quota \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+**Example response**
+
+```json
+{
+  "maxWorkingLeads": 50,
+  "currentWorkingLeads": 34
+}
+```
+
+Before adding leads to the working set, check this endpoint to confirm the agent has available capacity.
+
+## Find which agents are working a lead
+
+Send a `GET` request to `/v2.0/sales-agents/by-lead` with a `leadId` query parameter to retrieve the list of agents currently working that lead.
+
+```bash
+curl -X GET "https://api.lofty.com/v2.0/sales-agents/by-lead?leadId=789012345678" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+The response returns an array of agent objects, each including the agent's ID, name, and contact details.
+
+## Mute a working lead
+
+Muting a working lead deprioritizes it in the agent's queue without removing it from the working set. This is useful when a lead has gone temporarily unresponsive or the agent is waiting for a callback before following up.
+
+Send a `PUT` request to `/v2.0/sales-agents/working-lead/{leadId}/mute` with the desired mute state.
+
+```bash
+# Mute a lead
+curl -X PUT https://api.lofty.com/v2.0/sales-agents/working-lead/789012345678/mute \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "muted": true
+  }'
+```
+
+```bash
+# Unmute a lead
+curl -X PUT https://api.lofty.com/v2.0/sales-agents/working-lead/789012345678/mute \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "muted": false
+  }'
+```
+
+## Check mute status
+
+Send a `GET` request to `/v2.0/sales-agent/lead/mute-status` with a `leadId` query parameter to check whether a lead is currently muted for the authenticated agent.
+
+```bash
+curl -X GET "https://api.lofty.com/v2.0/sales-agent/lead/mute-status?leadId=789012345678" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+**Example response**
+
+```json
+{
+  "leadId": 789012345678,
+  "muted": true
+}
+```

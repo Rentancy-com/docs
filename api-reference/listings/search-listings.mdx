@@ -1,0 +1,102 @@
+---
+title: "POST /v2.0/listings/search — Search MLS Listings"
+description: "Search MLS listings by location, price range, bedrooms, bathrooms, square footage, property type, and listing status using the Lofty API."
+---
+
+The Lofty listings search endpoint lets you query MLS listings using a flexible set of filters. Use it to find properties matching a buyer's criteria, power a property search feature in your app, or associate relevant listings with a lead.
+
+## Endpoint
+
+```
+POST https://api.lofty.com/v2.0/listings/search
+```
+
+## Request body
+
+<ParamField body="keywords" type="string">
+  Location keywords (city, neighborhood, ZIP code, or address fragment) to search within.
+</ParamField>
+
+<ParamField body="minPrice" type="number">
+  Minimum listing price in USD.
+</ParamField>
+
+<ParamField body="maxPrice" type="number">
+  Maximum listing price in USD.
+</ParamField>
+
+<ParamField body="minBedrooms" type="integer">
+  Minimum number of bedrooms.
+</ParamField>
+
+<ParamField body="minBathrooms" type="number">
+  Minimum number of bathrooms.
+</ParamField>
+
+<ParamField body="minSqft" type="integer">
+  Minimum square footage.
+</ParamField>
+
+<ParamField body="maxSqft" type="integer">
+  Maximum square footage.
+</ParamField>
+
+<ParamField body="propertyType" type="string">
+  Property type filter (e.g., `SINGLE_FAMILY`, `CONDO`, `TOWNHOUSE`, `MULTI_FAMILY`, `LAND`).
+</ParamField>
+
+<ParamField body="listingStatus" type="string">
+  Listing status filter (e.g., `ACTIVE`, `PENDING`, `SOLD`).
+</ParamField>
+
+<ParamField body="page" type="integer">
+  Page number (0-based). Defaults to `0`.
+</ParamField>
+
+<ParamField body="pageSize" type="integer">
+  Number of results per page. Defaults to `20`.
+</ParamField>
+
+## Example request
+
+```bash
+curl -X POST "https://api.lofty.com/v2.0/listings/search" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "keywords": "Austin, TX",
+    "minPrice": 400000,
+    "maxPrice": 700000,
+    "minBedrooms": 3,
+    "listingStatus": "ACTIVE",
+    "pageSize": 10
+  }'
+```
+
+## Example response
+
+```json
+{
+  "total": 48,
+  "page": 0,
+  "pageSize": 10,
+  "listings": [
+    {
+      "listingId": "563172647619608",
+      "mlsNumber": "1234567",
+      "address": "123 Main St, Austin, TX 78701",
+      "price": 550000,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "sqft": 2100,
+      "propertyType": "SINGLE_FAMILY",
+      "status": "ACTIVE",
+      "listDate": "2024-03-01"
+    }
+  ]
+}
+```
+
+<Note>
+  Listing IDs are 64-bit integers. If you're using JavaScript, treat them as strings to avoid precision loss. See [JavaScript Integration](/javascript-integration).
+</Note>

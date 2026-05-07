@@ -1,0 +1,90 @@
+---
+title: "GET /v2.0/tasks — List Tasks for a Lead"
+description: "Retrieve all tasks and appointments attached to a Lofty lead, or fetch tasks assigned to the current agent using the my-tasks endpoint."
+---
+
+Returns all tasks and appointments associated with a given lead. The caller must have manage permission on the lead. Tasks and appointments share the same response structure and are returned together.
+
+<Note>
+  Use `GET /v2.0/tasks/my-tasks` to retrieve tasks assigned to the currently authenticated agent without specifying a lead. See the [My tasks](#my-tasks) section below.
+</Note>
+
+<Note>
+  The legacy `GET /v1.0/tasks` endpoint returns tasks only (no appointments) and requires the same `leadId` parameter. Prefer V2 for all new integrations.
+</Note>
+
+## Query parameters
+
+<ParamField query="leadId" type="integer" required>
+  ID of the lead whose tasks and appointments to return. The caller must have manage permission on this lead.
+</ParamField>
+
+## Example request
+
+```bash
+curl -G https://api.lofty.com/v2.0/tasks \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data-urlencode "leadId=563172647619608"
+```
+
+## Response
+
+```json
+{
+  "tasks": [
+    {
+      "id": 88001,
+      "leadId": 563172647619608,
+      "leadName": "Jane Smith",
+      "leadEmail": "jane.smith@example.com",
+      "leadPhone": "3105550142",
+      "content": "Follow up on pre-approval letter",
+      "type": "Call",
+      "assignedRole": "Agent",
+      "assignedUser": "agent@brokerage.com",
+      "assignedUserId": 100234,
+      "startAt": "2026-05-10T10:00:00GMT",
+      "endAt": "2026-05-10T10:30:00GMT",
+      "timeZoneCode": "America/Los_Angeles",
+      "allDay": false,
+      "finishFlag": false,
+      "overdueFlag": false,
+      "finishTime": null,
+      "createTime": "2026-05-07T08:00:00Z",
+      "lastUpdate": "2026-05-07T08:00:00Z",
+      "address": null
+    }
+  ]
+}
+```
+
+## My tasks
+
+To list tasks assigned to the authenticated agent (or any user by ID), use the `my-tasks` endpoint:
+
+```bash
+curl -G https://api.lofty.com/v2.0/tasks/my-tasks \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  --data-urlencode "limit=20" \
+  --data-urlencode "currentId=0" \
+  --data-urlencode "timeZoneCode=America/New_York"
+```
+
+### My tasks query parameters
+
+<ParamField query="userId" type="integer">
+  User ID to query tasks for. Defaults to the currently authenticated user if not provided.
+</ParamField>
+
+<ParamField query="currentId" type="integer">
+  Cursor-based pagination anchor. Pass `0` to start from the beginning. Pass the last returned item's `id` to fetch the next page. Must be `>= 0`.
+</ParamField>
+
+<ParamField query="limit" type="integer">
+  Page size. Must be between 1 and 100. Defaults to 10.
+</ParamField>
+
+<ParamField query="timeZoneCode" type="string">
+  IANA timezone code (e.g., `America/New_York`). Determines how start and end times are interpreted. Falls back to the agent's configured timezone if not provided.
+</ParamField>

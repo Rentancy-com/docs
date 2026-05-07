@@ -1,0 +1,74 @@
+---
+title: "Call History — GET /v1.0/communication/call"
+description: "Retrieve call history for a lead using the Lofty API. Includes the V2 endpoint for additional event types and call recording URL retrieval."
+---
+
+The Lofty API lets you retrieve the call history associated with a lead. Use V2 for more complete event coverage including additional call event types not available in V1.
+
+## List calls (V2 — recommended)
+
+```
+GET https://api.lofty.com/v1.0/communication/call/v2
+```
+
+<ParamField query="leadId" type="integer" required>
+  ID of the lead whose call history to return. Must belong to the caller's team.
+</ParamField>
+
+<ParamField query="offset" type="integer">
+  Zero-based index of the first entry to return. Defaults to `0`.
+</ParamField>
+
+<ParamField query="limit" type="integer">
+  Number of entries per page.
+</ParamField>
+
+<ParamField query="currentId" type="integer">
+  Used for cursor-based pagination. Pass the last seen entry ID to retrieve the next page.
+</ParamField>
+
+```bash
+curl "https://api.lofty.com/v1.0/communication/call/v2?leadId=563172647619608&limit=20" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+## List calls (V1)
+
+```
+GET https://api.lofty.com/v1.0/communication/call
+```
+
+Accepts the same query parameters as V2. Use V2 for new integrations.
+
+## Example response
+
+```json
+{
+  "total": 12,
+  "entries": [
+    {
+      "callId": "456789012345678",
+      "leadId": "563172647619608",
+      "direction": "outbound",
+      "duration": 185,
+      "status": "completed",
+      "calledAt": "2024-04-01T09:15:00Z",
+      "agentId": "111222333444555",
+      "recordingAvailable": true
+    }
+  ]
+}
+```
+
+## Get a call recording URL
+
+To retrieve the playback URL for a recorded call:
+
+```bash
+curl "https://api.lofty.com/v1.0/call/url/456789012345678" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+<Note>
+  Recording URLs are time-limited. Fetch them on demand rather than storing them permanently.
+</Note>

@@ -1,0 +1,145 @@
+{
+  "projectType": "api-service",
+  "projectName": "Lofty Developer API",
+  "projectDescription": "A REST API platform enabling third-party developers to integrate with Lofty's real estate CRM — including leads, listings, transactions, communications, tasks, and AI features.",
+  "theme": "luma",
+  "primaryColor": "#3c5cdc",
+  "lightColor": "#ffffff",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "javascript-integration"
+            ]
+          },
+          {
+            "group": "Authentication",
+            "pages": [
+              "authentication/overview",
+              "authentication/oauth2",
+              "authentication/api-keys"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/leads",
+              "concepts/tasks-appointments",
+              "concepts/listings",
+              "concepts/transactions",
+              "concepts/webhooks"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/lead-management",
+              "guides/communication",
+              "guides/working-leads",
+              "guides/ai-features"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Leads",
+            "pages": [
+              "api-reference/leads/overview",
+              "api-reference/leads/list-leads",
+              "api-reference/leads/create-lead",
+              "api-reference/leads/get-lead",
+              "api-reference/leads/update-lead",
+              "api-reference/leads/delete-lead",
+              "api-reference/leads/assign-lead",
+              "api-reference/leads/activities",
+              "api-reference/leads/system-logs"
+            ]
+          },
+          {
+            "group": "Tasks & Calendar",
+            "pages": [
+              "api-reference/tasks/list-tasks",
+              "api-reference/tasks/create-task",
+              "api-reference/tasks/get-task",
+              "api-reference/tasks/update-task",
+              "api-reference/tasks/delete-task",
+              "api-reference/calendar/list-events",
+              "api-reference/calendar/create-event"
+            ]
+          },
+          {
+            "group": "Listings & Transactions",
+            "pages": [
+              "api-reference/listings/search-listings",
+              "api-reference/listings/get-published",
+              "api-reference/transactions/list-transactions",
+              "api-reference/transactions/create-transaction",
+              "api-reference/transactions/get-transaction"
+            ]
+          },
+          {
+            "group": "Communication",
+            "pages": [
+              "api-reference/communication/calls",
+              "api-reference/communication/emails",
+              "api-reference/communication/sms",
+              "api-reference/communication/notes"
+            ]
+          },
+          {
+            "group": "Webhooks & Team",
+            "pages": [
+              "api-reference/webhooks/list-webhooks",
+              "api-reference/webhooks/create-webhook",
+              "api-reference/webhooks/delete-webhook",
+              "api-reference/team/members",
+              "api-reference/team/routing"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "OAuth 2.0 and API Key authentication",
+    "Lead management with assignment and routing",
+    "Task and appointment scheduling",
+    "MLS listing search and management",
+    "Transaction tracking and management",
+    "Multi-channel communication (calls, SMS, email)",
+    "Webhook event subscriptions",
+    "AI-powered call summaries and lead analysis",
+    "Team member and agent directory",
+    "Working leads pipeline management"
+  ],
+  "publicApiSurface": [
+    "GET/POST /v1.0/leads",
+    "GET/PUT/DELETE /v1.0/leads/{leadId}",
+    "POST /v1.0/leads/{leadId}/assignment",
+    "GET/POST /v1.0/tasks",
+    "GET/POST /v2.0/calendar",
+    "GET/POST /v2.0/listings/search",
+    "GET /v1.0/getPublishedListings",
+    "GET/POST /v1.0/leads/{leadId}/transaction",
+    "GET /v1.0/communication/call",
+    "POST /v1.0/message/sms/send",
+    "POST /v1.0/message/email/send",
+    "GET/POST/DELETE /v1.0/webhook",
+    "GET/POST /v1.0/notes",
+    "GET /v1.0/members",
+    "GET /v1.0/routing/rule/list/{type}",
+    "GET/POST /v2.0/ai/lead-analysis",
+    "GET /v2.0/ai/call-summary",
+    "GET /v2.0/working-leads"
+  ]
+}

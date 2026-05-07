@@ -1,0 +1,144 @@
+---
+title: "GET /v1.0/leads — List Leads"
+description: "Search and paginate leads in Lofty using GET /v1.0/leads. Filter by assignee, stage, source, tags, segments, contact status, date ranges, and more."
+---
+
+Returns a page of leads matching the supplied filters. Multiple filters are combined with AND logic. Use `offset` for offset-based pagination or `scrollId` for cursor-based pagination across large result sets.
+
+## Query parameters
+
+<ParamField query="limit" type="integer">
+  Number of leads to return. Must be between 1 and 100. Defaults to 10 if not supplied. Returns `400 LIMIT_NOT_VALID` if out of range.
+</ParamField>
+
+<ParamField query="offset" type="integer">
+  Zero-based start index for offset-based pagination. Use `scrollId` instead when iterating over large datasets.
+</ParamField>
+
+<ParamField query="scrollId" type="string">
+  Cursor returned in the previous response's `get_metadata.scrollId`. Pass this value to retrieve the next batch of results without re-specifying all filters.
+</ParamField>
+
+<ParamField query="sort" type="string">
+  Sort field. Accepted values: `Default`, `LastContact`, `LastCall`, `LastEmail`, `LastActivity`. Defaults to `Default`.
+</ParamField>
+
+<ParamField query="desc" type="boolean">
+  `true` for descending order, `false` for ascending. Defaults to `false`.
+</ParamField>
+
+<ParamField query="assignedUserId" type="integer">
+  Filter leads by the ID of the assigned agent (64-bit integer).
+</ParamField>
+
+<ParamField query="stage" type="string">
+  Filter by pipeline stage name. Exact match.
+</ParamField>
+
+<ParamField query="source" type="string">
+  Filter by lead source name. Exact match.
+</ParamField>
+
+<ParamField query="email" type="string">
+  Precise search by email address.
+</ParamField>
+
+<ParamField query="phone" type="string">
+  Precise search by phone number. Example: `3479033333`.
+</ParamField>
+
+<ParamField query="key" type="string">
+  Fuzzy search by name, phone, or email.
+</ParamField>
+
+<ParamField query="contacted" type="boolean">
+  `true` to return only contacted leads; `false` to return only uncontacted leads.
+</ParamField>
+
+<ParamField query="anyTags" type="string">
+  Comma-separated tag names. Returns leads that have **any** of the listed tags.
+</ParamField>
+
+<ParamField query="allTags" type="string">
+  Comma-separated tag names. Returns leads that have **all** of the listed tags.
+</ParamField>
+
+<ParamField query="segments" type="string">
+  Filter by segment name.
+</ParamField>
+
+<ParamField query="groups" type="string" deprecated>
+  Filter by group name. Deprecated — use `segments` instead.
+</ParamField>
+
+<ParamField query="groupIds" type="integer">
+  Filter by office ID (64-bit integer).
+</ParamField>
+
+<ParamField query="querySubGroup" type="boolean">
+  When `true`, includes leads from sub-groups of the specified office.
+</ParamField>
+
+<ParamField query="languages" type="string">
+  Filter by language abbreviation (e.g., `en`, `zh-CN`). Returns leads matching any of the supplied values.
+</ParamField>
+
+<ParamField query="preciseSearchFlag" type="boolean">
+  When `true`, the `email` and `phone` filters use exact matching. When `false`, partial matches are allowed.
+</ParamField>
+
+<ParamField query="roleAssigneeFilters" type="string">
+  JSON-encoded array of role-based filters. Format: `[{"roleName":"Lead assign role name","assigneeToIds":[111,222]}]`
+</ParamField>
+
+## Example request
+
+```bash
+curl -G https://api.lofty.com/v1.0/leads \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  --data-urlencode "stage=New Lead" \
+  --data-urlencode "limit=20" \
+  --data-urlencode "offset=0" \
+  --data-urlencode "sort=LastActivity" \
+  --data-urlencode "desc=true"
+```
+
+## Response
+
+```json
+{
+  "get_metadata": {
+    "collection": "leads",
+    "limit": 20,
+    "offset": 0,
+    "total": 142,
+    "scrollId": "abc123scrolltoken"
+  },
+  "leads": [
+    {
+      "leadId": 563172647619608,
+      "leadUserId": 563172647619609,
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "emails": ["jane.smith@example.com"],
+      "phones": ["3105550142"],
+      "source": "Zillow",
+      "stage": "New Lead",
+      "assignedUserId": 100234,
+      "assignedUser": "agent@brokerage.com",
+      "score": 72,
+      "tags": [
+        { "tagId": 1, "tagName": "Hot Lead" }
+      ],
+      "createTime": "2026-03-01T08:00:00Z",
+      "cannotText": false,
+      "cannotCall": false,
+      "cannotEmail": false
+    }
+  ]
+}
+```
+
+<Note>
+  Use `get_metadata.scrollId` in subsequent requests to paginate efficiently over large result sets without repeating all filter parameters.
+</Note>

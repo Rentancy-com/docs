@@ -1,0 +1,43 @@
+---
+title: "Leads API Reference Overview"
+description: "Full reference for the Lofty Leads API: list, create, retrieve, update, delete, assign leads, and access activity timelines and system logs."
+---
+
+The Leads API gives you programmatic access to every stage of the lead lifecycle in Lofty. Use it to import leads from external sources, sync CRM data, automate assignment workflows, and retrieve activity history for reporting and compliance.
+
+All endpoints require a valid Bearer token in the `Authorization` header. See [Authentication](/authentication/overview) for details.
+
+<Note>
+  Lead IDs (`leadId`) are 64-bit integers. Use a `long` or `BigInt` type in your language of choice — standard 32-bit integers will overflow.
+</Note>
+
+## Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/v1.0/leads` | List and filter leads with pagination |
+| `POST` | `/v1.0/leads` | Create a new lead |
+| `GET` | `/v1.0/leads/{leadId}` | Get a single lead by ID |
+| `PUT` | `/v1.0/leads/{leadId}` | Update an existing lead |
+| `DELETE` | `/v1.0/leads/{leadId}` | Move a lead to the trash |
+| `POST` | `/v1.0/leads/{leadId}/assignment` | Assign a lead to one or more agents |
+| `POST` | `/v1.0/leads/assignee` | Preview routing assignees without creating a lead |
+| `GET` | `/v2.0/leads/{leadId}/activities` | List call, text, and email activity for a lead |
+| `GET` | `/v1.0/leads/{leadId}/activities` | List site-tracked activities (browse, search, favorite) |
+| `POST` | `/v1.0/leads/{leadId}/activity` | Log an external communication as a site activity |
+| `GET` | `/v1.0/systemLogs` | Retrieve the system-generated audit trail for a lead |
+
+## Base URL
+
+```
+https://api.lofty.com
+```
+
+## About 64-bit integer IDs
+
+All lead identifiers returned by the API (including `leadId`, `leadUserId`, and `assignedUserId`) are 64-bit signed integers. When working in JavaScript or other languages with limited integer precision, always treat these values as strings or use a `BigInt` type to avoid silent truncation.
+
+## Related resources
+
+- [Managing leads guide](/guides/lead-management) — end-to-end walkthrough of lead operations
+- [Authentication](/authentication/overview) — how to obtain an access token

@@ -1,0 +1,93 @@
+---
+title: "Get Started with the Lofty Developer API"
+description: "Create a Lofty developer account, register your application, obtain OAuth 2.0 credentials or an API key, and make your first authenticated API call in minutes."
+---
+
+This guide walks you through everything you need to make your first API call to Lofty. By the end, you'll have a developer account, valid credentials, and a working request that returns lead data from the API.
+
+<Steps>
+  <Step title="Create a developer account">
+    Go to the Lofty Developer Platform at [https://api.lofty.com/vendor/frontend/static/index.html#/login](https://api.lofty.com/vendor/frontend/static/index.html#/login) and complete the signup flow:
+
+    1. Click **Sign Up**.
+    2. Enter your full name, organization name, email address, phone number, and a password.
+    3. Check your email for a verification code — it's valid for 10 minutes.
+    4. Enter the verification code to complete signup.
+
+    After signing up, you'll land on the Developer Platform dashboard where you can register and manage your applications.
+
+    <Note>
+      If you're building an integration for production use, you'll need to submit your application for review. Lofty's review process typically takes 2–5 business days. You can continue developing against the API in Development Mode while your app is under review.
+    </Note>
+  </Step>
+
+  <Step title="Get your credentials">
+    Choose the authentication method that fits your use case:
+
+    **OAuth 2.0 (recommended for third-party integrations)**
+
+    Once your application is registered in the Developer Portal, you'll receive a **Client ID** and **Client Secret**. Use these to obtain a short-lived `access_token` by following the [OAuth 2.0 flow](/authentication/oauth2). Each token is scoped to the API permissions you've granted to your application.
+
+    If you call an endpoint your application hasn't been granted access to, the API returns error code `200100` ("Sorry, the vendor does not have permission for this API.") — even if your token is otherwise valid. Grant the necessary scopes in the Developer Portal before making those calls.
+
+    **API Key (for internal tools)**
+
+    In the Lofty CRM, go to **Settings > Integrations > API** to generate an API key. This key is tied to the user account and does not expire automatically.
+
+    <Warning>
+      API keys must remain internal. Do not share them with external vendors or embed them in client-side code. You assume full responsibility for managing the key's usage and security.
+    </Warning>
+  </Step>
+
+  <Step title="Make your first API call">
+    Fetch a list of leads from your Lofty account. The endpoint requires your credentials in the `Authorization` header.
+
+    <CodeGroup>
+
+    ```bash OAuth 2.0
+    curl --request GET \
+      --url https://api.lofty.com/v1.0/leads \
+      --header 'Content-type: application/json' \
+      --header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+    ```
+
+    ```bash API Key
+    curl --request GET \
+      --url https://api.lofty.com/v1.0/leads \
+      --header 'Content-type: application/json' \
+      --header 'Authorization: token YOUR_API_KEY'
+    ```
+
+    </CodeGroup>
+
+    Replace `YOUR_ACCESS_TOKEN` or `YOUR_API_KEY` with your actual credentials.
+  </Step>
+
+  <Step title="Handle the response">
+    A successful response returns a JSON object containing your leads data. Check the `code` field to confirm success — Lofty uses `0` to indicate a successful operation.
+
+    ```json
+    {
+      "code": 0,
+      "msg": "success",
+      "data": {
+        "total": 42,
+        "list": [
+          {
+            "id": 563172647619608,
+            "name": "Alex Johnson",
+            "email": "alex@example.com",
+            "phone": "+15551234567"
+          }
+        ]
+      }
+    }
+    ```
+
+    <Warning>
+      Notice that `id` is a 64-bit integer. **Do not parse this with `JSON.parse()` in JavaScript** — values this large can exceed JavaScript's safe integer range (2^53-1), causing silent precision loss where the ID is silently rounded to a different number. Read the [JavaScript and TypeScript Integration Guide](/javascript-integration) before building a JS or TS client.
+    </Warning>
+
+    If the request fails, the response includes a non-zero `code` and a human-readable `msg` field explaining the error. Common error codes include `200100` (missing API permission scope) and `401` (invalid or expired credentials).
+  </Step>
+</Steps>

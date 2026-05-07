@@ -1,0 +1,50 @@
+---
+title: "Authentication Overview: OAuth 2.0 and API Keys"
+description: "Lofty supports OAuth 2.0 for secure third-party integrations and API keys for internal use. Learn which method fits your use case."
+---
+
+Every request to the Lofty API must be authenticated. Lofty supports two methods: **OAuth 2.0** and **API keys**. OAuth 2.0 is the recommended approach for most integrations — it provides fine-grained permission scopes, works without sharing user credentials, and is subject to Lofty's security review process. API keys are simpler to set up but carry more responsibility for you to manage securely.
+
+## Comparison
+
+| | OAuth 2.0 | API key |
+|---|---|---|
+| **Recommended for** | Third-party integrations, production apps | Internal tools, quick testing |
+| **Security model** | Token-based; subject to Lofty security assessments | Static key; client assumes full responsibility |
+| **Expiration** | Access tokens expire automatically | No automatic expiration |
+| **Scope control** | Tokens are scoped to specific APIs | No built-in scope restrictions |
+| **External sharing** | Safe for use in authorized third-party flows | Must never be shared with external vendors |
+
+## Recommendation
+
+Use OAuth 2.0 whenever you're building an integration that other users or organizations will connect to. The permission scope system lets you request only the access your app needs, and Lofty's review process provides an additional layer of security.
+
+Use API keys only for internal tooling or exploratory development where you control the environment end to end.
+
+<Tip>
+  Lofty strongly recommends OAuth 2.0 for all production integrations. If you're unsure which method to use, start with OAuth 2.0.
+</Tip>
+
+## Authentication methods
+
+<Columns cols={2}>
+  <Card title="OAuth 2.0" icon="shield-check" href="/authentication/oauth2">
+    Set up OAuth 2.0 for your application, request access tokens, and manage permission scopes in the Developer Portal.
+  </Card>
+  <Card title="API keys" icon="key" href="/authentication/api-keys">
+    Find your API key in your Lofty account settings and learn when API key authentication is appropriate.
+  </Card>
+</Columns>
+
+## Permission scopes and error 200100
+
+Each OAuth access token is scoped to a specific set of API endpoints. If your application calls an endpoint it has not been granted access to, the API returns:
+
+```json
+{
+  "code": 200100,
+  "msg": "Sorry, the vendor does not have permission for this API."
+}
+```
+
+This error occurs even when the token itself is valid. To resolve it, grant the required permission scope to your application in the [Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) and re-authenticate to obtain an updated token.

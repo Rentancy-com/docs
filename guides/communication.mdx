@@ -1,0 +1,168 @@
+---
+title: "Logging and Sending Communications via Lofty API"
+description: "Send emails and SMS, retrieve call and message history, add notes, and log external communications for Lofty leads using the REST API."
+---
+
+Lofty's communication APIs let you send emails and SMS messages directly to leads, retrieve their full interaction history, manage notes, and log calls or messages that took place outside the CRM. This guide covers each communication channel and explains how to keep your lead timeline accurate and up to date.
+
+## Unified activity timeline
+
+The activity timeline endpoint returns all interactions for a lead—calls, texts, and emails—sorted chronologically. This gives you a single view of every touchpoint with a lead.
+
+```bash
+curl -X GET "https://api.lofty.com/v2.0/leads/789012345678/activities" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+**Example response**
+
+```json
+{
+  "activities": [
+    {
+      "activityId": "act_001",
+      "type": "call",
+      "direction": "outbound",
+      "timestamp": "2026-05-06T14:32:00Z",
+      "duration": 180,
+      "summary": "Discussed property at 123 Main St"
+    },
+    {
+      "activityId": "act_002",
+      "type": "sms",
+      "direction": "inbound",
+      "timestamp": "2026-05-06T16:10:00Z",
+      "content": "Thanks for calling! I have a few questions."
+    },
+    {
+      "activityId": "act_003",
+      "type": "email",
+      "direction": "outbound",
+      "timestamp": "2026-05-07T09:00:00Z",
+      "subject": "Follow-up on 123 Main St"
+    }
+  ],
+  "page": 1,
+  "pageSize": 20,
+  "total": 3
+}
+```
+
+## Send an email or SMS
+
+Use the email and SMS endpoints to send messages to a lead directly from your integration.
+
+<CodeGroup>
+
+```bash Send email
+curl -X POST https://api.lofty.com/v1.0/message/email/send \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 789012345678,
+    "subject": "Follow-up on your home search",
+    "body": "Hi Jane, I wanted to follow up on the properties we discussed. Let me know if you have any questions."
+  }'
+```
+
+```bash Send SMS
+curl -X POST https://api.lofty.com/v1.0/message/sms/send \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 789012345678,
+    "content": "Hi Jane! Just checking in. Feel free to reach out if you have questions about any listings."
+  }'
+```
+
+</CodeGroup>
+
+## Call history
+
+Retrieve the call history for a lead using the call communication endpoint. Use the V2 endpoint when you need richer detail such as recordings, transcripts, and AI-generated summaries.
+
+```bash
+# Standard call history
+curl -X GET "https://api.lofty.com/v1.0/communication/call?leadId=789012345678" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+```bash
+# Detailed call history (V2)
+curl -X GET "https://api.lofty.com/v1.0/communication/call/v2?leadId=789012345678" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+## Notes
+
+Notes let you attach free-form text to a lead's record. You can list, create, update, and delete notes using the `/v1.0/notes` endpoints.
+
+**List notes for a lead**
+
+```bash
+curl -X GET "https://api.lofty.com/v1.0/notes?leadId=789012345678" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+**Create a note**
+
+```bash
+curl -X POST https://api.lofty.com/v1.0/notes \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "leadId": 789012345678,
+    "content": "Lead is interested in 3-bedroom homes in the Riverside area. Budget up to $650,000."
+  }'
+```
+
+**Update a note**
+
+```bash
+curl -X PUT https://api.lofty.com/v1.0/notes/note_abc123 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "Lead is interested in 3-4 bedroom homes in the Riverside area. Budget up to $700,000 after pre-approval."
+  }'
+```
+
+**Delete a note**
+
+```bash
+curl -X DELETE https://api.lofty.com/v1.0/notes/note_abc123 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+## Log external communications
+
+If a call, email, or text happened outside of Lofty—for example, from a personal phone or a third-party email client—you can log it manually to keep the lead's activity timeline accurate.
+
+Send a `POST` request to `/v1.0/leads/{leadId}/activity` with the details of the interaction.
+
+```bash
+curl -X POST https://api.lofty.com/v1.0/leads/789012345678/activity \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "call",
+    "direction": "outbound",
+    "duration": 240,
+    "timestamp": "2026-05-07T10:15:00Z",
+    "notes": "Called to confirm showing appointment for tomorrow at 2pm."
+  }'
+```
+
+The `direction` field indicates who initiated the interaction:
+
+- `"outbound"` — the agent reached out to the lead
+- `"inbound"` — the lead reached out to the agent
+
+<Note>
+  Activity logging is processed asynchronously. After creating a manual activity entry, allow a short delay before querying the timeline—the entry may not appear immediately in subsequent GET requests.
+</Note>

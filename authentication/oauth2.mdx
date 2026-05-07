@@ -1,0 +1,118 @@
+---
+title: "Authenticate with OAuth 2.0 on Lofty API"
+description: "Set up OAuth 2.0 for your Lofty integration: create a developer account, register your app, obtain an access token, and manage permission scopes."
+---
+
+OAuth 2.0 is the recommended authentication method for Lofty API integrations. It lets your application act on behalf of Lofty users without requiring their passwords, and scopes each access token to only the API endpoints your application has been explicitly granted access to. Before you can make authenticated requests, you need a developer account, a registered application, and a valid access token.
+
+## Set up OAuth 2.0
+
+<Steps>
+  <Step title="Create a developer account">
+    Go to the [Lofty Developer Platform](https://api.lofty.com/vendor/frontend/static/index.html#/login) and click **Sign Up**. Enter your full name, organization name, email address, phone number, and a password.
+
+    Lofty will send a verification code to your email address. The code is valid for **10 minutes** — enter it to complete signup. After verifying, you'll land on the Developer Platform dashboard.
+  </Step>
+
+  <Step title="Register your application">
+    From the Developer Platform dashboard, create a new application. Provide your app name, description, and the redirect URIs your OAuth flow will use.
+
+    New applications start in **Development Mode**, which lets you test the full OAuth flow without going through the production review process. When you're ready to deploy to production, submit your app for review.
+  </Step>
+
+  <Step title="Get your Client ID and Client Secret">
+    After registering your application, Lofty generates a **Client ID** and **Client Secret** for your app. You'll use these credentials to request access tokens.
+
+    <Warning>
+      Keep your Client Secret secure. Do not expose it in client-side code, public repositories, or logs.
+    </Warning>
+  </Step>
+
+  <Step title="Request an access token">
+    Exchange your Client ID and Client Secret for an access token using the OAuth 2.0 flow. For the full token request details — including endpoint, request parameters, and response format — see the [Lofty OAuth 2.0 API Reference](https://help.lofty.com/hc/en-us/articles/47801571926811-Lofty-OAuth-2-0-API-Reference).
+  </Step>
+
+  <Step title="Use the token in API calls">
+    Include the access token in the `Authorization` header of every API request.
+
+    | Header | Value |
+    |---|---|
+    | `Content-type` | `application/json` |
+    | `Authorization` | `Bearer [access_token]` |
+
+    <CodeGroup>
+
+    ```bash cURL
+    curl --request GET \
+      --url https://api.lofty.com/v1.0/leads \
+      --header 'Content-type: application/json' \
+      --header 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+    ```
+
+    </CodeGroup>
+
+    Replace `YOUR_ACCESS_TOKEN` with the token returned from the token request step.
+  </Step>
+</Steps>
+
+## Permission scopes
+
+Each access token is scoped to the specific API endpoints you've granted to your application. Calling an endpoint outside that scope returns error code `200100`, even if the token is otherwise valid.
+
+```json
+{
+  "code": 200100,
+  "msg": "Sorry, the vendor does not have permission for this API."
+}
+```
+
+To grant additional scopes, go to the **Permissions** card in the [Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) and add the endpoints your application needs. After updating scopes, your existing users will need to re-authorize your app (see [App edits](#app-edits) below).
+
+## App lifecycle
+
+Applications go through a review process before they can be used in production.
+
+| Stage | Description |
+|---|---|
+| **Development Mode** | Default state after registration. Full OAuth flow available for testing; no review required. |
+| **Under review** | Application submitted for production access. Review takes 2–5 business days. |
+| **Production** | Application approved. Real users can authorize your app. All edits go through review before taking effect. |
+| **Declined** | Application not approved. You'll receive an email with the reason. Edit and resubmit at any time. |
+
+## App edits
+
+Once your app is in production, changes go through a brief review before they take effect. This protects users with active connections to your app.
+
+### Standard updates
+
+The following changes are non-breaking. Your existing connected users are not affected — their OAuth connections remain active throughout the review.
+
+- App name and description
+- Redirect URIs
+- Removing existing permission scopes
+
+### Breaking changes
+
+Adding new permission scopes is a breaking change. After you publish, existing users must re-authorize your app to grant the new permissions. You'll see an amber **"Update Submitted — Re-authorization Required"** badge during review. Notify your users before publishing a breaking change.
+
+### How to submit an edit
+
+1. Click **Edit** on the App Information or Permissions card. Changes are saved locally and marked with an **Edit Pending Approval** badge. Your app continues running with its current approved configuration.
+2. Click **Submit for Review** when you're ready. Review typically takes 2–5 business days. You'll receive an email when a decision is made. Edit buttons are locked while the edit is under review.
+3. Once approved, the status changes to **Ready to Deploy**. Click **Publish Changes** to make your updates live.
+
+To cancel a pending edit before review completes, click **Cancel Edit**. This reverts all staged changes, removes pending badges, and unlocks the edit buttons.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Can I make more edits while my existing edit is under review?">
+    No. Edit buttons are locked while an edit is in review. If you need to make urgent changes, cancel the pending edit first, make your updates, and resubmit.
+  </Accordion>
+  <Accordion title="Does submitting an edit affect my app's production access?">
+    No. Your app continues to operate normally with its current approved configuration throughout the entire review process.
+  </Accordion>
+  <Accordion title="What if my edit is declined?">
+    You'll receive an email with the reason for the decline. Your app keeps running with its current configuration. You can make adjustments and submit a new edit at any time.
+  </Accordion>
+</AccordionGroup>

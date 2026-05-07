@@ -1,0 +1,71 @@
+---
+title: "POST /v1.0/webhook — Subscribe to Webhook Events"
+description: "Register a webhook endpoint to receive real-time event notifications from Lofty. Supports all lead, task, transaction, and communication event types."
+---
+
+Subscribe your endpoint to receive HTTP POST notifications from Lofty when specific events occur — such as a new lead arriving, a stage change, or a task update.
+
+## Endpoint
+
+```
+POST https://api.lofty.com/v1.0/webhook
+```
+
+## Request body
+
+<ParamField body="url" type="string" required>
+  The HTTPS endpoint URL where Lofty will POST event notifications. Must be publicly reachable.
+</ParamField>
+
+<ParamField body="listId" type="integer" required>
+  The event type ID to subscribe to. See the event type table on the [list webhooks page](/api-reference/webhooks/list-webhooks) for all available values.
+</ParamField>
+
+## Example request
+
+```bash
+curl -X POST "https://api.lofty.com/v1.0/webhook" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://yourapp.com/webhooks/lofty",
+    "listId": 1
+  }'
+```
+
+## Example response
+
+```json
+{
+  "subscribeId": "sub_111222333",
+  "eventType": 1,
+  "url": "https://yourapp.com/webhooks/lofty",
+  "createdAt": "2024-04-01T12:00:00Z"
+}
+```
+
+## Webhook payload format
+
+When an event fires, Lofty sends a `POST` request to your URL with a JSON body:
+
+```json
+{
+  "eventType": 1,
+  "eventName": "NEW_LEAD",
+  "timestamp": "2024-04-01T12:05:00Z",
+  "data": {
+    "leadId": "563172647619608",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane@example.com"
+  }
+}
+```
+
+<Note>
+  Your endpoint must respond with a `200 OK` within a reasonable timeout. Lofty delivers events within 1 minute of occurrence (up to 5 minutes maximum). Respond quickly — do heavy processing asynchronously.
+</Note>
+
+<Tip>
+  For hidden leads, webhook notifications are only sent to the assigned agent's integrations. Other subscribers will not receive events for hidden leads they do not have access to.
+</Tip>
