@@ -8,17 +8,17 @@ icon: "key"
 
 | Method | Best for | Configured via |
 | --- | --- | --- |
-| **1. Token URL** | CI/CD, automation with session ID | `LOFTY_TOKEN_URL` + `LOFTY_SESSION_ID` |
-| **2. Browser OAuth (PKCE)** | Interactive developer use | `lofty-cli auth login-browser` |
-| **3. Client Credentials** | Server-to-server | `LOFTY_CLIENT_ID` + `LOFTY_CLIENT_SECRET` + `LOFTY_CUSTOMER_KEY` |
-| **4. Direct Token** | One-off testing, CI injection | `LOFTY_ACCESS_TOKEN` |
+| **Token URL** | CI/CD, automation with session ID | `LOFTY_TOKEN_URL` + `LOFTY_SESSION_ID` |
+| **Browser OAuth (PKCE)** | Interactive developer use | `lofty-cli auth login-browser` |
+| **Client Credentials** | Server-to-server | `LOFTY_CLIENT_ID` + `LOFTY_CLIENT_SECRET` + `LOFTY_CUSTOMER_KEY` |
+| **Direct Token** | One-off testing, CI injection | `LOFTY_ACCESS_TOKEN` |
 
 <Note>
-  Tokens obtained by methods 1, 2, and 3 are cached locally and refreshed automatically when they expire.
+  Tokens obtained by Token URL, Browser OAuth, and Client Credentials are cached locally and refreshed automatically when they expire.
 </Note>
 
 <AccordionGroup>
-  <Accordion title="Method 1 — Token URL (highest priority)" icon="link">
+  <Accordion title="Token URL (highest priority)" icon="link">
     Use this when an upstream system can mint a session ID and exchange it for tokens through a custom endpoint.
 
     ```bash
@@ -36,7 +36,7 @@ icon: "key"
     Tokens are cached at `~/.config/tokens/lofty-session-cache.json` and refreshed transparently.
   </Accordion>
 
-  <Accordion title="Method 2 — Browser OAuth (recommended for humans)" icon="browser" defaultOpen>
+  <Accordion title="Browser OAuth (recommended for humans)" icon="browser" defaultOpen>
     The simplest method for interactive use. The CLI launches your default browser, you log in once, and the token is stored locally.
 
     ```bash
@@ -45,7 +45,7 @@ icon: "key"
 
     The flow uses OAuth 2.0 with [PKCE](https://oauth.net/2/pkce/) — no client secret is needed on your machine.
   </Accordion>
-  <Accordion title="Method 3 — OAuth client credentials" icon="server">
+  <Accordion title="OAuth client credentials" icon="server">
     Use this for server-to-server scenarios where there is no human to complete a browser flow. Implements the [OAuth 2.0 Client Credentials Grant](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) with an additional resource owner identifier.
 
     <Steps>
@@ -80,7 +80,7 @@ icon: "key"
     </Note>
   </Accordion>
 
-  <Accordion title="Method 4 — Direct access token" icon="key">
+  <Accordion title="Direct access token" icon="key">
     When another system has already obtained an access token (e.g. a CI job that ran `auth login` upstream), inject it directly:
 
     ```bash

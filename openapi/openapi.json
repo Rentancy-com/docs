@@ -5229,7 +5229,7 @@
           "Leads"
         ],
         "summary": "Create a new lead",
-        "description": "## Lead Assignment & Routing",
+        "description": "",
         "operationId": "add_3",
         "parameters": [
           {
