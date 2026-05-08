@@ -3,7 +3,19 @@ title: "Changelog"
 description: "Stay up to date with the latest Lofty API updates, new endpoints, and field changes."
 ---
 
-<Update label="April 2026" tags={["New endpoints", "Field changes"]}>
+<Update label="April 2026" tags={["New endpoints", "Field changes", "New tools"]}>
+  ## Lofty CLI
+
+  Released [`@loftyai/lofty-cli`](https://www.npmjs.com/package/@loftyai/lofty-cli) — a command-line tool for the Lofty API. Manage leads, agents, listings, tasks, transactions, and more from your terminal.
+
+  ```bash
+  npm install -g @loftyai/lofty-cli
+  lofty-cli auth login
+  lofty-cli leads list --limit 10
+  ```
+
+  See the [Lofty CLI documentation](/cli/install) for setup and command reference.
+
   ## Transaction V2 Search
 
   Added `GET /v2.0/transactions` — paginated transaction search with keyword, lead, and date filters.
