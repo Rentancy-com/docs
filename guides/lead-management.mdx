@@ -5,6 +5,10 @@ description: "Create, retrieve, update, assign, and delete leads using the Lofty
 
 This guide shows how to perform common lead operations. All examples assume you have a valid access token — see [Authentication](/authentication/overview).
 
+<Warning>
+All IDs returned by the API (`leadId`, `assignedUserId`, etc.) are **64-bit integers** sent as JSON numbers. JavaScript's `JSON.parse()` will silently corrupt values exceeding `2^53 - 1`. Use string-based parsing in JS/TS clients — see [JS / TS Integration](/javascript-integration).
+</Warning>
+
 ## Create a lead
 
 ```bash
@@ -20,6 +24,18 @@ curl -X POST https://api.lofty.com/v1.0/leads \
     "source": "Website"
   }'
 ```
+
+Response:
+
+```json
+{
+  "leadId": 651095960136641
+}
+```
+
+<Note>
+The `leadId` is returned as a JSON number. In JavaScript, parse the response as text and handle the ID as a string or `BigInt` to avoid precision loss.
+</Note>
 
 Omit `assignedUserId` to let Lofty's routing rules automatically assign the lead. Include it to skip routing and assign directly.
 
