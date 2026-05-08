@@ -152,8 +152,7 @@
                   "api-reference/leads/resolve-assignees-by-lead-info",
                   "api-reference/leads/place-a-property",
                   "api-reference/leads/place-an-inquiry",
-                  "api-reference/leads/system-logs",
-                  "api-reference/leads/brokermint-webhook-update-a-synced-lead"
+                  "api-reference/leads/system-logs"
                 ]
               }
             ]
@@ -217,8 +216,7 @@
                 "group": "Property Address",
                 "pages": [
                   "api-reference/transactions/update-transaction-property-address",
-                  "api-reference/transactions/get-transaction-property-address",
-                  "api-reference/transactions/brokermint-webhook-update-a-synced-transaction"
+                  "api-reference/transactions/get-transaction-property-address"
                 ]
               }
             ]
@@ -371,6 +369,13 @@
               "api-reference/webhooks/list-webhooks",
               "api-reference/webhooks/create-webhook",
               "api-reference/webhooks/delete-webhook"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "api-reference/leads/brokermint-webhook-update-a-synced-lead",
+              "api-reference/transactions/brokermint-webhook-update-a-synced-transaction"
             ]
           }
         ]
