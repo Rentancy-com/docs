@@ -1,0 +1,69 @@
+---
+title: "March 2026"
+---
+
+<Update label="March 2026" tags={["New endpoints", "New features", "Authentication"]}>
+  ## Sales Agents & AI
+
+  8 new endpoints for managing Sales Agent workflows:
+
+  - **`GET /v2.0/sales-agents/by-lead`** — Get Sales Agent by lead ID
+  - **`GET /v2.0/sales-agents/quota`** — Get current user's quota
+  - **`GET /PUT /v2.0/sales-agent/settings`** — Query and update settings
+  - **`PUT /v2.0/sales-agents/working-lead/{leadId}/mute`** — Mute a working lead
+  - **`POST /v2.0/working-leads/add`** — Batch add leads to working pool
+  - **`POST /v2.0/plan-tasks/create`** — Batch create plan tasks
+
+  ## Intelligent Features (AI)
+
+  6 new AI-powered endpoints:
+
+  - **`POST /v2.0/ai/call-script`** — Generate call script
+  - **`GET /POST /v2.0/ai/call-summary`** — Get or trigger call summary generation
+  - **`POST /v2.0/ai/prepare-insight`** — Generate prepare insight
+  - **`GET /POST /v2.0/ai/lead-analysis`** — List or create lead analysis tasks
+
+  ## Calendar V2
+
+  Full CRUD + lifecycle management for calendar events:
+
+  - **`GET /POST /v2.0/calendar`** — List and create events
+  - **`PUT /DELETE /v2.0/calendar/{calendarId}`** — Update and delete events
+  - **`POST finish/unfinish`** — Mark events as completed or reopen
+  - **`GET /v2.0/calendar/meetings/available`** — List available meeting slots
+
+  ## Tasks V2 Enhancements
+
+  - **`GET /v2.0/tasks/my-tasks`** — List tasks and appointments assigned to the current user
+  - **`POST finish/unfinish`** — Mark tasks as completed or reopen
+
+  ## Lead Activity V2
+
+  - **`GET /v2.0/leads/{leadId}/activities`** — Unified timeline with calls, texts, and emails in chronological order
+
+  ## Listing V2
+
+  - **`POST /v2.0/listings/search`** — Search by location, price, beds, baths, property type
+  - Replaced `locations` array with simpler `key` / `keywordType` params
+
+  ## Notifications
+
+  - **`POST /v2.0/sales-agent/notification/app-push/send-task-reminder`** — Task reminder push
+  - **`POST send-to-agent`** — Send system SMS or email to agent
+  - **`POST /v2.0/sales-agent/ai-number/send-sms-to-agent`** — Send SMS via AI number
+
+  ## Agent Tags
+
+  - **`POST /v1.0/agent/{agentId}/tag/add`** — Batch add tags with autoCreate support
+
+  ## Field Changes
+
+  - **Listing** — Added `propertyTypePrimary` and `propertyTypeSecondary` to response
+  - **Note** — Added `noteId`, `noteType`, `idOfType` fields
+  - **Calendar V2** — Added `taskId` field to calendar items
+
+  ## Authentication
+
+  - Added OAuth 2.0 Client Credentials flow (`/oauth/token`) for server-to-server integrations
+  - Added per-app rate limiting and token scope enforcement
+</Update>

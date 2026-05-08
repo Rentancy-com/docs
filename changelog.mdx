@@ -3,105 +3,16 @@ title: "Changelog"
 description: "Stay up to date with the latest Lofty API updates, new endpoints, and field changes."
 ---
 
-<Update label="April 2026" tags={["New endpoints", "Field changes", "New tools"]}>
-  ## Lofty CLI
+## Recent updates
 
-  Released [`@loftyai/lofty-cli`](https://www.npmjs.com/package/@loftyai/lofty-cli) — a command-line tool for the Lofty API. Manage leads, agents, listings, tasks, transactions, and more from your terminal.
-
-  ```bash
-  npm install -g @loftyai/lofty-cli
-  lofty-cli auth login
-  lofty-cli leads list --limit 10
-  ```
-
-  See the [Lofty CLI documentation](/cli/install) for setup and command reference.
-
-  ## Transaction V2 Search
-
-  Added `GET /v2.0/transactions` — paginated transaction search with keyword, lead, and date filters.
-
-  ## Lead Query Enhancements
-
-  New parameters for `GET /v1.0/leads`:
-
-  - **`returnFields`**: Specify which fields to return (comma-separated), reducing payload size.
-  - **`otherFilters`**: Pass custom LeadFilter overrides for advanced filtering.
-  - **`key`**: Fuzzy search by name, phone, or email in a single parameter.
-
-  ## Field Changes
-
-  - **Calendar V2** — `startTime` / `endTime` now accept millisecond timestamps in addition to ISO 8601.
-  - **Manual Log** (`POST /v1.0/logType`) — Added `emailSubject`, `toEmail`, `fromEmail` fields for email log entries.
-</Update>
-
-<Update label="March 2026" tags={["New endpoints", "New features", "Authentication"]}>
-  ## Sales Agents & AI
-
-  8 new endpoints for managing Sales Agent workflows:
-
-  - **`GET /v2.0/sales-agents/by-lead`** — Get Sales Agent by lead ID
-  - **`GET /v2.0/sales-agents/quota`** — Get current user's quota
-  - **`GET /PUT /v2.0/sales-agent/settings`** — Query and update settings
-  - **`PUT /v2.0/sales-agents/working-lead/{leadId}/mute`** — Mute a working lead
-  - **`POST /v2.0/working-leads/add`** — Batch add leads to working pool
-  - **`POST /v2.0/plan-tasks/create`** — Batch create plan tasks
-
-  ## Intelligent Features (AI)
-
-  6 new AI-powered endpoints:
-
-  - **`POST /v2.0/ai/call-script`** — Generate call script
-  - **`GET /POST /v2.0/ai/call-summary`** — Get or trigger call summary generation
-  - **`POST /v2.0/ai/prepare-insight`** — Generate prepare insight
-  - **`GET /POST /v2.0/ai/lead-analysis`** — List or create lead analysis tasks
-
-  ## Calendar V2
-
-  Full CRUD + lifecycle management for calendar events:
-
-  - **`GET /POST /v2.0/calendar`** — List and create events
-  - **`PUT /DELETE /v2.0/calendar/{calendarId}`** — Update and delete events
-  - **`POST finish/unfinish`** — Mark events as completed or reopen
-  - **`GET /v2.0/calendar/meetings/available`** — List available meeting slots
-
-  ## Tasks V2 Enhancements
-
-  - **`GET /v2.0/tasks/my-tasks`** — List tasks and appointments assigned to the current user
-  - **`POST finish/unfinish`** — Mark tasks as completed or reopen
-
-  ## Lead Activity V2
-
-  - **`GET /v2.0/leads/{leadId}/activities`** — Unified timeline with calls, texts, and emails in chronological order
-
-  ## Listing V2
-
-  - **`POST /v2.0/listings/search`** — Search by location, price, beds, baths, property type
-  - Replaced `locations` array with simpler `key` / `keywordType` params
-
-  ## Notifications
-
-  - **`POST /v2.0/sales-agent/notification/app-push/send-task-reminder`** — Task reminder push
-  - **`POST send-to-agent`** — Send system SMS or email to agent
-  - **`POST /v2.0/sales-agent/ai-number/send-sms-to-agent`** — Send SMS via AI number
-
-  ## Agent Tags
-
-  - **`POST /v1.0/agent/{agentId}/tag/add`** — Batch add tags with autoCreate support
-
-  ## Field Changes
-
-  - **Listing** — Added `propertyTypePrimary` and `propertyTypeSecondary` to response
-  - **Note** — Added `noteId`, `noteType`, `idOfType` fields
-  - **Calendar V2** — Added `taskId` field to calendar items
-
-  ## Authentication
-
-  - Added OAuth 2.0 Client Credentials flow (`/oauth/token`) for server-to-server integrations
-  - Added per-app rate limiting and token scope enforcement
-</Update>
-
-<Update label="June 2025" tags={["Field changes"]}>
-  ## Lead Type Labels
-
-  Added automatic label tag generation based on `leadTypes` — buyer/seller classification is now applied automatically when creating or updating leads.
-</Update>
+<CardGroup cols={2}>
+  <Card title="April 2026" icon="rocket" href="/changelog/2026-04">
+    Lofty CLI release, Transaction V2 search, Lead query enhancements.
+  </Card>
+  <Card title="March 2026" icon="star" href="/changelog/2026-03">
+    40+ new V2 endpoints: Sales Agents, AI Features, Calendar, Tasks, Listings, Notifications.
+  </Card>
+  <Card title="June 2025" icon="tag" href="/changelog/2025-06">
+    Automatic lead type label generation.
+  </Card>
+</CardGroup>

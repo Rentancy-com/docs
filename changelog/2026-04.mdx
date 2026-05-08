@@ -1,0 +1,34 @@
+---
+title: "April 2026"
+---
+
+<Update label="April 2026" tags={["New endpoints", "Field changes", "New tools"]}>
+  ## Lofty CLI
+
+  Released [`@loftyai/lofty-cli`](https://www.npmjs.com/package/@loftyai/lofty-cli) — a command-line tool for the Lofty API. Manage leads, agents, listings, tasks, transactions, and more from your terminal.
+
+  ```bash
+  npm install -g @loftyai/lofty-cli
+  lofty-cli auth login
+  lofty-cli leads list --limit 10
+  ```
+
+  See the [Lofty CLI documentation](/cli/install) for setup and command reference.
+
+  ## Transaction V2 Search
+
+  Added `GET /v2.0/transactions` — paginated transaction search with keyword, lead, and date filters.
+
+  ## Lead Query Enhancements
+
+  New parameters for `GET /v1.0/leads`:
+
+  - **`returnFields`**: Specify which fields to return (comma-separated), reducing payload size.
+  - **`otherFilters`**: Pass custom LeadFilter overrides for advanced filtering.
+  - **`key`**: Fuzzy search by name, phone, or email in a single parameter.
+
+  ## Field Changes
+
+  - **Calendar V2** — `startTime` / `endTime` now accept millisecond timestamps in addition to ISO 8601.
+  - **Manual Log** (`POST /v1.0/logType`) — Added `emailSubject`, `toEmail`, `fromEmail` fields for email log entries.
+</Update>

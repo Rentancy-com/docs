@@ -387,7 +387,9 @@
           {
             "group": "Changelog",
             "pages": [
-              "changelog"
+              "changelog/2026-04",
+              "changelog/2026-03",
+              "changelog/2025-06"
             ]
           }
         ]
