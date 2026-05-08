@@ -2,3 +2,7 @@
 title: "Create Lead"
 openapi: "openapi/openapi.json POST /v1.0/leads"
 ---
+
+<Warning>
+**Silent truncation** — `firstName`, `lastName`, `groups`, `segments` are truncated to **30 characters**; `tags` / `tagsAdd` to **64 characters**. The API returns success with no error. Validate input length before sending.
+</Warning>
