@@ -1,0 +1,61 @@
+---
+title: "2023"
+---
+
+<Update label="Q3–Q4 2023" tags={["Breaking changes", "Field changes"]}>
+  ## Groups Renamed to Segments
+
+  **Breaking change** — `groups` parameter renamed to `segments` across all lead endpoints. The `groups` parameter is still accepted but deprecated.
+
+  ## Lead Sharing Limits
+
+  - Added share lead limit controls for team visibility management.
+
+  ## Multiple Webhook Subscriptions
+
+  - A single team can now subscribe to the same event type multiple times with different callback URLs.
+
+  ## Lead Source Permissions
+
+  - Added permission checks for lead source modifications.
+</Update>
+
+<Update label="Q2 2023" tags={["New fields", "New features"]}>
+  ## Webhook Event Payloads
+
+  - Added Pipeline Change event (listId: 12) for tracking lead stage transitions.
+
+  ## Lead Fields
+
+  - Added `note` parameter to `POST /v1.0/leads` — attach a note when creating a lead.
+  - Added `assignGroupId` parameter — specify routing rule scope (-1 for company-level).
+
+  ## Custom Fields Support
+
+  - Added `POST /v1.0/teamFeatures/custom-field` — create custom field definitions.
+  - Added custom field type support in transaction responses.
+
+  ## Agent Management
+
+  - `POST /v1.0/agent/profile/add` — expanded to support more fields (phone, email, office assignment).
+  - Default phone code set to US (`1`) when not specified.
+
+  ## Lead Opt-in Flags
+
+  - Added `cannotCall`, `cannotText`, `cannotEmail` fields to lead model for communication preferences.
+</Update>
+
+<Update label="Q1 2023" tags={["New features", "Field changes"]}>
+  ## Lead Source Management
+
+  - Added ability to create and update lead sources via API.
+  - Added source validation with group-level source checking.
+
+  ## Email Sending
+
+  - Added `POST /v1.0/message/email/send` endpoint for outbound email delivery.
+
+  ## Lead Property Fix
+
+  - Fixed `POST /v1.0/leads/{leadId}/property` — property association now works correctly.
+</Update>

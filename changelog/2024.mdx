@@ -1,0 +1,53 @@
+---
+title: "2024"
+---
+
+<Update label="Q4 2024" tags={["Breaking changes", "New endpoints"]}>
+  ## Organization Redesign
+
+  Restructured the Agent Organization API with new office and company management endpoints.
+
+  ## Published Listings
+
+  - Added `GET /v1.0/getPublishedListings` — export team listings as XML for syndication partners.
+
+  ## Lead Enhancements
+
+  - **`withTrash`** parameter added to `GET /v1.0/leads/{leadId}` — retrieve trashed leads.
+  - **`isPrivate` renamed to `isHidden`** — lead visibility field updated across all endpoints.
+  - **Lead ownership** — added ownership scope validation for lead access control.
+  - Removed `leadRouting` parameter from lead creation.
+</Update>
+
+<Update label="Q2–Q3 2024" tags={["Field changes", "New features"]}>
+  ## Multi Lead Types
+
+  Leads now support **multiple types simultaneously** (e.g., a lead can be both Buyer and Seller). The `leadTypes` field accepts an array of type IDs.
+
+  ## Notes Enhancement
+
+  - Added notes support with content length validation.
+
+  ## Send Email API
+
+  - Added `POST /v1.0/message/email/send` for sending outbound emails to leads.
+
+  ## Lead Search
+
+  - Migrated lead search to Elasticsearch for improved performance.
+  - Added `currentId` parameter for cursor-based pagination.
+
+  ## Transaction Commissions
+
+  - Added `commissions` field documentation with detailed property descriptions.
+</Update>
+
+<Update label="Q1 2024" tags={["Authentication", "Field changes"]}>
+  ## Lead Routing Annotations
+
+  - Improved lead routing documentation for `POST /v1.0/leads`, clarifying auto-assignment behavior.
+
+  ## Agent Fields
+
+  - Added `agentPid` field to agent endpoints.
+</Update>
