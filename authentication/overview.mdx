@@ -41,7 +41,29 @@ curl https://api.lofty.com/v1.0/leads \
 
 ## Rate limiting
 
-API requests are subject to rate limits. If you exceed the limit, the API returns HTTP `429 Too Many Requests`. Implement exponential backoff in your retry logic.
+The default rate limit is **500 requests per minute** per account. The window resets every **60 seconds**.
+
+Every response includes rate limit headers:
+
+| Header | Description |
+|---|---|
+| `X-RateLimit-Limit` | Maximum requests allowed in the current window (default: 500) |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `X-RateLimit-Reset` | Time (UTC epoch seconds) when the window resets |
+
+When the limit is exceeded, the API returns `HTTP 429`:
+
+```http
+HTTP/1.1 429
+X-RateLimit-Limit: 20
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 21000
+{"message":"Too Many Requests"}
+```
+
+<Note>
+Some endpoints (e.g. AI features) have lower per-endpoint limits. Check the `X-RateLimit-Limit` header in responses to determine the actual limit for each endpoint.
+</Note>
 
 ## Common errors
 
