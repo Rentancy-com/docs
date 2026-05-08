@@ -28,7 +28,7 @@ This guide walks you through everything you need to make your first API call to 
 
     Once your application is registered in the Developer Portal, you'll receive a **Client ID** and **Client Secret**. Use these to obtain a short-lived `access_token` by following the [OAuth 2.0 flow](/authentication/oauth2). Each token is scoped to the API permissions you've granted to your application.
 
-    If you call an endpoint your application hasn't been granted access to, the API returns error code `200100` ("Sorry, the vendor does not have permission for this API.") — even if your token is otherwise valid. Grant the necessary scopes in the Developer Portal before making those calls.
+    If you call an endpoint your application hasn't been granted access to, the API returns `HTTP 403` with error code `200100` ("Sorry, the vendor does not have permission for this API.") — even if your token is otherwise valid. Grant the necessary scopes in the Developer Portal before making those calls.
 
     **API Key (for internal tools)**
 
@@ -88,6 +88,6 @@ This guide walks you through everything you need to make your first API call to 
       Notice that `id` is a 64-bit integer. **Do not parse this with `JSON.parse()` in JavaScript** — values this large can exceed JavaScript's safe integer range (2^53-1), causing silent precision loss where the ID is silently rounded to a different number. Read the [JavaScript and TypeScript Integration Guide](/javascript-integration) before building a JS or TS client.
     </Warning>
 
-    If the request fails, the response includes a non-zero `code` and a human-readable `msg` field explaining the error. Common error codes include `200100` (missing API permission scope) and `401` (invalid or expired credentials).
+    If the request fails, the response includes a non-zero `code` and a human-readable `msg` field explaining the error. Common error codes include `200100` (missing API permission scope, returns `HTTP 403`) and `401` (invalid or expired credentials).
   </Step>
 </Steps>

@@ -5264,11 +5264,21 @@
         },
         "responses": {
           "200": {
-            "description": "OK\nExample: {leadId: 651095960136641}",
+            "description": "Lead created successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "leadId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "The ID of the newly created lead."
+                    }
+                  }
+                },
+                "example": {
+                  "leadId": 651095960136641
                 }
               }
             }

@@ -73,6 +73,10 @@ All payloads include:
 | 11 | Appointment | Appointment created, updated, finished, or deleted |
 | 12 | Pipeline Change | Lead pipeline stage changed |
 
+<Warning>
+**Call, Email, and Text webhooks do not fire for AUTO communications.** Only agent-initiated (`MANUAL`) and after-the-fact logged (`LOGGED`) events trigger webhooks. Automated messages sent by Lofty (drip campaigns, auto-responders, Smart Plans, etc.) are excluded. If your integration depends on tracking all communications, you must also poll the Communication API for `AUTO` type events.
+</Warning>
+
 ---
 
 ## Event payloads

@@ -55,12 +55,12 @@ You need a **Developer Platform account** and a **registered application** befor
 
 ## Permission scopes
 
-Each token is scoped to the endpoints you've granted in the Developer Portal. Calling an out-of-scope endpoint returns:
+Each token is scoped to the endpoints you've granted in the Developer Portal. Calling an out-of-scope endpoint returns `HTTP 403` with:
 
 ```json
 {
   "code": 200100,
-  "msg": "Sorry, the vendor does not have permission for this API."
+  "message": "Sorry, the vendor does not have permission for this API."
 }
 ```
 

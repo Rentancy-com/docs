@@ -48,5 +48,5 @@ API requests are subject to rate limits. If you exceed the limit, the API return
 | HTTP Status | Code | Description |
 |---|---|---|
 | `401` | — | Invalid or missing authentication credentials. |
-| `200` | `200100` | Token is valid but lacks the required permission scope. Grant the scope in the [Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) and re-authorize. |
+| `403` | `200100` | Token is valid but lacks the required permission scope. Grant the scope in the [Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) and re-authorize. |
 | `429` | — | Rate limit exceeded. Retry with backoff. |
