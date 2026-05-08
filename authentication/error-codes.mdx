@@ -1,0 +1,146 @@
+---
+title: "Error Codes"
+description: "Complete reference of error codes returned by the Lofty API."
+---
+
+The Lofty API uses standard HTTP status codes combined with a `code` field in the response body for detailed error identification.
+
+## Response format
+
+Error responses follow this structure:
+
+```json
+{
+  "code": 200100,
+  "message": "Sorry, the vendor does not have permission for this API."
+}
+```
+
+## HTTP status codes
+
+| Status | Meaning |
+|---|---|
+| `200` | Success |
+| `400` | Bad Request — invalid parameters or validation failure |
+| `401` | Unauthorized — missing or invalid credentials |
+| `403` | Forbidden — valid token but insufficient permissions |
+| `404` | Not Found — resource does not exist or caller has no access |
+| `429` | Too Many Requests — rate limit exceeded |
+| `500` | Internal Server Error |
+
+## Authentication & permission errors
+
+| Code | HTTP | Description |
+|---|---|---|
+| `200100` | 403 | OAuth token lacks the required permission scope. Grant the scope in the [Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) and re-authorize. |
+| `BAD_CREDENTIALS` | 401 | Invalid API key or access token. |
+| `VENDOR_HAS_NO_PERMISSION` | 403 | Vendor application does not have access to this API. |
+| `PERMISSION_DENIED` | 403 | Caller does not have the required role for this operation (e.g. accessing another agent's tasks). |
+| `NO_ACCESS_WEBSITE` | 403 | Caller has no access to the specified user's listing data. |
+| `ACCESS_ALL_TEAM_LEADS` | 403 | Team-wide communication search requires the `ACCESS_ALL_TEAM_LEADS` permission. |
+
+## Validation errors (400)
+
+| Code | Description |
+|---|---|
+| `INVALID_PARAMETER` | One or more request parameters are invalid or missing. |
+| `MISSING_PARAMETER` | A required parameter was not provided. |
+| `LIMIT_NOT_VALID` | `limit` parameter is out of the allowed range (typically 1–100). |
+| `LIMIT_PARAM_OVERSIZE` | `limit` exceeds the configured maximum for this endpoint. |
+| `PARAMETER_TOO_LONG` | A string parameter exceeds the maximum allowed length. |
+| `LISTING_LIMIT_NOT_VALID` | Listing search `limit` is out of range. |
+
+## Resource not found (404)
+
+| Code | Description |
+|---|---|
+| `LEAD_NOT_EXIST` | The specified lead was not found or the caller has no access. |
+| `LEAD_NOT_FOUND` | Lead not found (used by some V2 endpoints). |
+| `TASK_NOT_EXIST` | The specified task or appointment was not found. |
+| `TRANSACTION_NOT_EXIST` | The specified transaction was not found. |
+| `USER_NOT_EXIST` | The specified user was not found. |
+| `RESOURCE_NOT_EXIST` | Generic — the requested resource was not found. |
+| `ALERT_CONDITION_FEGIN_FAIL` | Listing alert condition lookup failed. |
+
+## Lead errors (400)
+
+| Code | Description |
+|---|---|
+| `PARAM_FIRST_NAME_FILL` | `firstName` is required when resolving assignees. |
+| `PARAM_EMAIL_MUST_FILL` | `email` is required when resolving assignees. |
+| `INVALID_UPDATE_OPERATION_LEADID` | Invalid lead ID in update operation. |
+
+## Transaction errors (400)
+
+| Code | Description |
+|---|---|
+| `TRANSACTION_NAME_BLANK` | Transaction name cannot be empty. |
+| `TRANSACTION_NAME_HTML` | Transaction name cannot contain HTML. |
+
+## Task errors (400)
+
+| Code | Description |
+|---|---|
+| `TASK_IS_SMARTPLAN` | Cannot modify a task that belongs to a Smart Plan. |
+
+## Team & custom field errors (400)
+
+| Code | Description |
+|---|---|
+| `ATTRIBUTE_NAME_EMPTY` | Custom field name is required. |
+| `ATTRIBUTE_TYPE_EMPTY` | Custom field type is required. |
+
+## Routing errors (400)
+
+| Code | Description |
+|---|---|
+| `BUSINESS_TYPE_ERROR` | Invalid routing business type. |
+| `STRATEGY_TYPE_ERROR` | Invalid routing strategy type. |
+| `STRATEGY_TYPE_NOT_MATCH` | Routing strategy type does not match the rule. |
+| `INVAID_ROLE_ID` | Invalid role ID. |
+| `INVAID_ID` | Invalid routing rule ID. |
+| `INVAID_GROUP_ID` | Invalid group/office ID. |
+| `INVAID_ACTIVE_HOURS` | Invalid active hours configuration. |
+| `INVAID_ACTIVE_DAY` | Invalid active day configuration. |
+| `INVAID_MEMBER_WEIGHT` | Invalid member weight value. |
+| `INVAID_TOUCHMINUTES` | Invalid touch minutes value. |
+
+## Webhook errors (400)
+
+| Code | Description |
+|---|---|
+| `WEBHOOK_CALLBACK_URL_INVALID` | Callback URL is not a valid HTTPS URL. |
+| `WEBHOOK_EXCEED_LIMIT` | Maximum number of webhook subscriptions reached. |
+| `WEBHOOK_DELETE_NOT_EXIST` | Subscription ID does not exist. |
+| `WEBHOOK_DELETE_NO_AUTHORITY` | Caller does not own this subscription. |
+
+## Rate limit (429)
+
+When rate limited, the response includes:
+
+```http
+HTTP/1.1 429
+X-RateLimit-Limit: 20
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 21000
+{"message":"Too Many Requests"}
+```
+
+See [Rate Limiting](/authentication/overview#rate-limiting) for details.
+
+## Handling errors
+
+```javascript
+const response = await fetch('https://api.lofty.com/v1.0/leads', {
+  headers: { 'Authorization': 'Bearer YOUR_TOKEN' }
+});
+
+if (!response.ok) {
+  const error = await response.json();
+  console.error(`HTTP ${response.status}: ${error.code} — ${error.message}`);
+}
+```
+
+<Tip>
+Always check both the HTTP status code **and** the `code` field in the response body. Some business errors return specific codes (like `200100`) that provide more detail than the HTTP status alone.
+</Tip>

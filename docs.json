@@ -44,7 +44,8 @@
               "concepts/tasks-appointments",
               "concepts/listings",
               "concepts/transactions",
-              "concepts/webhooks"
+              "concepts/webhooks",
+              "authentication/error-codes"
             ]
           },
           {
