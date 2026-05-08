@@ -1,0 +1,46 @@
+---
+title: "2025"
+---
+
+<Update label="Q4 2025" tags={["New features", "New endpoints"]}>
+  ## Call Recording URL
+
+  - Added `GET /v1.0/call/url/{callId}` — retrieve the recording URL for a specific call.
+
+  ## Canva Design Center Integration
+
+  - Integrated Canva design export functionality (internal use, hidden from public API).
+  - Added `teamId` to Canva agent info response.
+
+  ## Listing Search Enhancements
+
+  - Added support for CRM my-listing and office-listing search endpoints.
+</Update>
+
+<Update label="Q2–Q3 2025" tags={["Field changes"]}>
+  ## Lead Type Labels
+
+  - Added automatic label tag generation based on `leadTypes` — buyer/seller classification is now applied automatically when creating or updating leads.
+
+  ## Lead Activity
+
+  - Added default `createTime` for lead activities when not provided.
+
+  ## Lead Source
+
+  - Improved lead source validation logic for updates.
+
+  ## Field Removals
+
+  - `leadType` (singular) field hidden from API — use `leadTypes` (array) instead.
+</Update>
+
+<Update label="Q1 2025" tags={["Authentication", "Bug fixes"]}>
+  ## Authentication
+
+  - Deprecated legacy API key token info endpoint — use OAuth 2.0 token exchange instead.
+
+  ## Bug Fixes
+
+  - Fixed `cannotEmail` opt-out flag not being applied correctly on lead updates.
+</Update>
