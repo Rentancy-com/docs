@@ -1,126 +1,70 @@
 ---
 title: "Leads"
-description: "Leads are the central entity in Lofty's CRM. Learn how to create, retrieve, assign, and track leads through their full lifecycle using the REST API."
+description: "Understand the lead data model, lifecycle, and routing in Lofty."
 ---
 
-A lead in Lofty represents a contact or prospect in the CRM — a person an agent is working to convert into a client. Nearly every other resource in the API (tasks, appointments, transactions, activities) is associated with a lead, making the lead object the foundation of any Lofty integration.
+A lead represents a contact or prospect in the Lofty CRM. Nearly every other resource — tasks, transactions, activities, communications — is associated with a lead.
 
-## What is a lead?
-
-In Lofty, a lead is a person record that tracks a prospect's contact information, pipeline stage, source, assigned agent, and all interaction history. When someone fills out a form on a real estate website, gets imported from a third-party source, or is added manually by an agent, Lofty creates a lead record and routes it to the right agent.
-
-Leads support multiple emails and phone numbers, can carry custom fields and tags, and have a dedicated activity timeline that records every call, text, email, and agent-logged interaction.
-
-<Note>
-All lead IDs (`leadId`) are 64-bit integers. JavaScript clients must handle these carefully to avoid silent precision loss. See the [JavaScript and TypeScript Integration Guide](/javascript-integration) for details.
-</Note>
-
-## Key lead properties
+## Data model
 
 | Field | Type | Description |
-| --- | --- | --- |
-| `leadId` | int64 | Unique identifier for the lead |
-| `firstName` / `lastName` | string | Lead's name (max 30 characters each) |
-| `emails` | string[] | List of email addresses |
-| `phones` | string[] | List of phone numbers (max 20 chars each) |
-| `assignedUserId` | int64 | User ID of the agent assigned to this lead |
-| `stageId` | int64 | Pipeline stage ID |
+|---|---|---|
+| `leadId` | int64 | Unique identifier |
+| `firstName` / `lastName` | string | Name (max 30 chars each) |
+| `emails` | string[] | Email addresses |
+| `phones` | string[] | Phone numbers |
+| `assignedUserId` | int64 | Assigned agent's user ID |
 | `stage` | string | Pipeline stage name |
 | `source` | string | Lead source label |
 | `score` | int32 | Lead score |
-| `tags` | object[] | Tags applied to the lead |
-| `leadTypes` | int32[] | Lead type IDs: Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7), Homeowner (8), Landlord (9), Other (-1) |
+| `tags` | object[] | Applied tags |
+| `leadTypes` | int32[] | Type IDs: Buyer (2), Seller (1), Renter (5), Investor (6), Agent (7), Homeowner (8), Landlord (9), Other (-1) |
 | `teamId` | int64 | Team the lead belongs to |
 
-## Lead lifecycle
+<Note>
+All lead IDs are 64-bit integers. JavaScript clients must handle these carefully — see [JS / TS Integration](/javascript-integration).
+</Note>
 
-Leads move through a pipeline from initial capture to closed deal. The typical flow involves four stages:
+## Lifecycle
 
-**1. Routing** — When a lead is created without an explicit `assignedUserId`, Lofty applies your team's routing rules to automatically assign it to an agent. You can read and update routing configuration with `GET /v1.0/routing/rule/{type}` and `PUT /v1.0/routing/rule/{type}`. To list available routing rules by type, use `GET /v1.0/routing/rule/list/{type}`.
+Leads move through four stages:
 
-**2. Assignment** — You can explicitly assign or reassign a lead at any time using `POST /v1.0/leads/{leadId}/assignment`. Pass an array of assignee objects specifying the user ID and role. To resolve an agent from lead contact information (for example, during a third-party import), use `POST /v1.0/leads/assignee`.
+1. **Capture** — A lead is created via API, form submission, or third-party import. Lofty creates a lead record with contact info and source.
 
-**3. Working leads** — Agents actively working a set of leads can be tracked using the working leads pool. Query working leads with `GET /v2.0/working-leads` (paginated) and add leads to the pool with `POST /v2.0/working-leads/add`.
+2. **Routing** — If no `assignedUserId` is provided, Lofty applies the team's routing rules to automatically assign the lead to an agent.
 
-**4. Activities** — All interactions with a lead are captured in the activity timeline. Fetch a lead's site activities with `GET /v1.0/leads/{leadId}/activities`. For a unified timeline that includes calls, texts, and emails in chronological order, use the V2 endpoint `GET /v2.0/leads/{leadId}/activities`.
+3. **Working** — The assigned agent works the lead. Activities (calls, emails, texts) are tracked in the lead's timeline. Agents can add leads to the working pool for AI assistant follow-up.
+
+4. **Conversion** — The lead progresses through pipeline stages toward a closed deal. Transactions are created and associated with the lead.
+
+## Pipeline stages
+
+Each lead has a `stage` that reflects where it is in the sales process. Stages are configurable per team. Common stages include New Lead, Contacted, Qualified, Under Contract, and Closed.
+
+Stage changes trigger [Pipeline Change webhooks](/concepts/webhooks#12-pipeline-change) (listId: 12).
 
 ## Hidden leads
 
-A lead is considered "hidden" when it has an assigned agent and visibility restrictions are in effect. For hidden leads, only the assigned agent receives webhook notifications. Other team members — including company owners and admins — will not receive notifications for hidden lead events.
+When a lead has visibility restrictions, only the assigned agent receives webhook notifications and can access the lead. Other team members — including admins — are excluded.
 
-<Warning>
-When a lead is hidden, only the assigned agent can access associated webhook event notifications. Design your integration to account for this when handling events for leads that may be hidden.
-</Warning>
+## Activities
 
-## CRUD endpoints
+The activity timeline captures all interactions with a lead:
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `GET` | `/v1.0/leads` | Search for leads (filter by stage, source, tag, created/updated time) |
-| `POST` | `/v1.0/leads` | Create a new lead |
-| `GET` | `/v1.0/leads/{leadId}` | Get a lead by ID |
-| `PUT` | `/v1.0/leads/{leadId}` | Update a lead |
-| `DELETE` | `/v1.0/leads/{leadId}` | Trash a lead |
-| `POST` | `/v1.0/leads/{leadId}/assignment` | Assign a lead to one or more agents |
-| `POST` | `/v1.0/leads/assignee` | Resolve assignees by lead contact info |
-| `POST` | `/v1.0/leads/{leadId}/inquiry` | Place an inquiry on a lead |
-| `POST` | `/v1.0/leads/{leadId}/property` | Associate a property with a lead |
-
-## Working leads
-
-The working leads pool is a subset of leads that an agent's AI assistant (Sales Agent) is actively managing. This is separate from assignment — a lead can be assigned to an agent without being in the working pool.
-
-```bash
-# Query working leads (paginated)
-GET https://api.lofty.com/v2.0/working-leads
-
-# Add leads to the working pool
-POST https://api.lofty.com/v2.0/working-leads/add
-```
-
-Use the working leads API when you need to know which leads an agent's AI assistant is currently following up with, or when you want to programmatically add leads to that pool.
-
-## Activities timeline
-
-The activity timeline tracks everything that happens with a lead. There are two ways to access it:
-
-- `GET /v1.0/leads/{leadId}/activities` — Returns site-level activities such as property views, favorites, and searches.
-- `GET /v2.0/leads/{leadId}/activities` — Returns a unified chronological timeline including calls, texts, emails, and agent-logged communications.
+- **V1** (`GET /v1.0/leads/{leadId}/activities`) — Site activities: property views, favorites, searches.
+- **V2** (`GET /v2.0/leads/{leadId}/activities`) — Unified timeline: calls, texts, emails, and agent-logged communications in chronological order.
 
 <Tip>
-Prefer the V2 activities endpoint for new integrations. It gives you a complete picture of all lead interactions in a single, time-ordered response.
+Use the V2 activities endpoint for new integrations — it provides a complete picture in a single response.
 </Tip>
 
-## Creating a lead
-
-When you create a lead, you can either let Lofty route it automatically or assign it directly to an agent by supplying `assignedUserId`. Providing `assignedUserId` skips automatic routing entirely.
-
-```bash
-POST https://api.lofty.com/v1.0/leads
-```
-
-```json
-{
-  "firstName": "Alex",
-  "lastName": "Johnson",
-  "emails": ["alex@example.com"],
-  "phones": ["5551234567"],
-  "leadTypes": [2],
-  "assignedUserId": 10000000514
-}
-```
-
-<Note>
-First and last name fields each have a 30-character limit. If you exceed the limit, the lead is still created, but only the first 30 characters are stored.
-</Note>
-
-## Next steps
+## Related resources
 
 <CardGroup cols={2}>
-  <Card title="Lead management guide" icon="users" href="/guides/lead-management">
-    Step-by-step guide to creating, assigning, and updating leads.
+  <Card title="Lead Management Guide" icon="list-check" href="/guides/lead-management">
+    Step-by-step: create, update, assign, and delete leads.
   </Card>
-  <Card title="Leads API reference" icon="code" href="/api-reference/leads/overview">
-    Full endpoint documentation with request and response schemas.
+  <Card title="Leads API Reference" icon="code" href="/api-reference/leads/overview">
+    Full endpoint documentation with parameters and responses.
   </Card>
 </CardGroup>

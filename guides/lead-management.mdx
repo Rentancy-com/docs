@@ -1,26 +1,11 @@
 ---
 title: "Lead Management"
-description: "Create, retrieve, update, delete, and assign leads in Lofty using the REST API. Covers single and bulk operations with code examples."
+description: "Create, retrieve, update, assign, and delete leads using the Lofty API."
 ---
 
-This guide walks you through the full lifecycle of a lead in Lofty: creating new records, retrieving and listing them, updating fields, deleting leads, and assigning them to agents—including bulk assignment. All examples use the Lofty REST API and assume you have a valid OAuth access token.
+This guide shows how to perform common lead operations. All examples assume you have a valid access token — see [Authentication](/authentication/overview).
 
 ## Create a lead
-
-Send a `POST` request to `/v1.0/leads` to create a new lead record.
-
-**Key body fields**
-
-| Field | Type | Description |
-|---|---|---|
-| `firstName` | string | Lead's first name |
-| `lastName` | string | Lead's last name |
-| `emails` | array | List of email address objects |
-| `phones` | array | List of phone number objects |
-| `assignedUserId` | integer | ID of the agent to assign the lead to |
-| `source` | string | Lead source (e.g., `"Zillow"`, `"Website"`) |
-| `tags` | array | List of tag strings |
-| `leadType` | string | Type of lead (e.g., `"Buyer"`, `"Seller"`) |
 
 ```bash
 curl -X POST https://api.lofty.com/v1.0/leads \
@@ -29,117 +14,81 @@ curl -X POST https://api.lofty.com/v1.0/leads \
   -d '{
     "firstName": "Jane",
     "lastName": "Smith",
-    "emails": [{ "email": "jane.smith@example.com", "type": "personal" }],
-    "phones": [{ "phone": "5551234567", "type": "mobile" }],
-    "assignedUserId": 456,
-    "source": "Website",
-    "tags": ["hot-lead", "buyer"],
-    "leadType": "Buyer"
+    "emails": ["jane.smith@example.com"],
+    "phones": ["5551234567"],
+    "leadTypes": [2],
+    "source": "Website"
   }'
 ```
+
+Omit `assignedUserId` to let Lofty's routing rules automatically assign the lead. Include it to skip routing and assign directly.
 
 ## Retrieve a lead
 
-Send a `GET` request to `/v1.0/leads/{leadId}` to fetch a single lead by its ID.
-
 ```bash
-curl -X GET https://api.lofty.com/v1.0/leads/789012345678 \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json"
+curl https://api.lofty.com/v1.0/leads/563172647619608 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-The response includes the following fields:
+## List and filter leads
 
-| Field | Type | Description |
-|---|---|---|
-| `leadId` | integer (64-bit) | Unique lead identifier |
-| `name` | string | Full name of the lead |
-| `emails` | array | Email address objects |
-| `phones` | array | Phone number objects |
-| `stage` | string | Current pipeline stage |
-| `assignedUserId` | integer | ID of the assigned agent |
-| `tags` | array | Tags associated with the lead |
-
-## List leads
-
-Send a `GET` request to `/v1.0/leads` to retrieve a paginated list of leads. Use query parameters to filter results.
-
-| Parameter | Type | Description |
-|---|---|---|
-| `page` | integer | Page number (1-indexed) |
-| `pageSize` | integer | Number of results per page |
-| `assigneeId` | integer | Filter by assigned agent ID |
-| `status` | string | Filter by lead status |
-| `source` | string | Filter by lead source |
-| `tags` | string | Comma-separated list of tags to filter by |
+Use query parameters to paginate and filter:
 
 ```bash
-curl -X GET "https://api.lofty.com/v1.0/leads?page=1&pageSize=25&assigneeId=456&status=active&source=Website" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json"
+curl "https://api.lofty.com/v1.0/leads?limit=20&offset=0&stage=New+Lead&sort=LastActivity&desc=true" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
+
+Key filters: `assignedUserId`, `stage`, `source`, `email`, `phone`, `key` (fuzzy search), `anyTags`, `allTags`, `contacted`.
+
+Use `scrollId` from the response for efficient cursor-based pagination over large result sets.
 
 ## Update a lead
 
-Send a `PUT` request to `/v1.0/leads/{leadId}` with the fields you want to change. You do not need to include every field—only include the fields you are updating.
+Send only the fields you want to change:
 
 ```bash
-curl -X PUT https://api.lofty.com/v1.0/leads/789012345678 \
+curl -X PUT https://api.lofty.com/v1.0/leads/563172647619608 \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "stage": "Nurture",
-    "tags": ["hot-lead", "buyer", "follow-up"],
-    "source": "Referral"
+    "stage": "Contacted",
+    "tags": [{"tagName": "follow-up"}]
   }'
-```
-
-## Delete a lead
-
-Send a `DELETE` request to `/v1.0/leads/{leadId}` to permanently remove a lead.
-
-<Warning>
-  Deleting a lead is irreversible. All associated data—including communications, notes, and activity history—will be permanently removed. Ensure you have verified the correct `leadId` before proceeding.
-</Warning>
-
-```bash
-curl -X DELETE https://api.lofty.com/v1.0/leads/789012345678 \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json"
 ```
 
 ## Assign a lead
 
-Send a `POST` request to `/v1.0/leads/{leadId}/assignment` to assign a single lead to an agent.
-
 ```bash
-curl -X POST https://api.lofty.com/v1.0/leads/789012345678/assignment \
+curl -X POST https://api.lofty.com/v1.0/leads/563172647619608/assignment \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "assignedUserId": 123
+    "assignees": [{"userId": 10000000514}]
   }'
 ```
 
-## Bulk assign leads
+To preview which agent routing would select without creating a lead, use the [Preview Routing](/api-reference/leads/resolve-assignees-by-lead-info) endpoint.
 
-Send a `POST` request to `/v1.0/leads/assignee` to assign multiple leads to an agent in a single request.
+## Delete a lead
+
+`DELETE /v1.0/leads/{leadId}` moves the lead to the trash — it is **not permanently deleted**. A `reason` parameter is required and stored for audit purposes.
 
 ```bash
-curl -X POST https://api.lofty.com/v1.0/leads/assignee \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "leadIds": [789012345678, 789012345679, 789012345680],
-    "assignedUserId": 123
-  }'
+curl -X DELETE "https://api.lofty.com/v1.0/leads/563172647619608?reason=Duplicate+record" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-## Hidden leads
+<Note>
+Trashed leads may be recoverable from the Lofty CRM interface. The API does not provide a restore endpoint.
+</Note>
 
-Lofty supports hidden leads for privacy in shared team environments. When a lead is marked as hidden, only the agent assigned to that lead can retrieve or interact with it. Other agents and admin users will not see the lead in list responses or search results.
+## Monitor lead changes
 
-## Related resources
+Subscribe to [Lead Info webhooks](/concepts/webhooks#2-lead-info) (listId: 2) to receive real-time notifications when leads are created, updated, or deleted.
 
-- [Leads concept overview](/concepts/leads) — Learn how leads are structured and managed in Lofty
-- [Leads API reference](/api-reference/leads/overview) — Full endpoint documentation with parameter schemas and response models
+## Next steps
+
+- [Leads concept](/concepts/leads) — understand the data model and lifecycle
+- [Leads API reference](/api-reference/leads/overview) — full endpoint documentation
+- [Communication guide](/guides/communication) — log calls, emails, and texts for leads
