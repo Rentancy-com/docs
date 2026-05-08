@@ -15,13 +15,7 @@
     "primary": {
       "type": "github",
       "href": "https://github.com/lofty"
-    },
-    "links": [
-      {
-        "label": "Changelog",
-        "href": "/changelog"
-      }
-    ]
+    }
   },
   "navigation": {
     "tabs": [
@@ -383,6 +377,17 @@
             "pages": [
               "api-reference/leads/brokermint-webhook-update-a-synced-lead",
               "api-reference/transactions/brokermint-webhook-update-a-synced-transaction"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Changelog",
+            "pages": [
+              "changelog"
             ]
           }
         ]
