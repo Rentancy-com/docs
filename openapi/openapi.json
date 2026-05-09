@@ -118,7 +118,7 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "Get a task by ID",
+        "summary": "Get Task",
         "description": "Returns a single task or appointment by ID. Tasks and appointments share the same taskId namespace; the endpoint resolves the target automatically.\n\nCaller must have manage permission on the task's lead.",
         "operationId": "getTaskById",
         "parameters": [
@@ -155,22 +155,22 @@
               }
             }
           },
-          "400": {
-            "description": "Caller has no access to the owning lead (20017 PERMISSION_DENIED).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Task or appointment retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TaskV2SingleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Caller has no access to the owning lead (20017 PERMISSION_DENIED).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -201,7 +201,7 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "Update a task or appointment",
+        "summary": "Update Task",
         "description": "Partially updates a task or appointment. Only non-null fields in the request body are applied.\n\nNotes:\n- To mark an entry as completed or not, use the finish / unfinish endpoints instead.\n- At least one of content, startAt, endAt, address must be supplied; an entirely empty payload returns 400 MISSING_PARAMETER.\n- Caller must have manage permission on the entry's lead.",
         "operationId": "updateTask",
         "parameters": [
@@ -304,7 +304,7 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "Delete a task or appointment",
+        "summary": "Delete Task",
         "description": "Deletes a task or appointment by ID. Caller must have manage permission on the entry's lead.",
         "operationId": "deleteTask",
         "parameters": [
@@ -341,22 +341,22 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Missing or invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Entry deleted. Response body is a simple message envelope.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -508,22 +508,22 @@
               }
             }
           },
-          "200": {
-            "description": "Settings retrieved successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesAgentSettingResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Sales Agent not found for the current user.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Settings retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesAgentSettingResponse"
                 }
               }
             }
@@ -589,22 +589,22 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid parameters.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Settings updated successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -627,7 +627,7 @@
         "tags": [
           "Calendar V2 API"
         ],
-        "summary": "Update a calendar entry",
+        "summary": "Update Calendar Event",
         "description": "Partially updates a Task or Appointment. Only non-empty fields in the request body are applied; omitted fields keep their current values.\n\nNotes:\n- calendarId must be the composite string returned by POST /v2.0/calendar (e.g. '12345-task' or '12345-appointment'). Invalid format returns 400.\n- When startAt or endAt is supplied, it must be later than the current server time.",
         "operationId": "updateCalendar",
         "parameters": [
@@ -718,7 +718,7 @@
         "tags": [
           "Calendar V2 API"
         ],
-        "summary": "Delete a calendar entry",
+        "summary": "Delete Calendar Event",
         "description": "Deletes a Task or Appointment by its composite ID. The response body is a simple message envelope.",
         "operationId": "deleteCalendar",
         "parameters": [
@@ -753,22 +753,22 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Missing or invalid authentication token.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Calendar deleted.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CalendarMessageResponseEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -801,7 +801,7 @@
         "tags": [
           "Tasks & Appointments"
         ],
-        "summary": "Get a task by ID",
+        "summary": "Get Task (V1)",
         "description": "Returns a single task by ID, along with the lead's pipeline context. Caller must have manage permission on the lead that owns the task.",
         "operationId": "getTaskById_1",
         "parameters": [
@@ -884,8 +884,8 @@
         "tags": [
           "Tasks & Appointments"
         ],
-        "summary": "Update a task",
-        "description": "Partially updates an existing task. Fields not supplied are left unchanged.",
+        "summary": "Update Task (V1)",
+        "description": "Partially updates an existing task. Fields not supplied are left unchanged.\n\nNotes:\n- When finishFlag is true, the task is marked completed and all other fields are ignored. Completion is rejected for smart-plan tasks (TASK_IS_SMARTPLAN).\n- When leadId is supplied, it must match the task's existing lead; otherwise 400 INVALID_UPDATE_OPERATION_LEADID.\n- At least one field must be supplied; an entirely empty payload returns 400 MISSING_PARAMETER.\n- Caller must have manage permission on the task's lead.\n- The response body is empty.",
         "operationId": "updateTask_1",
         "parameters": [
           {
@@ -934,11 +934,11 @@
           "404": {
             "description": "Task does not exist (TASK_NOT_EXIST) or caller lacks access to the lead (20006 LEAD_NOT_EXIST)."
           },
-          "200": {
-            "description": "Task updated. Response body is empty."
-          },
           "401": {
             "description": "Missing or invalid authentication token."
+          },
+          "200": {
+            "description": "Task updated successfully. No response body."
           },
           "400": {
             "description": "Missing or invalid parameter (20012 INVALID_PARAMETER / MISSING_PARAMETER), finish attempted on a smart-plan task (TASK_IS_SMARTPLAN), or leadId does not match the task's lead (INVALID_UPDATE_OPERATION_LEADID)."
@@ -952,7 +952,7 @@
         "tags": [
           "Tasks & Appointments"
         ],
-        "summary": "Delete a task",
+        "summary": "Delete Task (V1)",
         "description": "Deletes a task by ID. Caller must have manage permission on the task's lead. The response body is empty.",
         "operationId": "deleteTask_1",
         "parameters": [
@@ -996,7 +996,7 @@
             "description": "Missing or invalid authentication token."
           },
           "200": {
-            "description": "Task deleted. Response body is empty."
+            "description": "Task deleted successfully. No response body."
           },
           "500": {
             "description": "Internal server error."
@@ -1010,7 +1010,7 @@
           "Lead Routing"
         ],
         "summary": "Update a routing rule",
-        "description": "Updates a routing rule identified by its ID.",
+        "description": "Updates a routing rule identified by its ID. Validates activeHours and routingStrategy:\n\n- activeDays: list of 1-7; deduplicated and sorted server-side.\n- hoursStart / hoursEnd: each in [0, 23].\n- routingStrategy.strategyType must match the business type. LEAD_POND is only allowed for AGENT_LEAD; NEXT_UP and BLAST_ALERT are not allowed for ASSISTANT_LEAD.\n- memberWeights must reference valid members in the team.\n- touchMinutes must be in (0, 1440]; when > 60, must be an integer multiple of 60.\n\nCaller must have MANAGE_LEAD_DISTRIBUTION or MANAGE_LEAD_DISTRIBUTION_DEPARTMENT permission.",
         "operationId": "editRule",
         "parameters": [
           {
@@ -1070,8 +1070,8 @@
               }
             }
           },
-          "200": {
-            "description": "Rule updated. Response body is the literal \"ok\".",
+          "401": {
+            "description": "Missing or invalid authentication token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1080,12 +1080,13 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authentication token.",
+          "200": {
+            "description": "Rule updated.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "string",
+                  "example": "ok"
                 }
               }
             }
@@ -1198,7 +1199,7 @@
           "Lead Routing"
         ],
         "summary": "Update default (supplement) routing rule",
-        "description": "Updates the default / fallback routing rule for the given business type.",
+        "description": "Updates the default / fallback routing rule for the given business type.\n\nNotes:\n- BLAST_ALERT and Next_Up strategies are not allowed for ASSISTANT_LEAD.\n- When strategyType = DEFAULT_ASSIGNEE and type = AGENT_LEAD, exactly one of assigneeAgentId or assigneeGroupId must be supplied.\n- For non-DEFAULT_ASSIGNEE strategies, touchMinutes must be in (0, 1440] and, when > 60, an integer multiple of 60.\n\nCaller must have MANAGE_LEAD_DISTRIBUTION or MANAGE_LEAD_DISTRIBUTION_DEPARTMENT permission.",
         "operationId": "editSupplementRule",
         "parameters": [
           {
@@ -1248,16 +1249,6 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Rule updated. Response body is the literal \"ok\".",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
@@ -1274,6 +1265,17 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Rule updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "ok"
                 }
               }
             }
@@ -1296,7 +1298,7 @@
         "tags": [
           "Agent Organization"
         ],
-        "summary": "Add an office to the team",
+        "summary": "Add Office",
         "description": "Creates a new office (organizational sub-unit) under the caller's team. Caller must have permission to manage team organization.",
         "operationId": "addOffice",
         "parameters": [
@@ -1377,7 +1379,7 @@
         "tags": [
           "Agent Organization"
         ],
-        "summary": "Update an office",
+        "summary": "Update Office",
         "description": "Updates an existing office under the caller's team. Caller must have permission to manage team organization.",
         "operationId": "updateOffice",
         "parameters": [
@@ -1543,7 +1545,7 @@
         "tags": [
           "Notes"
         ],
-        "summary": "Update a note",
+        "summary": "Update Note",
         "description": "Updates the content and pin state of an existing note.\n\nNotes:\n- content must not be blank; isPin must not be null.\n- content is silently truncated to 2000 characters.\n- If leadId is supplied in the body, it must match the note's lead; otherwise 400 INVALID_UPDATE_OPERATION_LEADID.\n- Caller must have access to the lead; otherwise 404 LEAD_NOT_EXIST.\n- The response body is empty.",
         "operationId": "update",
         "parameters": [
@@ -1597,7 +1599,7 @@
             "description": "Note does not exist (20007 RESOURCE_NOT_EXIST) or lead is not accessible (20006 LEAD_NOT_EXIST)."
           },
           "200": {
-            "description": "Note updated. Response body is empty."
+            "description": "Note updated successfully. No response body."
           },
           "500": {
             "description": "Internal server error."
@@ -1611,7 +1613,7 @@
         "tags": [
           "Notes"
         ],
-        "summary": "Delete a note",
+        "summary": "Delete Note",
         "description": "Deletes a note by ID. Caller must have manage permission on the lead that owns the note. The response body is empty.",
         "operationId": "delete_1",
         "parameters": [
@@ -1655,7 +1657,7 @@
             "description": "Note does not exist (20007 RESOURCE_NOT_EXIST) or lead is not accessible (20006 LEAD_NOT_EXIST)."
           },
           "200": {
-            "description": "Note deleted. Response body is empty."
+            "description": "Note deleted successfully. No response body."
           },
           "500": {
             "description": "Internal server error."
@@ -1668,7 +1670,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Get a lead by ID",
+        "summary": "Get Lead",
         "description": "Returns a single lead by ID. The response is wrapped under the 'lead' key.\n\nNotes:\n- By default, trashed leads are not returned. Pass withTrash=true to include them.\n- Caller must have access to the lead; otherwise 404 LEAD_NOT_EXIST.",
         "operationId": "get",
         "parameters": [
@@ -1752,7 +1754,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Update a lead",
+        "summary": "Update Lead",
         "description": "Updates an existing lead. Caller must have manage permission on the lead.",
         "operationId": "update_1",
         "parameters": [
@@ -1820,11 +1822,11 @@
             }
           },
           "200": {
-            "description": "Lead updated. Response envelope carries the updated lead's ID and status.",
+            "description": "Lead updated.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/LeadIdResponse"
                 }
               }
             }
@@ -1855,7 +1857,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Trash a lead",
+        "summary": "Delete Lead",
         "description": "Moves a lead to the trash. A reason is required and is stored for audit. The response body is empty.",
         "operationId": "trash",
         "parameters": [
@@ -1909,7 +1911,18 @@
             "description": "reason missing (20012 INVALID_PARAMETER)."
           },
           "200": {
-            "description": "Lead trashed. Response body is empty."
+            "description": "Lead trashed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "deleted": true,
+                    "leadId": "651095960136641"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Lead does not exist or is not accessible (20006 LEAD_NOT_EXIST)."
@@ -1925,7 +1938,7 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "Get a transaction by id",
+        "summary": "Get Transaction",
         "description": "Fetches a single transaction that belongs to the given lead.\n\nPrerequisites:\n- leadId must be manageable by the caller; otherwise 404 LEAD_NOT_EXIST.\n- transactionId must exist, not be deleted, AND belong to leadId; otherwise 404 TRANSACTION_NOT_EXIST. For security, cross-lead transactionIds are treated as 'not exist' rather than 'forbidden'.",
         "operationId": "getTransactionsByTransactionId",
         "parameters": [
@@ -1972,22 +1985,22 @@
               }
             }
           },
-          "404": {
-            "description": "Lead not manageable (20006 LEAD_NOT_EXIST), or transaction not found / not bound to leadId (200060 TRANSACTION_NOT_EXIST).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "The requested transaction.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LeadTransaction"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Lead not manageable (20006 LEAD_NOT_EXIST), or transaction not found / not bound to leadId (200060 TRANSACTION_NOT_EXIST).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2008,8 +2021,8 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "Partially update a transaction",
-        "description": "Partially updates an existing transaction. Fields absent from the request body are not changed, and fields equal to zero / null / blank are not applied. For example, sending {\"transactionName\":\"new name\"} leaves all other fields untouched.",
+        "summary": "Update Transaction",
+        "description": "Partially updates an existing transaction. Only supplied fields are applied; omitted fields remain unchanged.",
         "operationId": "updateTransaction",
         "parameters": [
           {
@@ -2123,8 +2136,8 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "Brokermint webhook: update a synced transaction",
-        "description": "Callback endpoint for Brokermint to push transaction updates into Lofty. Not intended for general external callers.",
+        "summary": "Brokermint — Sync Transaction",
+        "description": "Callback endpoint for Brokermint integration to sync transaction updates into Lofty.\n\nThe transaction must be linked to Brokermint via the Lofty UI before this endpoint can update it. See the request body schema for supported fields.",
         "operationId": "updateTransactionFromBrokermint",
         "parameters": [
           {
@@ -2158,22 +2171,22 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "Missing or invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Envelope {code, message}. code=0 indicates applied; code=200060 indicates the transaction was not found (either the Brokermint link is missing or the transaction was deleted). HTTP status is 200 in both cases.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TransactionCallbackResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2196,7 +2209,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Brokermint webhook: update a synced lead",
+        "summary": "Brokermint — Sync Lead",
         "description": "Callback endpoint for Brokermint to push contact updates into Lofty. Not intended for general external callers.\n\nThe target contact must have been previously linked to a Brokermint record through the Lofty UI's Brokermint Integration. Without this link the response body contains a non-zero code despite HTTP 200.",
         "operationId": "updateContacts",
         "parameters": [
@@ -2231,6 +2244,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Brokermint contact synced.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
@@ -2243,16 +2266,6 @@
           },
           "500": {
             "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Envelope {code, message}. code=0 indicates applied; non-zero codes indicate the contact was not found or the link is missing.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2352,7 +2365,7 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "List tasks of a lead",
+        "summary": "List Tasks",
         "description": "Returns all tasks and appointments attached to the given lead. Caller must have manage permission on the lead.",
         "operationId": "listTask",
         "parameters": [
@@ -2399,22 +2412,22 @@
               }
             }
           },
-          "400": {
-            "description": "Caller has no access to the lead (20017 PERMISSION_DENIED).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Tasks and appointments for the lead.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TaskV2ListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Caller has no access to the lead (20017 PERMISSION_DENIED).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2435,7 +2448,7 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "Add a task or appointment",
+        "summary": "Create Task",
         "description": "Creates a new task or appointment on the target lead. Whether an appointment or a regular task is created depends on the payload's type field.\n\nNotes:\n- content, assignedRole, leadId and endAt are required.\n- Caller must have manage permission on the lead.\n- The response contains only the new entry's ID under the 'taskId' key.",
         "operationId": "addTask",
         "parameters": [
@@ -2518,7 +2531,7 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "Mark a task as not completed",
+        "summary": "Unfinish Task",
         "description": "Reverts a task or appointment back to the not-completed state. Caller must have manage permission on the entry's lead.",
         "operationId": "unfinishTask",
         "parameters": [
@@ -2565,22 +2578,22 @@
               }
             }
           },
-          "404": {
-            "description": "Task or appointment does not exist (TASK_NOT_EXIST).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Entry marked as not completed.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task or appointment does not exist (TASK_NOT_EXIST).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2603,7 +2616,7 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "Mark a task as completed",
+        "summary": "Finish Task",
         "description": "Marks a task or appointment as completed. Caller must have manage permission on the entry's lead. Smart-plan tasks cannot be finished through this endpoint (TASK_IS_SMARTPLAN).",
         "operationId": "finishTask",
         "parameters": [
@@ -2698,7 +2711,7 @@
         "tags": [
           "Notifications V2"
         ],
-        "summary": "Send app push for task/appointment reminder",
+        "summary": "Send Task Reminder Push",
         "description": "Sends an in-app push notification to the agent assigned to the given task or appointment.",
         "operationId": "sendAppPushTaskReminder",
         "parameters": [
@@ -2733,22 +2746,22 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Push sent successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Invalid parameters (e.g., task not found)",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Push sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               }
             }
@@ -2761,7 +2774,7 @@
         "tags": [
           "Notifications V2"
         ],
-        "summary": "Send system SMS to agent",
+        "summary": "Send SMS to Agent",
         "description": "Sends a system SMS message to the current logged-in user's phone number.",
         "operationId": "sendSystemSmsToAgent",
         "parameters": [
@@ -2824,7 +2837,7 @@
         "tags": [
           "Notifications V2"
         ],
-        "summary": "Send system email to agent",
+        "summary": "Send Email to Agent",
         "description": "Sends a system email to the current logged-in user's email address.",
         "operationId": "sendSystemEmailToAgent",
         "parameters": [
@@ -2942,22 +2955,22 @@
               }
             }
           },
-          "200": {
-            "description": "SMS sent successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "SMS sent successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               }
             }
@@ -3053,7 +3066,7 @@
         "tags": [
           "Listing V2"
         ],
-        "summary": "Search listings",
+        "summary": "Search Listings",
         "description": "Search listings by location keywords and optional filters (price, bedrooms, bathrooms, sqft, property type, listing status, purchase type).",
         "operationId": "searchListings",
         "parameters": [
@@ -3106,8 +3119,8 @@
         "tags": [
           "Calendar V2 API"
         ],
-        "summary": "Query calendar entries",
-        "description": "Returns a page of calendar entries (Tasks and Appointments) for the caller, optionally filtered by leadId, type and completion status.",
+        "summary": "List Calendar Events",
+        "description": "Returns a page of calendar entries (Tasks and Appointments) for the caller, optionally filtered by leadId, type and completion status.\n\nNotes:\n- At least one of startTime or endTime is required; requests missing both return 400 INVALID_PARAMETER.\n- includeFinished=true returns both finished and unfinished entries; includeFinished=false returns only unfinished.\n- Results are wrapped under the 'data' key, which also carries pagination metadata.",
         "operationId": "queryCalendars",
         "parameters": [
           {
@@ -3323,8 +3336,8 @@
         "tags": [
           "Calendar V2 API"
         ],
-        "summary": "Create a calendar entry",
-        "description": "Creates either a Task or an Appointment for the target lead, selected by the 'type' field (case-insensitive TASK / APPOINTMENT).",
+        "summary": "Create Calendar Event",
+        "description": "Creates either a Task or an Appointment for the target lead, selected by the 'type' field (case-insensitive TASK / APPOINTMENT).\n\nNotes:\n- Caller must have manage permission on the lead; otherwise 400 PERMISSION_DENIED (20017).\n- type, leadId, content, startAt and endAt are required. taskWay is additionally required when type = TASK.\n- startAt and endAt must be later than the current server time.\n- The returned data.id is a composite string ('<numericId>-task' or '<numericId>-appointment') and must be used as-is when updating, finishing or deleting this entry.\n- When startAt and endAt are both exactly midnight (00:00:00) in their declared offsets, an appointment is automatically marked as all-day.",
         "operationId": "createCalendar",
         "parameters": [
           {
@@ -3406,7 +3419,7 @@
         "tags": [
           "Calendar V2 API"
         ],
-        "summary": "Mark a calendar entry as not completed",
+        "summary": "Unfinish Calendar Event",
         "description": "Reverts a Task or Appointment back to the not-completed state. Caller must have manage permission on the entry's lead.",
         "operationId": "unfinishCalendar",
         "parameters": [
@@ -3451,22 +3464,22 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid calendarId format or target not found (20012 INVALID_PARAMETER); caller is not the manager (20017 PERMISSION_DENIED).",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Calendar marked as not completed.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CalendarMessageResponseEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid calendarId format or target not found (20012 INVALID_PARAMETER); caller is not the manager (20017 PERMISSION_DENIED).",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3489,7 +3502,7 @@
         "tags": [
           "Calendar V2 API"
         ],
-        "summary": "Mark a calendar entry as completed",
+        "summary": "Finish Calendar Event",
         "description": "Marks a Task or Appointment as finished. Caller must have manage permission on the entry's lead.",
         "operationId": "finishCalendar",
         "parameters": [
@@ -3572,7 +3585,7 @@
         "tags": [
           "Intelligent Features"
         ],
-        "summary": "Generate Prepare Insight",
+        "summary": "Prepare Insight",
         "description": "Generates pre-meeting insight based on lead and appointment information.",
         "operationId": "generatePrepareInsight",
         "parameters": [
@@ -3645,7 +3658,7 @@
         "tags": [
           "Intelligent Features"
         ],
-        "summary": "Query LeadAnalysis task list",
+        "summary": "List Lead Analysis Tasks",
         "description": "Paginates current user's LeadAnalysis tasks (last 3 months, excluding canceled/finished).",
         "operationId": "listLeadAnalysisTasks",
         "parameters": [
@@ -3680,22 +3693,22 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "List retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiCommonResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "List retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiCommonResponse"
                 }
               }
             }
@@ -3706,7 +3719,7 @@
         "tags": [
           "Intelligent Features"
         ],
-        "summary": "Create LeadAnalysis task",
+        "summary": "Create Lead Analysis Task",
         "description": "Triggers an AI analysis task for the specified lead list, executed asynchronously.",
         "operationId": "createLeadAnalysisTask",
         "parameters": [
@@ -3751,6 +3764,16 @@
               }
             }
           },
+          "200": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiCommonResponse"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Invalid parameters (leadIds is empty)",
             "content": {
@@ -3770,16 +3793,6 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "Task created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiCommonResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -3789,7 +3802,7 @@
         "tags": [
           "Intelligent Features"
         ],
-        "summary": "Trigger Call Summary generation",
+        "summary": "Generate Call Summary",
         "description": "Triggers async generation of a call summary from a call recording.",
         "operationId": "generateCallSummary",
         "parameters": [
@@ -3907,22 +3920,22 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Call script generated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CallScriptResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Call script generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CallScriptResponse"
                 }
               }
             }
@@ -3945,7 +3958,7 @@
         "tags": [
           "Webhooks"
         ],
-        "summary": "Add a webhook subscription",
+        "summary": "Create Webhook",
         "description": "Subscribes the caller's team to a webhook event type. See the Webhooks tag description for the full list of event types and delivery rules. For detailed payload shapes per event type, see [Webhook Event Payloads](/concepts/webhooks#event-payloads).",
         "operationId": "add",
         "parameters": [
@@ -4028,7 +4041,7 @@
         "tags": [
           "Team Features"
         ],
-        "summary": "Add a lead custom field",
+        "summary": "Add Custom Field",
         "description": "Creates a new lead-level custom field on the caller's team.\n\nNotes:\n- attributeName is required and is trimmed; empty names are rejected.\n- attributeType is required.\n- The response body is a plain string message.",
         "operationId": "addCustomField",
         "parameters": [
@@ -4063,18 +4076,19 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "Missing or invalid authentication token.",
+          "200": {
+            "description": "Custom field created.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "string",
+                  "example": "success"
                 }
               }
             }
           },
-          "200": {
-            "description": "Result message as a plain string.",
+          "401": {
+            "description": "Missing or invalid authentication token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4111,7 +4125,7 @@
         "tags": [
           "Tasks & Appointments"
         ],
-        "summary": "List tasks of a lead",
+        "summary": "List Tasks (V1)",
         "description": "Returns tasks attached to the given lead. Caller must have manage permission on the lead.",
         "operationId": "listTask_1",
         "parameters": [
@@ -4158,22 +4172,22 @@
               }
             }
           },
-          "400": {
-            "description": "Caller has no access to the lead (20017 PERMISSION_DENIED).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Tasks for the lead.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TaskListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Caller has no access to the lead (20017 PERMISSION_DENIED).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4194,7 +4208,7 @@
         "tags": [
           "Tasks & Appointments"
         ],
-        "summary": "Add a new task",
+        "summary": "Create Task (V1)",
         "description": "Creates a task on the target lead.\n\nNotes:\n- content, leadId, deadline, type and assignedRole are required.\n- Caller must have manage permission on the lead.\n- The response contains only the new task's ID under the 'taskId' key.",
         "operationId": "addTask_1",
         "parameters": [
@@ -4277,7 +4291,7 @@
         "tags": [
           "Agent Organization"
         ],
-        "summary": "Update the team's company info",
+        "summary": "Update Company",
         "description": "Updates the company record associated with the caller's team. Caller must have permission to manage team organization.",
         "operationId": "updateCompany",
         "parameters": [
@@ -4360,7 +4374,7 @@
         "tags": [
           "Notes"
         ],
-        "summary": "List notes of a lead",
+        "summary": "List Notes",
         "description": "Returns all notes attached to the given lead.\n\nNotes:\n- Caller must have access to the lead; otherwise 404 LEAD_NOT_EXIST.\n- By default only user-created notes are returned. Pass includeSystemNote=true to also include automated / system-generated notes.\n- Response order is not guaranteed.",
         "operationId": "list_2",
         "parameters": [
@@ -4397,22 +4411,22 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Notes for the lead (empty array when the lead has no notes).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NoteListResponse"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Notes for the lead (empty array when the lead has no notes).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoteListResponse"
                 }
               }
             }
@@ -4443,8 +4457,8 @@
         "tags": [
           "Notes"
         ],
-        "summary": "Add a note",
-        "description": "Creates a note on the target lead.",
+        "summary": "Create Note",
+        "description": "Creates a note on the target lead.\n\nNotes:\n- leadId, content and isPin are required; content must not be blank.\n- content is silently truncated to 2000 characters.\n- Caller must have access to the lead; otherwise 404 LEAD_NOT_EXIST.\n- The response contains only the new note's ID under the 'noteId' key.\n- Persistence is asynchronous: subsequent GET and PUT on the returned noteId may briefly return 404 immediately after create. DELETE is unaffected.",
         "operationId": "add_1",
         "parameters": [
           {
@@ -4536,7 +4550,7 @@
         "tags": [
           "Communication"
         ],
-        "summary": "Send an SMS to a lead",
+        "summary": "Send SMS",
         "description": "Sends an SMS to the specified lead from the caller's virtual number.\n\nNotes:\n- leadId and content are required.\n- phoneNumber + phoneCode select a specific phone on the lead; when omitted, the lead's primary phone is used.\n- Caller must have manage permission on the lead and must have an active virtual number.",
         "operationId": "sendSms",
         "parameters": [
@@ -4619,7 +4633,7 @@
         "tags": [
           "Communication"
         ],
-        "summary": "Send an email to a lead",
+        "summary": "Send Email",
         "description": "Sends an email to the specified lead using the caller's outgoing email configuration.\n\nNotes:\n- leadId, subject and content are required.\n- toEmail selects a specific email on the lead; when it is not present on the lead, the lead's primary email is used.\n- Caller must have manage permission on the lead.",
         "operationId": "sendEmail",
         "parameters": [
@@ -4664,22 +4678,22 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Email delivered. Response contains the message ID, subject and destination.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EmailSendResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4703,7 +4717,7 @@
           "Lead Manual Log"
         ],
         "summary": "List manual logs of a lead",
-        "description": "Returns the lead's manual-log entries for a single channel (logCall, logEmail or logText), paginated via offset+limit or cursor (currentId).",
+        "description": "Returns the lead's manual-log entries for a single channel (logCall, logEmail or logText), paginated via offset+limit or cursor (currentId).\n\nNotes:\n- Only entries whose logType equals logCall, logEmail or logText are returned. Auto-captured communications are not included.\n- Caller must have access to the lead; otherwise 404 LEAD_NOT_EXIST.\n- Default mode (currentId=0): offset + limit pagination, ordered by sort and order.\n- Cursor mode (currentId > 0): the sort parameter is ignored; entries are ordered by id, with timelineTime as secondary key, matching the direction in order.\n- limit outside [1, 1000] is silently reset to 10; offset < 0 is silently reset to 0; offset + limit > 20000 returns 400 OFFSET_EXCEED_LIMIT.\n- sort=createTime (default) orders by the entry time as logged by the agent (usually equal to the record's creation time). sort=id orders by the entry's ID.\n- order=asc (default) returns oldest first; pass order=desc for newest first.",
         "operationId": "list_3",
         "parameters": [
           {
@@ -4809,16 +4823,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Page of manual log entries for the requested channel.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogTypeListResponse"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
@@ -4835,6 +4839,16 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Page of manual log entries for the requested channel.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogTypeListResponse"
                 }
               }
             }
@@ -4866,7 +4880,7 @@
           "Lead Manual Log"
         ],
         "summary": "Add a manual log entry",
-        "description": "Creates a manual log entry (logCall, logEmail or logText) for the target lead.",
+        "description": "Creates a manual log entry (logCall, logEmail or logText) for the target lead.\n\nNotes:\n- Persistence is asynchronous. The response returns the new entry's ID once the write is enqueued; the entry becomes readable after a short delay.\n- Caller must have access to the lead (owner, shared agent, or assigned lender), and the lead must not be trashed. Otherwise 404 LEAD_NOT_EXIST.\n- leadId, logType and content are required for all channels.\n- content is silently truncated to 5000 characters.\n- outboundOrInbound must be exactly 'outbound' or 'inbound' when supplied; omitted values default to 'outbound'.\n- For logCall: leadPhoneNumber is required (max 20 characters). callingOutcome is optional (max 20 characters); values outside the known set are silently normalized to 'Talked' during persistence.\n- For logEmail: emailSubject / toEmail / fromEmail are optional and accepted as-is.",
         "operationId": "add_2",
         "parameters": [
           {
@@ -4958,7 +4972,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Search for leads",
+        "summary": "List Leads",
         "description": "Returns a page of leads matching the supplied filters with pagination metadata.\n\nNotes:\n- limit must be in [1, 100]; otherwise 400 LIMIT_NOT_VALID.\n- Use offset for offset-based pagination or scrollId for cursor-based pagination.\n- Multiple filters are combined with AND logic; multi-value filters within a single parameter (e.g. allTags, anyTags) apply their documented AND / OR semantics.",
         "operationId": "list_4",
         "parameters": [
@@ -5182,6 +5196,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Page of matching leads with pagination metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadListResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
@@ -5202,16 +5226,6 @@
               }
             }
           },
-          "200": {
-            "description": "Page of matching leads with pagination metadata.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LeadListResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error.",
             "content": {
@@ -5228,8 +5242,8 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Create a new lead",
-        "description": "",
+        "summary": "Create Lead",
+        "description": "## Lead Assignment & Routing\n\n**Assignment priority:**\n1. If `assignedUserId` is provided, the lead is directly assigned to that agent. No routing rules are applied.\n2. If `assignedUserId` is empty or omitted, the lead goes through automatic lead routing based on the configured routing rules.\n\n**Routing rule scope** (when routing is triggered):\n- `assignGroupId = -1` → Apply company-level routing rules.\n- `assignGroupId = <officeId>` → Apply routing rules for the specified office.\n- `assignGroupId` not set → Default routing rules will be applied according to the lead’s ownership scope.\n\n**Routing location matching:**\n- For Seller (1) type leads, routing is determined by the `property` field (property address/location).\n- For all other lead types (Buyer, Renter, etc.), routing is determined by `inquiry.locations[]` (interested areas).\n\n## Lead Ownership\n\nControls the visibility scope of the lead:\n- `ownershipScope = TEAM` → Visible to the entire team (company-wide).\n- `ownershipScope = OFFICE` → Visible to a specific office. Must provide `ownershipId` with the office ID.\n- `ownershipScope = PERSONAL` → Visible only to the assigned agent. Must provide `ownershipId` with the agent's user ID.\n- If not specified, defaults to PERSONAL scope owned by the API caller.\n\n## Eventual consistency\n\nPersistence is asynchronous. The lead ID is returned immediately, but subsequent GET /v1.0/leads/{leadId} and similar read endpoints may briefly return 404 right after create. Follow-up writes (PUT, POST inquiry, POST property, POST transaction) are unaffected.",
         "operationId": "add_3",
         "parameters": [
           {
@@ -5264,21 +5278,11 @@
         },
         "responses": {
           "200": {
-            "description": "Lead created successfully.",
+            "description": "Lead created.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "leadId": {
-                      "type": "integer",
-                      "format": "int64",
-                      "description": "The ID of the newly created lead."
-                    }
-                  }
-                },
-                "example": {
-                  "leadId": 651095960136641
+                  "$ref": "#/components/schemas/LeadIdResponse"
                 }
               }
             }
@@ -5291,7 +5295,7 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "Create a transaction",
+        "summary": "Create Transaction",
         "description": "Creates a new transaction under the given lead.",
         "operationId": "addTransaction",
         "parameters": [
@@ -5347,6 +5351,16 @@
               }
             }
           },
+          "200": {
+            "description": "Transaction created. The response is the persisted transaction.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadTransaction"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Lead not manageable (20006 LEAD_NOT_EXIST).",
             "content": {
@@ -5363,16 +5377,6 @@
               "application/json": {
                 "schema": {
                   "type": "string"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Transaction created. The response is the persisted transaction.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LeadTransaction"
                 }
               }
             }
@@ -5395,8 +5399,8 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "Update transaction property address",
-        "description": "Updates the property address of a transaction. Note: transactionId is carried in the request body, not the URL.",
+        "summary": "Update Property Address",
+        "description": "Updates the property address of a transaction. The `transactionId` is carried in the request body, not the URL.\n\n**Full replacement** — omitted fields are set to null. To update a single field, GET the current address first, modify, then resubmit the whole object.",
         "operationId": "updateTransactionPropertyAddress",
         "parameters": [
           {
@@ -5499,7 +5503,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Place a property",
+        "summary": "Update Property Info",
         "description": "Place a property for a lead.",
         "operationId": "updateProperty",
         "parameters": [
@@ -5544,11 +5548,11 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/LeadIdResponse"
                 }
               }
             }
@@ -5561,7 +5565,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Place an inquiry",
+        "summary": "Add Inquiry",
         "description": "Place an inquiry for a lead.",
         "operationId": "updateInquiry",
         "parameters": [
@@ -5606,11 +5610,11 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/LeadIdResponse"
                 }
               }
             }
@@ -5623,7 +5627,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Assign a lead",
+        "summary": "Assign Lead",
         "description": "Place assignee to a lead.",
         "operationId": "assign",
         "parameters": [
@@ -5672,11 +5676,11 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/LeadIdResponse"
                 }
               }
             }
@@ -5734,11 +5738,11 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/LeadIdResponse"
                 }
               }
             }
@@ -5751,7 +5755,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "Resolve assignees by lead info",
+        "summary": "Preview Routing",
         "description": "Returns the assignees that would be selected by routing rules for a hypothetical lead matching the supplied name, email and other attributes. Useful for previewing routing before creating the lead.\n\nNotes:\n- firstName and email are required.\n- The response lists one entry per role matched by routing.",
         "operationId": "getAssigneeInfo",
         "parameters": [
@@ -5942,8 +5946,8 @@
         "tags": [
           "Opportunity"
         ],
-        "summary": "Send an opportunity notification to the lead's assigned agent(s)",
-        "description": "Send an in-app notification to the agent(s) assigned to the given lead, simulating a buyer/seller activity signal.",
+        "summary": "Send Opportunity Alert",
+        "description": "Sends an in-app notification to the agent(s) assigned to the given lead, representing a buyer/seller activity signal (e.g. viewed a listing, saved a search, requested CMA). Certain notificationType values also trigger SMS and Email delivery.\n\n**Use case:** a partner system observes a user action on its own site and wants that action to surface as an opportunity in the assigned agent's Lofty inbox.\n\n## Delivery channels\n\n| Channel | Trigger |\n|---|---|\n| In-app push | All notificationType values |\n| SMS + Email | Browse (11/48/138), Saved listing (9/52/136), Saved search (27/140), Mortgage calculator (89), Return-to-site (166) |\n\nIf the lead belongs to a lead pond, the notification is broadcast to all pond members instead of the single assignee.\n\n## Important notes\n\n- The leadId **must** belong to the caller's own team.\n- Agents whose team has the OPPORTUNITY resource disabled are silently skipped.\n- This endpoint is **not idempotent**. Repeated calls produce repeated deliveries.\n- The `data` field in the response is a best-effort success hint, not a strict delivery confirmation. See the 200 response description for details.",
         "operationId": "sendOpportunityNotification",
         "parameters": [
           {
@@ -5977,22 +5981,22 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Invalid token / rate-limited / package quota exceeded (handled by the common filter chain before reaching this endpoint; see RateLimitFilter / PackageLimitFilter).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Request accepted. Response body = {status:{code:0,msg:\"success\"}, data:<bool>}. data=true  => notification(s) dispatched to at least one assignee (non-pond path). data=false => one of the silent-failure conditions: leadId=0, notificationType=null, lead not found, no agent-role assignee, or the lead is a lead-pond lead (where broadcast is still triggered but the API returns false due to a known quirk). Callers SHOULD NOT rely on data=true/false as a strict delivery confirmation.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SendOpportunityNotificationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token / rate-limited / package quota exceeded (handled by the common filter chain before reaching this endpoint; see RateLimitFilter / PackageLimitFilter).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -6016,7 +6020,7 @@
           "Agent User"
         ],
         "summary": "Create a new agent",
-        "description": "Creates a new agent under the caller's team using the supplied profile.",
+        "description": "Creates a new agent under the caller's team using the supplied profile.\n\nNotes:\n- accountInfo.phoneNumber and accountInfo.emailAddress are required.\n- When phoneCode is omitted, '1' (US) is used by default.\n- When roleName is supplied, it is resolved to the team's matching role; unknown names are ignored and the agent is created without a role binding.\n- Long text fields (address, licenseId, position, personalWebsite, personalIntroduction, social-media item values) are silently truncated to their individual limits.\n- The response envelope carries errorCode = 0 on success; non-zero values indicate validation failure or upstream error, with errorMsg describing the cause.",
         "operationId": "addAgent",
         "parameters": [
           {
@@ -6088,7 +6092,7 @@
         "tags": [
           "Communication"
         ],
-        "summary": "Search communications by agent",
+        "summary": "Search by Agent",
         "description": "Returns a page of communication timeline entries for the caller (or the caller's team when teamView=true, requiring ACCESS_ALL_TEAM_LEADS permission), filtered by type and optional time range. The response is a page wrapper with totalCount, offset, limit, and pageData.",
         "operationId": "getCommunicationByAgent",
         "parameters": [
@@ -6250,6 +6254,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Working leads retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkingLeadListResponseV2"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
@@ -6266,16 +6280,6 @@
               "application/json": {
                 "schema": {
                   "type": "string"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Working leads retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WorkingLeadListResponseV2"
                 }
               }
             }
@@ -6298,8 +6302,8 @@
         "tags": [
           "Transactions V2"
         ],
-        "summary": "Search transactions",
-        "description": "Paginated transaction search. queryKey performs a contains-style fuzzy match (only the first 15 characters are used) against any of: transaction name, property address, or associated lead name. Results are returned if the keyword matches any of these fields.",
+        "summary": "List Transactions",
+        "description": "Search and list transactions with pagination and optional keyword filter.",
         "operationId": "searchTransactions",
         "parameters": [
           {
@@ -6378,22 +6382,22 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TransactionV2PageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -6406,8 +6410,8 @@
         "tags": [
           "Tasks & Appointments V2"
         ],
-        "summary": "List tasks assigned to the caller",
-        "description": "Returns tasks and appointments assigned to the current user, sorted by start time descending.",
+        "summary": "My Tasks",
+        "description": "Returns tasks assigned to the caller, sorted by startTime descending. Supports cursor-based pagination via currentId (offset) + limit.\n\nNotes:\n- currentId must be >= 0 (INVALID_PARAMETER otherwise).\n- limit must be in [1, 100] (LIMIT_NOT_VALID otherwise).\n- timeZoneCode selects how start/end times are formatted; when omitted, the caller's configured timezone is used.",
         "operationId": "listTasksByUser",
         "parameters": [
           {
@@ -6477,22 +6481,22 @@
               }
             }
           },
-          "400": {
-            "description": "currentId < 0 (INVALID_PARAMETER) or limit out of range (LIMIT_NOT_VALID).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Tasks assigned to the caller.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TaskV2ListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "currentId < 0 (INVALID_PARAMETER) or limit out of range (LIMIT_NOT_VALID).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -6551,16 +6555,6 @@
               }
             }
           },
-          "200": {
-            "description": "Working lead status retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WorkingLeadV2"
-                }
-              }
-            }
-          },
           "403": {
             "description": "Caller does not have access to this lead.",
             "content": {
@@ -6577,6 +6571,16 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Working lead status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkingLeadV2"
                 }
               }
             }
@@ -6741,6 +6745,16 @@
               }
             }
           },
+          "403": {
+            "description": "Caller does not have access to this lead.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Invalid lead ID parameter.",
             "content": {
@@ -6751,8 +6765,8 @@
               }
             }
           },
-          "403": {
-            "description": "Caller does not have access to this lead.",
+          "404": {
+            "description": "Sales Agent not found for the lead.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6767,16 +6781,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SalesAgentResponseV2"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Sales Agent not found for the lead.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -6919,6 +6923,19 @@
               }
             }
           },
+          "200": {
+            "description": "Plan tasks retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanTaskResponseV2"
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Caller does not have access to this lead.",
             "content": {
@@ -6935,19 +6952,6 @@
               "application/json": {
                 "schema": {
                   "type": "string"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Plan tasks retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PlanTaskResponseV2"
-                  }
                 }
               }
             }
@@ -7089,8 +7093,8 @@
         "tags": [
           "Calendar V2 API"
         ],
-        "summary": "List available meeting slots",
-        "description": "Returns available meeting time slots within the given time range, sorted by startTime ascending.",
+        "summary": "Available Meetings",
+        "description": "Returns available meeting time slots within the given time range, sorted by startTime ascending.\n\nNotes:\n- Either startTime (ISO 8601) or startTimeMs (millisecond timestamp) must be provided; same for endTime / endTimeMs. When both forms are provided for a field, the string form takes precedence.\n- The resolved start time must be later than the current server time.\n- The resolved end time must be later than the resolved start time.\n- The range between start and end must not exceed 90 days.\n- At most 'limit' slots are returned; the envelope also includes the total count.",
         "operationId": "getAvailableMeetings",
         "parameters": [
           {
@@ -7169,22 +7173,22 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Available meeting slots with total count.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AvailableMeetingsResponseEnvelope"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Available meeting slots with total count.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableMeetingsResponseEnvelope"
                 }
               }
             }
@@ -7241,22 +7245,22 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Call summary retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CallSummaryResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Call summary retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CallSummaryResponse"
                 }
               }
             }
@@ -7279,7 +7283,7 @@
         "tags": [
           "Webhooks"
         ],
-        "summary": "List webhook subscriptions for the team",
+        "summary": "List Webhooks",
         "description": "Returns all webhook subscriptions configured for the caller's team. See the Webhooks tag description for the full list of event types. For detailed payload shapes per event type, see [Webhook Event Payloads](/concepts/webhooks#event-payloads).",
         "operationId": "list",
         "parameters": [
@@ -7335,7 +7339,7 @@
         "tags": [
           "Vendor"
         ],
-        "summary": "List vendors of the caller's team",
+        "summary": "List Vendors",
         "description": "Returns the vendor directory for the team .Notes:\n- Scope: the list is scoped to the caller's team (teamId is resolved from the token).\n- Ordering is not guaranteed; do not rely on a specific sort order.\n- Only the fields defined in VendorInfo are exposed; internal fields are not returned.\n- The response is a bare JSON array; empty array when the team has no vendors.",
         "operationId": "getVendorInfo",
         "parameters": [
@@ -7350,16 +7354,6 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Permission denied (error code 20017 PERMISSION_DENIED). The token is valid but the authorization scope does not allow listing team vendors.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Vendor list for the caller's team. Empty array when the team has no vendors.",
             "content": {
@@ -7369,6 +7363,16 @@
                   "items": {
                     "$ref": "#/components/schemas/VendorInfo"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Permission denied (error code 20017 PERMISSION_DENIED). The token is valid but the authorization scope does not allow listing team vendors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -7477,7 +7481,7 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "List transaction custom field definitions",
+        "summary": "List Transaction Custom Fields",
         "description": "Returns the team-level custom field definitions applicable to transactions. Use the returned ids when populating LeadTransaction.customFields on create / update.\n\nScope: the caller's team.",
         "operationId": "getTransactionCustomFields",
         "parameters": [
@@ -7492,6 +7496,16 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Missing or invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "200": {
             "description": "List of custom field definitions (may be empty).",
             "content": {
@@ -7501,16 +7515,6 @@
                   "items": {
                     "$ref": "#/components/schemas/CustomFieldResponse"
                   }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -7533,7 +7537,7 @@
         "tags": [
           "Team Features"
         ],
-        "summary": "List lead tags visible to the caller",
+        "summary": "List Tags",
         "description": "Returns lead tags visible to the caller within the team. Includes both team-wide tags and tags scoped to the caller.",
         "operationId": "listTag",
         "parameters": [
@@ -7589,7 +7593,7 @@
         "tags": [
           "Team Features"
         ],
-        "summary": "List lead custom field definitions",
+        "summary": "List Custom Fields",
         "description": "Returns the lead-level custom field definitions configured on the caller's team. Use the returned IDs when populating custom field values on leads.",
         "operationId": "listCustomField",
         "parameters": [
@@ -7645,7 +7649,7 @@
         "tags": [
           "Team Features"
         ],
-        "summary": "List lead ponds visible to the caller",
+        "summary": "List Lead Ponds",
         "description": "Returns lead ponds on the caller's team that the caller is allowed to see.",
         "operationId": "listLeadPonds",
         "parameters": [
@@ -7701,7 +7705,7 @@
         "tags": [
           "Team Features"
         ],
-        "summary": "Get a lead pond by ID",
+        "summary": "Get Lead Pond",
         "description": "Returns a single lead pond by ID. The pond must belong to the caller's team and be visible to the caller.",
         "operationId": "findPondById",
         "parameters": [
@@ -7748,22 +7752,22 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Lead pond retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LeadPond"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -7776,7 +7780,7 @@
         "tags": [
           "Lead System Logs"
         ],
-        "summary": "List a lead's system log",
+        "summary": "System Logs",
         "description": "Returns system-event timeline entries for the lead, sorted by timelineTime descending (newest first), with offset-based pagination.\n\nAuthorization: the authenticated user must be the lead's owner or the shared agent; otherwise 403 is returned.",
         "operationId": "list_1",
         "parameters": [
@@ -7902,7 +7906,7 @@
         "tags": [
           "Lead Routing"
         ],
-        "summary": "List routing rules",
+        "summary": "Lead Routing Rules",
         "description": "Returns the routing rules configured on the caller's team for the given business type. Caller must have MANAGE_LEAD_DISTRIBUTION or MANAGE_LEAD_DISTRIBUTION_DEPARTMENT permission.",
         "operationId": "listRule",
         "parameters": [
@@ -7945,16 +7949,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Missing or invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Routing rules for the given business type.",
             "content": {
@@ -7964,6 +7958,16 @@
                   "items": {
                     "$ref": "#/components/schemas/RoutingRule"
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -8021,16 +8025,6 @@
               }
             }
           },
-          "400": {
-            "description": "Permission denied (PERMISSION_DENIED 20017).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Assign roles defined on the team.",
             "content": {
@@ -8040,6 +8034,16 @@
                   "items": {
                     "$ref": "#/components/schemas/AssignRole"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Permission denied (PERMISSION_DENIED 20017).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -8156,8 +8160,8 @@
         "tags": [
           "Agent Organization"
         ],
-        "summary": "Get the caller's organization info",
-        "description": "Returns the organization structure the caller belongs to.",
+        "summary": "Get Organization",
+        "description": "Returns the organization structure the caller belongs to.\n\nNotes:\n- When the caller is part of a multi-team group (brokerage), orgType is MULTI_TEAM and multiTeamInfo carries the parent group's ID and name; enterpriseInfo is absent.\n- Otherwise orgType is SIGNAL_INSTANCE and enterpriseInfo describes the caller's office, visible sub-offices, and assigned permission profile.\n- visibleOrgInfoList depends on the caller's permissions: callers with MANAGE_ORGANIZATION see all offices in the company; callers with MANAGE_ORGANIZATION_DEPARTMENT see their own office's sub-offices; others receive an empty list.",
         "operationId": "getOrgInfo",
         "parameters": [
           {
@@ -8209,7 +8213,7 @@
         "tags": [
           "Agent Organization"
         ],
-        "summary": "List permission profiles available to the team",
+        "summary": "List Permission Profiles",
         "description": "Returns the permission profiles (role templates) defined on the caller's team. Use these IDs when assigning roles to team members.\n\nCaller must have MANAGE_TEAM_AGENT or MANAGE_PERMISSION_PROFILE permission; otherwise 400 VENDOR_HAS_NO_PERMISSION.",
         "operationId": "getPermissionProfile",
         "parameters": [
@@ -8244,6 +8248,16 @@
               }
             }
           },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "200": {
             "description": "Permission profiles defined on the team.",
             "content": {
@@ -8256,16 +8270,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
           }
         }
       }
@@ -8275,7 +8279,7 @@
         "tags": [
           "Members"
         ],
-        "summary": "List team members",
+        "summary": "Team Members",
         "description": "Returns members of the caller's team, optionally filtered by office / group IDs, with pagination metadata.\n\nNotes:\n- limit must not exceed the configured maximum; oversized values return 400 LIMIT_PARAM_OVERSIZE.\n- offset < 0 is silently reset to 0.\n- total in _metadata reflects the full result size before pagination.\n- When groupIds is omitted, all members visible to the caller are returned.",
         "operationId": "getMembers",
         "parameters": [
@@ -8343,22 +8347,22 @@
               }
             }
           },
-          "400": {
-            "description": "limit exceeds the configured maximum (LIMIT_PARAM_OVERSIZE).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Page of team members with pagination metadata.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MemberListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "limit exceeds the configured maximum (LIMIT_PARAM_OVERSIZE).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -8554,22 +8558,22 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Manual log entry retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LogTypeSingleResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -8631,7 +8635,7 @@
             "description": "Missing or invalid authentication token."
           },
           "200": {
-            "description": "Delete succeeded. Response body is empty."
+            "description": "Log entry deleted successfully. No response body."
           },
           "404": {
             "description": "Entry does not exist or is not a manual log (20007 RESOURCE_NOT_EXIST), or the caller has no access to the owning lead (20006 LEAD_NOT_EXIST)."
@@ -8647,8 +8651,8 @@
         "tags": [
           "Listing"
         ],
-        "summary": "Search listings by agent, office or MLS id",
-        "description": "Searches active and sold listings for a specific agent (the caller by default), their office, or a set of MLS listing IDs.",
+        "summary": "Search by Agent / Office",
+        "description": "Searches active and sold listings for a specific agent (the caller by default), their office, or a set of MLS listing IDs.\n\nNotes:\n- limit must be in (0, 1000]; otherwise 400 LISTING_LIMIT_NOT_VALID.\n- listingId and soldListingId cannot be supplied together; doing so returns an error envelope on HTTP 200.\n- At least one of agentListings, officeListings, listingId, soldListingId, mlsListingIds, buildingName, or buildingAddress must identify the search target.\n- When userId differs from the caller, caller must have MANAGE_TEAM_AGENT permission.",
         "operationId": "getByUserId",
         "parameters": [
           {
@@ -8801,16 +8805,6 @@
               }
             }
           },
-          "200": {
-            "description": "Search result envelope with active listings, sold listings, and listing metadata.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingSearchResponse"
-                }
-              }
-            }
-          },
           "403": {
             "description": "Caller has no access to the specified userId's data (NO_ACCESS_WEBSITE).",
             "content": {
@@ -8827,6 +8821,16 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Search result envelope with active listings, sold listings, and listing metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingSearchResponse"
                 }
               }
             }
@@ -8849,8 +8853,8 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "List transactions for a lead",
-        "description": "Returns all transactions attached to the given lead.\n\nPrerequisites:\n- leadId must belong to the caller's team and the caller must have manage permission on the lead; otherwise 404 LEAD_NOT_EXIST is returned (existence is hidden for security).\n\nNotes:\n- Response order is not guaranteed; do not rely on it.\n- The response may include transactions that have been deleted.",
+        "summary": "List by Lead",
+        "description": "Returns all transactions attached to the given lead.",
         "operationId": "listTransactionsByLeadId",
         "parameters": [
           {
@@ -8926,8 +8930,8 @@
         "tags": [
           "Lead Transaction"
         ],
-        "summary": "Get transaction property address",
-        "description": "Returns the full address of the property associated with a transaction.\n\nPrerequisites:\n- leadId must be manageable by the caller (404 LEAD_NOT_EXIST otherwise).\n- transactionId must exist, not be deleted, and belong to leadId (404 TRANSACTION_NOT_EXIST otherwise).\n- The transaction must have a property record; transactions created without an address may return 404 RESOURCE_NOT_EXIST.",
+        "summary": "Get Property Address",
+        "description": "Returns the property address associated with a transaction.",
         "operationId": "getTransactionPropertyAddress",
         "parameters": [
           {
@@ -8963,22 +8967,22 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Property address.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LeadTransactionPropertyAddress"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Property address.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadTransactionPropertyAddress"
                 }
               }
             }
@@ -9011,7 +9015,7 @@
         "tags": [
           "Leads"
         ],
-        "summary": "List site activities of a lead",
+        "summary": "Lead Activities",
         "description": "Returns the lead's site-tracked activities (browse / search / favorite / CMA) across tracking types 1, 2, 3 and 23, merged and sorted by created time descending.\n\nNotes:\n- Caller must have manage permission on the lead; otherwise 404 LEAD_NOT_EXIST.\n- Page size is fixed at 100; use curPage to step through pages.",
         "operationId": "listActivities_1",
         "parameters": [
@@ -9051,19 +9055,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Activities for the lead.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LeadActivity"
-                  }
-                }
-              }
-            }
-          },
           "404": {
             "description": "Lead does not exist or caller has no access (20006 LEAD_NOT_EXIST).",
             "content": {
@@ -9080,6 +9071,19 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Activities for the lead.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LeadActivity"
+                  }
                 }
               }
             }
@@ -9102,7 +9106,7 @@
         "tags": [
           "Listing"
         ],
-        "summary": "Get published listings as XML",
+        "summary": "Get Published Listings",
         "description": "Returns the caller team's published listings as an XML feed. Intended for external syndication partners; the response content type is application/xml.",
         "operationId": "getPublishedListings",
         "parameters": [
@@ -9170,7 +9174,7 @@
         "tags": [
           "Communication"
         ],
-        "summary": "List text message history of a lead",
+        "summary": "SMS History",
         "description": "Returns text message history entries for the given lead. Lead must belong to the caller's team.",
         "operationId": "getCommunicationText",
         "parameters": [
@@ -9282,7 +9286,7 @@
         "tags": [
           "Communication"
         ],
-        "summary": "List email history of a lead",
+        "summary": "Email History",
         "description": "Returns email history entries for the given lead. Lead must belong to the caller's team.",
         "operationId": "getCommunicationEmail",
         "parameters": [
@@ -9346,22 +9350,22 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Email history entries for the lead.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommunicationEmailListResponse"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Email history entries for the lead.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunicationEmailListResponse"
                 }
               }
             }
@@ -9394,7 +9398,7 @@
         "tags": [
           "Communication"
         ],
-        "summary": "List call history of a lead",
+        "summary": "Call History",
         "description": "Returns call history entries for the given lead. Lead must belong to the caller's team.",
         "operationId": "getCommunicationCall",
         "parameters": [
@@ -9570,6 +9574,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Call history entries for the lead.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunicationCallV2ListResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Missing or invalid authentication token.",
             "content": {
@@ -9586,16 +9600,6 @@
               "application/json": {
                 "schema": {
                   "type": "string"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Call history entries for the lead.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommunicationCallV2ListResponse"
                 }
               }
             }
@@ -9756,6 +9760,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Call record retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CallDetailResponse"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Call does not exist, or caller has no access to the owning lead (20017 PERMISSION_DENIED).",
             "content": {
@@ -9772,16 +9786,6 @@
               "application/json": {
                 "schema": {
                   "type": "string"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Call record retrieved successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CallDetailResponse"
                 }
               }
             }
@@ -9899,7 +9903,7 @@
         "tags": [
           "Tasks & Appointments"
         ],
-        "summary": "List appointments of a lead",
+        "summary": "List Appointments",
         "description": "Returns appointments attached to the given lead. Caller must have manage permission on the lead.",
         "operationId": "list_5",
         "parameters": [
@@ -9987,7 +9991,7 @@
         "tags": [
           "Webhooks"
         ],
-        "summary": "Delete a webhook subscription",
+        "summary": "Delete Webhook",
         "description": "Deletes a webhook subscription by ID. The subscription must belong to the caller's team. The response body is empty.",
         "operationId": "delete",
         "parameters": [
@@ -10027,11 +10031,11 @@
           "401": {
             "description": "Missing or invalid authentication token."
           },
+          "200": {
+            "description": "Webhook deleted successfully. No response body."
+          },
           "400": {
             "description": "Subscription does not exist (WEBHOOK_DELETE_NOT_EXIST) or is not owned by the caller's team (WEBHOOK_DELETE_NO_AUTHORITY)."
-          },
-          "200": {
-            "description": "Subscription deleted. Response body is empty."
           },
           "500": {
             "description": "Internal server error."
@@ -10047,7 +10051,7 @@
         "properties": {
           "content": {
             "type": "string",
-            "description": "Updated task or appointment description. Plain text.",
+            "description": "Description of the task",
             "example": "Send an email to my lead"
           },
           "startAt": {
@@ -10167,7 +10171,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Active days of week (0=Sun, 6=Sat), empty means all days",
               "format": "int32"
             }
           },
@@ -10180,7 +10183,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead types filter, empty means all",
               "format": "int32"
             }
           },
@@ -10193,7 +10195,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead source IDs filter, empty means all",
               "format": "int64"
             }
           },
@@ -10206,7 +10207,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead pipeline IDs filter, empty means all",
               "format": "int64"
             }
           },
@@ -10219,7 +10219,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Agent IDs with access, contains -1 means all",
               "format": "int64"
             }
           },
@@ -10232,7 +10231,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Office IDs with access, contains -1 means all",
               "format": "int64"
             }
           },
@@ -10245,7 +10243,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead pond IDs with access, contains -1 means all",
               "format": "int64"
             }
           },
@@ -10272,7 +10269,7 @@
         "properties": {
           "content": {
             "type": "string",
-            "description": "Updated calendar event description. Plain text."
+            "description": "Updated content/description"
           },
           "startAt": {
             "type": "string",
@@ -10339,7 +10336,7 @@
         "properties": {
           "content": {
             "type": "string",
-            "description": "Task description. Plain text.",
+            "description": "Description of the task.",
             "example": "Send an email to my lead"
           },
           "leadId": {
@@ -10392,13 +10389,14 @@
             "example": [
               1,
               2,
+              3,
               4,
-              7
+              5
             ],
             "items": {
               "type": "integer",
-              "description": "Active day list, between 1 and 7",
-              "format": "int32"
+              "format": "int32",
+              "example": 1
             }
           },
           "hoursStart": {
@@ -10538,7 +10536,7 @@
           },
           "phoneCode": {
             "type": "string",
-            "description": "Country calling code without the leading `+`. Example: `1` (US), `86` (China).",
+            "description": "Phone country calling code without the leading +.",
             "example": "1"
           },
           "phoneCountry": {
@@ -10786,39 +10784,37 @@
             "type": "array",
             "description": "A list of email addresses associated with the lead",
             "example": [
-              "123456789@gmail.com",
-              "987654321@gmail.com"
+              "jane.doe@example.com",
+              "jdoe-work@company.com"
             ],
             "items": {
               "type": "string",
-              "description": "A list of email addresses associated with the lead",
-              "example": "[\"123456789@gmail.com\",\"987654321@gmail.com\"]"
+              "example": "jane.doe@example.com"
             }
           },
           "phones": {
             "type": "array",
             "description": "A list of phone numbers associated with the lead. (No more than 20 characters per phone)",
             "example": [
-              "123456789",
-              "987654321"
+              "+14155551234",
+              "+12125559876"
             ],
             "items": {
               "type": "string",
-              "description": "A list of phone numbers associated with the lead. (No more than 20 characters per phone)",
-              "example": "[\"123456789\",\"987654321\"]"
+              "example": "+14155551234"
             }
           },
           "leadTypes": {
             "type": "array",
             "description": "Types of lead, expressed by ID. Type ID : Other (-1),  Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7),Homeowner (8), Landlord (9)",
             "example": [
-              1,
-              2
+              2,
+              5
             ],
             "items": {
               "type": "integer",
-              "description": "Types of lead, expressed by ID. Type ID : Other (-1),  Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7),Homeowner (8), Landlord (9)",
-              "format": "int32"
+              "format": "int32",
+              "example": 2
             }
           },
           "assignedUserId": {
@@ -10863,62 +10859,61 @@
           },
           "stage": {
             "type": "string",
-            "description": "Pipeline stage name (e.g. `New Lead`, `Contacted`, `Qualified`). Max 20 characters. Must match an existing stage configured for the team.",
+            "description": "The stage the lead is in, less than 20 characters",
             "example": "Pending"
           },
           "groups": {
             "type": "array",
             "description": "The groups the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front. deprecated, use segments instead.",
             "example": [
-              "My_lead"
+              "VIP Clients",
+              "Open House Feb"
             ],
             "deprecated": true,
             "items": {
               "type": "string",
-              "description": "The groups the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front. deprecated, use segments instead.",
-              "example": "[\"My_lead\"]",
-              "deprecated": true
+              "example": "VIP Clients"
             }
           },
           "segments": {
             "type": "array",
             "description": "The segments the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front.",
             "example": [
-              "My_lead"
+              "First-Time Buyers",
+              "Downtown Area"
             ],
             "items": {
               "type": "string",
-              "description": "The segments the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front.",
-              "example": "[\"My_lead\"]"
+              "example": "First-Time Buyers"
             }
           },
           "tags": {
             "type": "array",
             "description": "The tags associated with the lead. All existing tags will be updated based on this call \n Caution: Max limit 64 characters.If you exceed the limit,the import will success , but only import 64 characters in front.",
             "example": [
-              "Co-Owner"
+              "Hot Lead",
+              "Zillow"
             ],
             "items": {
               "type": "string",
-              "description": "The tags associated with the lead. All existing tags will be updated based on this call \n Caution: Max limit 64 characters.If you exceed the limit,the import will success , but only import 64 characters in front.",
-              "example": "[\"Co-Owner\"]"
+              "example": "Hot Lead"
             }
           },
           "tagsAdd": {
             "type": "array",
             "description": "The tags associated with the lead. All existing tags will be retained, only add new tags base on this call\n Caution: Max limit 64 characters. If you exceed the limit, the import will success, but only import 64 characters in front.",
             "example": [
-              "Co-Owner"
+              "Referral",
+              "Pre-Approved"
             ],
             "items": {
               "type": "string",
-              "description": "The tags associated with the lead. All existing tags will be retained, only add new tags base on this call\n Caution: Max limit 64 characters. If you exceed the limit, the import will success, but only import 64 characters in front.",
-              "example": "[\"Co-Owner\"]"
+              "example": "Referral"
             }
           },
           "source": {
             "type": "string",
-            "description": "Lead source label (e.g. `Zillow`, `Website`, `Referral`, `Facebook`). Free-text string, team-configurable.",
+            "description": "The source of the lead",
             "example": "Open House"
           },
           "inquiry": {
@@ -11036,18 +11031,24 @@
           },
           "phones": {
             "type": "array",
-            "description": "A list of phone numbers associated with the family member. (No more than 20 characters per phone）",
+            "description": "A list of phone numbers associated with the family member. (No more than 20 characters per phone)",
+            "example": [
+              "+14155551234"
+            ],
             "items": {
               "type": "string",
-              "description": "A list of phone numbers associated with the family member. (No more than 20 characters per phone）"
+              "example": "+14155551234"
             }
           },
           "emails": {
             "type": "array",
             "description": "A list of email addresses associated with the lead",
+            "example": [
+              "spouse@example.com"
+            ],
             "items": {
               "type": "string",
-              "description": "A list of email addresses associated with the lead"
+              "example": "spouse@example.com"
             }
           },
           "birthday": {
@@ -11081,8 +11082,7 @@
             ],
             "items": {
               "type": "string",
-              "description": "Property types: `Single Family Home`, `Multi-Family`, `Condo`, `Townhouse`, `Mobile Home`, `Manufactured Home`, `Vacant Land`, `Commercial`.",
-              "example": "[\"Single Family Home\",\"Condo\"]"
+              "example": "Single Family Home"
             }
           },
           "bedroomsMin": {
@@ -11469,6 +11469,18 @@
           }
         ]
       },
+      "LeadIdResponse": {
+        "type": "object",
+        "properties": {
+          "leadId": {
+            "type": "integer",
+            "description": "ID of the lead.",
+            "format": "int64",
+            "example": 651095960136641
+          }
+        },
+        "description": "Response containing the lead ID."
+      },
       "IncomingTransaction": {
         "required": [
           "id"
@@ -11586,8 +11598,7 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string",
-            "description": "Email address. Must be a valid email format."
+            "type": "string"
           },
           "firstName": {
             "type": "string"
@@ -11614,8 +11625,7 @@
             "type": "string"
           },
           "phone": {
-            "type": "string",
-            "description": "Phone number, digits only, max 20 characters. Example: `5551234567`."
+            "type": "string"
           },
           "bmPrivate": {
             "type": "boolean"
@@ -11625,6 +11635,23 @@
           }
         },
         "description": "Brokermint-sourced contact payload."
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Status code. 0 indicates success.",
+            "format": "int32",
+            "example": 0
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message.",
+            "example": "success"
+          }
+        },
+        "description": "Common response envelope with status code and message."
       },
       "AddWorkingLeadRequestV2": {
         "required": [
@@ -11641,7 +11668,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead IDs to add to Sales Agent working pool (max 100)",
               "format": "int64"
             }
           },
@@ -11662,7 +11688,7 @@
         "properties": {
           "content": {
             "type": "string",
-            "description": "Task or appointment description. Plain text.",
+            "description": "Description of the task",
             "example": "Send an email to my lead"
           },
           "leadId": {
@@ -11790,7 +11816,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead IDs to create plan tasks for (max 100)",
               "format": "int64"
             }
           }
@@ -11847,16 +11872,14 @@
             "type": "array",
             "description": "Sort fields. Values from ListingSortEnum, e.g. MLS_LIST_DATE_L_DESC, PRICE_DESC, PRICE_ASC, BEDROOMS_DESC, BATHS_DESC, BUILT_YEAR_DESC, SQFT_DESC, RELEVANCE, QUALITY_DESC, OPEN_HOUSE_DESC.",
             "items": {
-              "type": "string",
-              "description": "Sort fields. Values from ListingSortEnum, e.g. MLS_LIST_DATE_L_DESC, PRICE_DESC, PRICE_ASC, BEDROOMS_DESC, BATHS_DESC, BUILT_YEAR_DESC, SQFT_DESC, RELEVANCE, QUALITY_DESC, OPEN_HOUSE_DESC."
+              "type": "string"
             }
           },
           "returnFields": {
             "type": "array",
             "description": "Return fields. If empty, uses default fields for the listing type.",
             "items": {
-              "type": "string",
-              "description": "Return fields. If empty, uses default fields for the listing type."
+              "type": "string"
             }
           },
           "pageNum": {
@@ -12298,7 +12321,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead IDs to analyze (required, cannot be empty)",
               "format": "int64"
             }
           }
@@ -12360,8 +12382,7 @@
             "type": "array",
             "description": "Suggested call objectives",
             "items": {
-              "type": "string",
-              "description": "Suggested call objectives"
+              "type": "string"
             }
           },
           "keyTalkingPoints": {
@@ -12385,8 +12406,7 @@
             "type": "array",
             "description": "Talking point content items",
             "items": {
-              "type": "string",
-              "description": "Talking point content items"
+              "type": "string"
             }
           }
         },
@@ -12509,7 +12529,7 @@
           },
           "phoneCode": {
             "type": "string",
-            "description": "Country calling code without the leading `+`. Example: `1` (US), `86` (China).",
+            "description": "Phone country calling code without the leading +.",
             "example": "1"
           },
           "phoneCountry": {
@@ -12576,12 +12596,12 @@
           },
           "phoneCode": {
             "type": "string",
-            "description": "Country calling code without the leading `+`. Example: `1` (US), `86` (China), `44` (UK).",
+            "description": "Recipient phone code",
             "example": "1"
           },
           "content": {
             "type": "string",
-            "description": "SMS message body. Plain text, no HTML.",
+            "description": "SMS content",
             "example": "Hello, this is a test message"
           },
           "leadId": {
@@ -12606,7 +12626,7 @@
           },
           "phoneCode": {
             "type": "string",
-            "description": "Country calling code without the leading `+`. Example: `1` (US), `86` (China), `44` (UK)."
+            "description": "Recipient phone code"
           }
         }
       },
@@ -12625,7 +12645,7 @@
           },
           "content": {
             "type": "string",
-            "description": "Email body content. Supports HTML.",
+            "description": "Email content",
             "example": "Hello, this is a test email"
           },
           "leadId": {
@@ -12865,39 +12885,37 @@
             "type": "array",
             "description": "A list of email addresses associated with the lead",
             "example": [
-              "123456789@gmail.com",
-              "987654321@gmail.com"
+              "jane.doe@example.com",
+              "jdoe-work@company.com"
             ],
             "items": {
               "type": "string",
-              "description": "A list of email addresses associated with the lead",
-              "example": "[\"123456789@gmail.com\",\"987654321@gmail.com\"]"
+              "example": "jane.doe@example.com"
             }
           },
           "phones": {
             "type": "array",
             "description": "A list of phone numbers associated with the lead. (No more than 20 characters per phone)",
             "example": [
-              "123456789",
-              "987654321"
+              "+14155551234",
+              "+12125559876"
             ],
             "items": {
               "type": "string",
-              "description": "A list of phone numbers associated with the lead. (No more than 20 characters per phone)",
-              "example": "[\"123456789\",\"987654321\"]"
+              "example": "+14155551234"
             }
           },
           "leadTypes": {
             "type": "array",
-            "description": "Types of lead, expressed by ID. Type ID : Other (-1),  Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7), Homeowner (8), Landlord (9)",
+            "description": "Types of lead, expressed by ID. Type ID : Other (-1), Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7), Homeowner (8), Landlord (9)",
             "example": [
-              1,
-              2
+              2,
+              5
             ],
             "items": {
               "type": "integer",
-              "description": "Types of lead, expressed by ID. Type ID : Other (-1),  Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7), Homeowner (8), Landlord (9)",
-              "format": "int32"
+              "format": "int32",
+              "example": 2
             }
           },
           "assignedUserId": {
@@ -12937,62 +12955,61 @@
           },
           "stage": {
             "type": "string",
-            "description": "Pipeline stage name (e.g. `New Lead`, `Contacted`, `Qualified`). Max 20 characters. Must match an existing stage configured for the team.",
+            "description": "The stage the lead is in, less than 20 characters",
             "example": "Pending"
           },
           "groups": {
             "type": "array",
-            "description": "The groups the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front. deprecated, use segments instead.",
+            "description": "The groups the lead is in. Caution: Max limit 30 characters. If you exceed the limit, the import will succeed, but only import 30 characters in front. Deprecated, use segments instead.",
             "example": [
-              "My_lead"
+              "VIP Clients",
+              "Open House Feb"
             ],
             "deprecated": true,
             "items": {
               "type": "string",
-              "description": "The groups the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front. deprecated, use segments instead.",
-              "example": "[\"My_lead\"]",
-              "deprecated": true
+              "example": "VIP Clients"
             }
           },
           "segments": {
             "type": "array",
-            "description": "The segments the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front.",
+            "description": "The segments the lead is in. Caution: Max limit 30 characters. If you exceed the limit, the import will succeed, but only import 30 characters in front.",
             "example": [
-              "My_lead"
+              "First-Time Buyers",
+              "Downtown Area"
             ],
             "items": {
               "type": "string",
-              "description": "The segments the lead is in \n Caution: Max limit 30 characters.If you exceed the limit,the import will success , but only import 30 characters in front.",
-              "example": "[\"My_lead\"]"
+              "example": "First-Time Buyers"
             }
           },
           "tags": {
             "type": "array",
-            "description": "The tags associated with the lead. All existing tags will be updated based on this call \n Caution: Max limit 64 characters.If you exceed the limit,the import will success , but only import 64 characters in front.",
+            "description": "The tags associated with the lead. All existing tags will be updated based on this call. Caution: Max limit 64 characters. If you exceed the limit, the import will succeed, but only import 64 characters in front.",
             "example": [
-              "Co-Owner"
+              "Hot Lead",
+              "Zillow"
             ],
             "items": {
               "type": "string",
-              "description": "The tags associated with the lead. All existing tags will be updated based on this call \n Caution: Max limit 64 characters.If you exceed the limit,the import will success , but only import 64 characters in front.",
-              "example": "[\"Co-Owner\"]"
+              "example": "Hot Lead"
             }
           },
           "tagsAdd": {
             "type": "array",
-            "description": "The tags associated with the lead. All existing tags will be retained, only add new tags base on this call\n Caution: Max limit 64 characters. If you exceed the limit, the import will success, but only import 64 characters in front.",
+            "description": "The tags associated with the lead. All existing tags will be retained, only add new tags based on this call. Caution: Max limit 64 characters. If you exceed the limit, the import will succeed, but only import 64 characters in front.",
             "example": [
-              "Co-Owner"
+              "Referral",
+              "Pre-Approved"
             ],
             "items": {
               "type": "string",
-              "description": "The tags associated with the lead. All existing tags will be retained, only add new tags base on this call\n Caution: Max limit 64 characters. If you exceed the limit, the import will success, but only import 64 characters in front.",
-              "example": "[\"Co-Owner\"]"
+              "example": "Referral"
             }
           },
           "source": {
             "type": "string",
-            "description": "Lead source label (e.g. `Zillow`, `Website`, `Referral`, `Facebook`). Free-text string, team-configurable.",
+            "description": "The source of the lead",
             "example": "Open House"
           },
           "inquiry": {
@@ -13097,7 +13114,7 @@
           },
           "content": {
             "type": "string",
-            "description": "Note content to attach to the lead on creation. Plain text.",
+            "description": "Note content",
             "example": "example_note"
           },
           "isPin": {
@@ -13338,13 +13355,9 @@
         }
       },
       "AgentTagRequest": {
-        "required": [
-          "tagNames"
-        ],
         "type": "object",
         "properties": {
           "tagNames": {
-            "maxLength": 20,
             "type": "array",
             "description": "Tag names to add to the agent. Up to 20 per call.",
             "example": [
@@ -13352,10 +13365,8 @@
               "Premium"
             ],
             "items": {
-              "maxLength": 20,
               "type": "string",
-              "description": "Tag names to add to the agent. Up to 20 per call.",
-              "example": "[\"VIP\",\"Premium\"]"
+              "example": "VIP"
             }
           },
           "autoCreate": {
@@ -13537,7 +13548,7 @@
           },
           "phoneCode": {
             "type": "string",
-            "description": "Country calling code without the leading `+`. Example: `1` (US), `86` (China).",
+            "description": "phone code of the agent",
             "example": "000001"
           },
           "phoneCountry": {
@@ -13548,11 +13559,14 @@
           "tagIds": {
             "type": "array",
             "description": "tags of the agent",
-            "example": "1,2,3",
+            "example": [
+              12345,
+              67890
+            ],
             "items": {
               "type": "integer",
-              "description": "tags of the agent",
-              "format": "int64"
+              "format": "int64",
+              "example": 12345
             }
           },
           "sendingEmail": {
@@ -13866,8 +13880,7 @@
             "type": "array",
             "description": "page data",
             "items": {
-              "type": "object",
-              "description": "page data"
+              "type": "object"
             }
           },
           "hasMore": {
@@ -14551,7 +14564,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Active days of week (0=Sun, 6=Sat)",
               "format": "int32"
             }
           },
@@ -14564,7 +14576,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead types filter",
               "format": "int32"
             }
           },
@@ -14577,7 +14588,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead source IDs filter",
               "format": "int64"
             }
           },
@@ -14590,7 +14600,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead pipeline IDs filter",
               "format": "int64"
             }
           },
@@ -14603,7 +14612,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Agent IDs with access",
               "format": "int64"
             }
           },
@@ -14616,7 +14624,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Office IDs with access",
               "format": "int64"
             }
           },
@@ -14629,7 +14636,6 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Lead pond IDs with access",
               "format": "int64"
             }
           },
@@ -14995,8 +15001,7 @@
             "type": "array",
             "description": "Additional parameters for the keyword",
             "items": {
-              "type": "object",
-              "description": "Additional parameters for the keyword"
+              "type": "object"
             }
           }
         },
@@ -15106,7 +15111,7 @@
           },
           "phoneCode": {
             "type": "string",
-            "description": "Country calling code, digits only, no leading `+`. Example: `1` (US), `86` (China).",
+            "description": "Phone country calling code, digits only, no leading '+'.",
             "example": "1"
           },
           "phoneCountry": {
@@ -15197,8 +15202,7 @@
             "type": "string"
           },
           "phoneCode": {
-            "type": "string",
-            "description": "Country calling code without the leading `+`. Example: `1` (US), `86` (China)."
+            "type": "string"
           },
           "phoneCountry": {
             "type": "string"
@@ -15476,10 +15480,14 @@
           "agentIds": {
             "type": "array",
             "description": "The accessible agent id of the lead pond, It's a list with user ids",
+            "example": [
+              10000000514,
+              10000000515
+            ],
             "items": {
               "type": "integer",
-              "description": "The accessible agent id of the lead pond, It's a list with user ids",
-              "format": "int64"
+              "format": "int64",
+              "example": 10000000514
             }
           }
         }
@@ -15929,13 +15937,12 @@
             "type": "array",
             "description": "Lead tag name list",
             "example": [
-              "tag1",
-              "tag2"
+              "Hot Lead",
+              "Zillow"
             ],
             "items": {
               "type": "string",
-              "description": "Lead tag name list",
-              "example": "[\"tag1\",\"tag2\"]"
+              "example": "Hot Lead"
             }
           },
           "tagMatchType": {
@@ -15947,13 +15954,12 @@
             "type": "array",
             "description": "Lead segment name list",
             "example": [
-              "group1",
-              "group2"
+              "First-Time Buyers",
+              "Downtown Area"
             ],
             "items": {
               "type": "string",
-              "description": "Lead segment name list",
-              "example": "[\"group1\",\"group2\"]"
+              "example": "First-Time Buyers"
             }
           },
           "groupMatchType": {
@@ -16431,17 +16437,25 @@
           "emails": {
             "type": "array",
             "description": "The email list of the lead",
+            "example": [
+              "jane.doe@example.com",
+              "jdoe-work@company.com"
+            ],
             "items": {
               "type": "string",
-              "description": "The email list of the lead"
+              "example": "jane.doe@example.com"
             }
           },
           "phones": {
             "type": "array",
             "description": "The phone list of the lead",
+            "example": [
+              "+14155551234",
+              "+12125559876"
+            ],
             "items": {
               "type": "string",
-              "description": "The phone list of the lead"
+              "example": "+14155551234"
             }
           },
           "leadSource": {
@@ -16560,20 +16574,27 @@
           },
           "groups": {
             "type": "array",
-            "description": "The groups that the lead in. deprecated, use segments instead.",
+            "description": "The groups that the lead in. Deprecated, use segments instead.",
+            "example": [
+              "VIP Clients",
+              "Open House Feb"
+            ],
             "deprecated": true,
             "items": {
               "type": "string",
-              "description": "The groups that the lead in. deprecated, use segments instead.",
-              "deprecated": true
+              "example": "VIP Clients"
             }
           },
           "segments": {
             "type": "array",
             "description": "The segments that the lead in",
+            "example": [
+              "First-Time Buyers",
+              "Downtown Area"
+            ],
             "items": {
               "type": "string",
-              "description": "The segments that the lead in"
+              "example": "First-Time Buyers"
             }
           },
           "unsubscription": {
@@ -16583,10 +16604,14 @@
           "leadTypes": {
             "type": "array",
             "description": "Types of lead, expressed by ID. Type ID : Other (-1),  Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7), Homeowner (8), Landlord (9)",
+            "example": [
+              2,
+              5
+            ],
             "items": {
               "type": "integer",
-              "description": "Types of lead, expressed by ID. Type ID : Other (-1),  Seller (1), Buyer (2), Renter (5), Investor (6), Agent (7), Homeowner (8), Landlord (9)",
-              "format": "int32"
+              "format": "int32",
+              "example": 2
             }
           },
           "lastTouch": {
@@ -16600,10 +16625,14 @@
           "phoneStatuses": {
             "type": "array",
             "description": "The status of the phone number\nType id: invaild number(1), vaild number(2), talked(3), DNC Number(4), DNC Contact(5)",
+            "example": [
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
-              "description": "The status of the phone number\nType id: invaild number(1), vaild number(2), talked(3), DNC Number(4), DNC Contact(5)",
-              "format": "int32"
+              "format": "int32",
+              "example": 2
             }
           },
           "assignCompletionStatus": {

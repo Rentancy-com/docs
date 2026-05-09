@@ -33,10 +33,6 @@ All endpoints require a valid Bearer token in the `Authorization` header. See [A
 https://api.lofty.com
 ```
 
-## About 64-bit integer IDs
-
-All lead identifiers returned by the API (including `leadId`, `leadUserId`, and `assignedUserId`) are 64-bit signed integers. When working in JavaScript or other languages with limited integer precision, always treat these values as strings or use a `BigInt` type to avoid silent truncation.
-
 ## Related resources
 
 - [Managing leads guide](/guides/lead-management) — end-to-end walkthrough of lead operations

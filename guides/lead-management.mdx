@@ -5,10 +5,6 @@ description: "Create, retrieve, update, assign, and delete leads using the Lofty
 
 This guide shows how to perform common lead operations. All examples assume you have a valid access token — see [Authentication](/authentication/overview).
 
-<Warning>
-All IDs returned by the API (`leadId`, `assignedUserId`, etc.) are **64-bit integers** sent as JSON numbers. JavaScript's `JSON.parse()` will silently corrupt values exceeding `2^53 - 1`. Use string-based parsing in JS/TS clients — see [JS / TS Integration](/javascript-integration).
-</Warning>
-
 ## Create a lead
 
 ```bash
