@@ -33,7 +33,7 @@ You need a **Developer Platform account** and a **registered application**. Sign
   </Step>
 
   <Step title="Request an access token">
-    Exchange your authorization code for an access token:
+    Exchange your credentials for an access token via the OAuth 2.0 authorization code flow.
 
     ```bash
     curl -X POST https://api.lofty.com/oauth/token \
@@ -44,9 +44,13 @@ You need a **Developer Platform account** and a **registered application**. Sign
       -d "code=<AUTHORIZATION_CODE>" \
       -d "redirect_uri=<REDIRECT_URI>"
     ```
+
+    For complete token endpoint details, see the [OAuth 2.0 API Reference](https://help.lofty.com/hc/en-us/articles/47801571926811).
   </Step>
 
   <Step title="Authenticate requests">
+    Pass the access token in the `Authorization` header:
+
     ```bash
     curl https://api.lofty.com/v1.0/leads \
       -H "Content-Type: application/json" \
