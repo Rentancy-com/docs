@@ -3,27 +3,34 @@ title: "Overview"
 description: "Authenticate with the Lofty API using OAuth 2.0 or API keys."
 ---
 
-All API requests require authentication via the `Authorization` header. Lofty supports two methods:
+All API requests require authentication via the `Authorization` header.
 
-| Method | Use case | Header format |
+| Method | Header format | Best for |
 |---|---|---|
-| **OAuth 2.0** | Production integrations, third-party apps | `Bearer <access_token>` |
-| **API Key** | Internal tools, testing | `token <api_key>` |
+| **OAuth 2.0** | `Bearer <access_token>` | Multi-tenant apps, third-party integrations |
+| **API Key** | `token <api_key>` | Personal automation, scripts, CLI |
 
-## Choosing a method
+## Which method should I use?
+
+| Scenario | Method | Grant Type |
+|---|---|---|
+| CLI tool (`lofty-cli`) | API Key | Used as `LOFTY_CUSTOMER_KEY` in Client Credentials |
+| Personal scripts / automation | API Key | Direct `token` header |
+| Server-to-server (no user) | OAuth 2.0 | Client Credentials + `customer_key` |
+| Web app (user authorizes) | OAuth 2.0 | Authorization Code |
+| SPA / mobile app | OAuth 2.0 | Authorization Code + PKCE |
+| Multi-tenant SaaS platform | OAuth 2.0 | Authorization Code |
 
 <CardGroup cols={2}>
   <Card title="OAuth 2.0" icon="shield-check" href="/authentication/oauth2">
-    Recommended for production. Supports scoped permissions, automatic token expiry, and Lofty's security review process.
+    Three grant types: Authorization Code, PKCE, and Client Credentials. Scoped permissions with security review.
   </Card>
   <Card title="API Keys" icon="key" href="/authentication/api-keys">
-    Quick setup for internal use. No scope control or automatic expiry.
+    User-scoped personal access tokens. Configurable expiration and `THIRD_PARTY_OPERATION` scope.
   </Card>
 </CardGroup>
 
 ## Base URL
-
-All API endpoints use the following base URL:
 
 ```
 https://api.lofty.com
@@ -31,23 +38,32 @@ https://api.lofty.com
 
 ## Request format
 
-Include the following headers in every request:
-
 ```bash
 curl https://api.lofty.com/v1.0/leads \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <access_token>"
 ```
 
+Or via CLI:
+
+```bash
+lofty-cli leads list --limit 10
+```
+
 ## Rate limiting
 
-The default rate limit is **500 requests per minute** per account. The window resets every **60 seconds**.
+Rate limits are **per-app** (not per-account), configured on each registered application.
 
-Every response includes rate limit headers:
+| App Mode | Rate Limit |
+|---|---|
+| Development | 100 requests/min |
+| Production | 500 requests/min |
+
+The window resets every **60 seconds**. Every response includes rate limit headers:
 
 | Header | Description |
 |---|---|
-| `X-RateLimit-Limit` | Maximum requests allowed in the current window (default: 500) |
+| `X-RateLimit-Limit` | Maximum requests allowed in the current window |
 | `X-RateLimit-Remaining` | Requests remaining in the current window |
 | `X-RateLimit-Reset` | Time (UTC epoch seconds) when the window resets |
 
@@ -62,7 +78,7 @@ X-RateLimit-Reset: 21000
 ```
 
 <Note>
-Some endpoints (e.g. AI features) have lower per-endpoint limits. Check the `X-RateLimit-Limit` header in responses to determine the actual limit for each endpoint.
+Some endpoints (e.g. AI features) have lower per-endpoint limits. Check the `X-RateLimit-Limit` header in responses to determine the actual limit.
 </Note>
 
 ## Common errors
@@ -72,3 +88,5 @@ Some endpoints (e.g. AI features) have lower per-endpoint limits. Check the `X-R
 | `401` | — | Invalid or missing authentication credentials. |
 | `403` | `200100` | Token is valid but lacks the required permission scope. Grant the scope in the [Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login) and re-authorize. |
 | `429` | — | Rate limit exceeded. Retry with backoff. |
+
+See [Error Codes](/authentication/error-codes) for the full reference.

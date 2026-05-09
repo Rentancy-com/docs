@@ -1,46 +1,46 @@
 ---
 title: "Install the Lofty CLI"
-description: "This page walks through installing lofty-cli and verifying the installation. After you finish, head to Authenticate your account to start making API calls."
+description: "Install lofty-cli and verify the installation."
 icon: "download"
 ---
-
-This page walks through installing `lofty-cli` and verifying the installation. After you finish, head to **[Authenticate your account](/cli/authentication)** to start making API calls.
 
 ## Prerequisites
 
 | Requirement | Minimum version | Notes |
-| --- | --- | --- |
-| Node.js | **18.0** | Required to run the CLI binary distributed on npm |
-| npm (or pnpm / bun / yarn) | any recent | npm 9+ recommended |
-| A Lofty account | — | Either a customer account (for API keys) or a vendor account (for OAuth) |
+|---|---|---|
+| **Bun** or **Node.js** | Bun 1.0+ / Node 18.0+ | Bun is recommended (the CLI bundle uses Bun internally). Node.js works via npm install but may require additional setup. |
+| npm (or pnpm / yarn) | any recent | For installing the package |
+| A Lofty account | — | For API key or OAuth credentials |
 
-Verify Node is available:
+<Note>
+The CLI is distributed as an npm package but internally uses Bun. If you only have Node.js, `npm install -g` will work, but some edge cases may require [Bun](https://bun.sh) installed as the runtime.
+</Note>
 
-```bash
-node --version
-# v20.11.1 (or any 18.0+)
-```
-
-<Tip>
-  If Node is missing, install it via [nvm](https://github.com/nvm-sh/nvm) or your package manager.
-</Tip>
-
-## Install the latest version
+## Install
 
 ```bash
 npm install -g @loftyai/lofty-cli
 ```
 
-Confirm the install resolved correctly:
+## Verify installation
 
 ```bash
+# Check version
 lofty-cli --version
-# Prints the version, e.g. 0.3.30
+
+# Check available commands
+lofty-cli --help
+
+# Verify auth is working (after login)
+lofty-cli auth status
 ```
 
-<Note>
-  If `lofty-cli: command not found` appears, your global npm `bin` directory is not on your `PATH`. Run `npm config get prefix` and add `<prefix>/bin` to your shell profile.
-</Note>
+<Warning>
+If `lofty-cli: command not found` appears:
+- **npm**: Run `npm config get prefix` and add `<prefix>/bin` to your shell `PATH`
+- **nvm**: Make sure your current Node version is active (`nvm use default`)
+- **Windows/PowerShell**: Use `npx lofty-cli` instead, or add the npm global bin to your system PATH
+</Warning>
 
 ## Upgrade
 
@@ -48,7 +48,7 @@ lofty-cli --version
 npm install -g @loftyai/lofty-cli@latest
 ```
 
-The CLI also performs a lightweight background check at startup and prints a notice when a newer version is available. The check never blocks command execution.
+The CLI also performs a lightweight background check at startup and prints a notice when a newer version is available.
 
 ## Uninstall
 
@@ -56,33 +56,36 @@ The CLI also performs a lightweight background check at startup and prints a not
 npm uninstall -g @loftyai/lofty-cli
 ```
 
-<Warning>
-  Local credentials and caches under `~/.config/lofty-cli/` and `~/.config/tokens/` are **not** removed automatically — delete them manually if you want a clean slate.
-</Warning>
+Credential files are **not** removed automatically. Delete them manually for a clean slate:
+
+```bash
+rm -f ~/.config/tokens/lofty-*.txt
+rm -f ~/.config/tokens/lofty-*.json
+```
+
+| Path | Created by | Contents |
+|---|---|---|
+| `~/.config/tokens/lofty-session-cache.json` | `auth login-session` | Token URL response |
+| `~/.config/tokens/lofty-pkce-cache.json` | `auth login-browser` | Browser OAuth tokens |
+| `~/.config/tokens/lofty-oauth-cache.json` | `auth login` | Client credentials tokens |
 
 ## Alternative: per-project install
-
-If you prefer not to install globally, add the CLI as a project dependency and invoke it via `npx`:
 
 ```bash
 npm install --save-dev @loftyai/lofty-cli
 npx lofty-cli --help
 ```
 
-This is useful when different projects need different CLI versions, or when running the CLI inside CI without a global install step.
+Useful when different projects need different CLI versions, or in CI without a global install.
 
 ## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Authenticate your account" icon="key" href="/cli/authentication">
+  <Card title="Authenticate" icon="key" href="/cli/authentication">
     Required before any API call.
   </Card>
 
   <Card title="Quickstart" icon="bolt" href="/cli/quickstart">
     Common end-to-end examples.
-  </Card>
-
-  <Card title="Command reference" icon="book" href="/cli/reference">
-    Full list of resources and subcommands.
   </Card>
 </CardGroup>

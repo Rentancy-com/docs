@@ -3,13 +3,19 @@ title: "OAuth 2.0"
 description: "Set up OAuth 2.0 authentication for your Lofty API integration."
 ---
 
-OAuth 2.0 is the recommended authentication method. Access tokens are scoped to specific API endpoints and expire automatically.
+OAuth 2.0 is the recommended authentication method for multi-tenant integrations. Lofty supports three grant types:
+
+| Grant Type | Use Case |
+|---|---|
+| **Authorization Code** | Web apps where a user authorizes access via browser |
+| **Authorization Code + PKCE** | SPAs and native apps (no client secret required) |
+| **Client Credentials** | Server-to-server / CLI (requires `customer_key`) |
 
 ## Prerequisites
 
-You need a **Developer Platform account** and a **registered application** before requesting tokens. Sign up at the [Lofty Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login).
+You need a **Developer Platform account** and a **registered application**. Sign up at the [Lofty Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login).
 
-## Setup
+## Authorization Code flow
 
 <Steps>
   <Step title="Register your application">
@@ -27,7 +33,7 @@ You need a **Developer Platform account** and a **registered application** befor
   </Step>
 
   <Step title="Request an access token">
-    Exchange your credentials for an access token via the OAuth 2.0 authorization code flow.
+    Exchange your authorization code for an access token:
 
     ```bash
     curl -X POST https://api.lofty.com/oauth/token \
@@ -38,13 +44,9 @@ You need a **Developer Platform account** and a **registered application** befor
       -d "code=<AUTHORIZATION_CODE>" \
       -d "redirect_uri=<REDIRECT_URI>"
     ```
-
-    For complete token endpoint details, see the [OAuth 2.0 API Reference](https://help.lofty.com/hc/en-us/articles/47801571926811).
   </Step>
 
   <Step title="Authenticate requests">
-    Pass the access token in the `Authorization` header:
-
     ```bash
     curl https://api.lofty.com/v1.0/leads \
       -H "Content-Type: application/json" \
@@ -53,9 +55,40 @@ You need a **Developer Platform account** and a **registered application** befor
   </Step>
 </Steps>
 
+## PKCE flow
+
+For SPAs and native apps that cannot securely store a client secret. Uses a code verifier/challenge instead.
+
+```bash
+curl -X POST https://api.lofty.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code" \
+  -d "client_id=<CLIENT_ID>" \
+  -d "code=<AUTHORIZATION_CODE>" \
+  -d "code_verifier=<CODE_VERIFIER>" \
+  -d "redirect_uri=<REDIRECT_URI>"
+```
+
+No `client_secret` is required. The Lofty CLI uses this flow for interactive browser login (`lofty-cli auth login-browser`).
+
+## Client Credentials flow
+
+For server-to-server integrations with no user interaction. Requires a `customer_key` (API key) to identify the target account.
+
+```bash
+curl -X POST https://api.lofty.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=<CLIENT_ID>" \
+  -d "client_secret=<CLIENT_SECRET>" \
+  -d "customer_key=<CUSTOMER_KEY>"
+```
+
+The `customer_key` is the target user's API key (found in **Settings → Integrations → API**). The resulting token is scoped to that user's data and permissions. See [CLI Authentication](/cli/authentication) for details.
+
 ## Permission scopes
 
-Each token is scoped to the endpoints you've granted in the Developer Portal. Calling an out-of-scope endpoint returns `HTTP 403` with:
+Each token is scoped to the endpoints granted to your application in the Developer Portal. Calling an out-of-scope endpoint returns `HTTP 403`:
 
 ```json
 {
@@ -64,15 +97,26 @@ Each token is scoped to the endpoints you've granted in the Developer Portal. Ca
 }
 ```
 
-To add scopes, update the **Permissions** section in the Developer Portal. Existing users must re-authorize after scope changes.
+<Warning>
+**Adding scopes is a breaking change.** When you add new permission scopes to a production app, all existing tokens are invalidated (`authorized_api_ids` changes). Existing users must re-authorize your app. Always notify users before adding scopes.
+</Warning>
+
+## Rate limits by app mode
+
+| Mode | Rate Limit |
+|---|---|
+| **Development** | 100 requests/min |
+| **Production** | 500 requests/min |
+
+Rate limits are **per-app**, not per-account. Set on `app_info.rate_limit_per_minute`.
 
 ## App lifecycle
 
 | Stage | Description |
 |---|---|
-| **Development** | Test the full OAuth flow without review. |
-| **Under Review** | Submitted for production access. Typically 2–5 business days. |
-| **Production** | Approved. Real users can authorize your app. |
+| **Development** | Test the full OAuth flow without review. Rate limit: 100/min. |
+| **Under Review** | Submitted for production access. |
+| **Production** | Approved. Real users can authorize your app. Rate limit: 500/min. |
 | **Declined** | Not approved. Edit and resubmit at any time. |
 
 ## Updating a production app
@@ -81,7 +125,7 @@ Once in production, edits require review before taking effect. Your app continue
 
 **Non-breaking changes** — app name, description, redirect URIs, removing scopes. Existing connections are unaffected.
 
-**Breaking changes** — adding new permission scopes. Existing users must re-authorize after publish. Notify users before submitting.
+**Breaking changes** — adding new permission scopes invalidates existing tokens. Users must re-authorize. Notify users before submitting.
 
 <Accordion title="Can I edit while a review is pending?">
   No. Edit controls are locked during review. Cancel the pending edit first if you need to make urgent changes.

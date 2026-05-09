@@ -3,7 +3,7 @@ title: "Introduction"
 description: "The Lofty Developer API provides REST access to leads, listings, transactions, communications, tasks, and webhooks in Lofty's real estate CRM platform."
 ---
 
-The Lofty Developer API is a REST API that gives you programmatic access to the Lofty real estate CRM platform. If you're building a third-party integration, automating lead workflows, syncing CRM data, or embedding real estate functionality into your own application, this API is your entry point.
+The Lofty Developer API is a RESTful API that gives you programmatic access to the Lofty real estate CRM platform. If you're building a third-party integration, automating lead workflows, syncing CRM data, or embedding real estate functionality into your own application, this API is your entry point.
 
 ## Base URL and versioning
 
@@ -16,46 +16,53 @@ https://api.lofty.com
 The API exposes two versioned path prefixes:
 
 | Version | Path prefix | Notes |
-| --- | --- | --- |
+|---|---|---|
 | v1.0 | `/v1.0/` | Current stable version for most endpoints |
 | v2.0 | `/v2.0/` | Available for select endpoints; check the API reference for availability |
 
-Always include the version prefix in your request URL. For example:
+## 64-bit integer IDs
 
-```text
-GET https://api.lofty.com/v1.0/leads
+All entity IDs in the Lofty API are **64-bit integers** that can exceed JavaScript's safe integer limit (`2^53 - 1`).
+
+```javascript
+// ❌ Unsafe — ID is silently corrupted
+const data = JSON.parse('{"leadId": 1738234566814937089}');
+console.log(data.leadId); // 1738234566814937088 ← wrong!
+
+// ✅ Safe — parse as string
+const text = await response.text();
+const safeData = text.replace(/:\s*(\d{16,})/g, ':"$1"');
 ```
 
-<Warning>
-  All entity IDs in the Lofty API are **64-bit integers**. JavaScript's `Number` type cannot safely represent integers larger than 2^53-1 (9,007,199,254,740,991). Lofty IDs can exceed this range, causing silent precision loss if you parse them with `JSON.parse()` or `parseInt()`. See the [JavaScript and TypeScript Integration Guide](/javascript-integration) before building any JS or TS client.
-</Warning>
+See [JS / TS Integration](/javascript-integration) for complete solutions using BigInt and custom parsers.
 
 ## Authentication
 
-Lofty supports two authentication methods. You include credentials in the `Authorization` request header on every API call.
+Lofty supports **OAuth 2.0** and **API Keys** (personal access tokens).
 
-**OAuth 2.0 (recommended)** — Designed for third-party integrations. You register an application in the Lofty Developer Portal, receive a Client ID and Client Secret, and exchange them for a short-lived access token. Each token is scoped to the specific API permissions you requested. This method is subject to security assessments and supports automatic token expiration.
+| Method | Use case | Header |
+|---|---|---|
+| OAuth 2.0 | Multi-tenant apps, third-party integrations | `Bearer <access_token>` |
+| API Key | Personal automation, scripts, CLI | `token <api_key>` |
 
-**API Key** — A static key tied to a specific Lofty user account, available under **Settings \> Integrations \> API** in the Lofty CRM. API keys do not expire automatically and are not subject to security review. They must remain internal and must not be shared with external vendors. Use this method only for internal tooling where you control both ends of the integration.
+**OAuth 2.0** — Three grant types: Authorization Code, PKCE (for SPAs), and Client Credentials (for server-to-server). Register your app in the [Developer Portal](https://api.lofty.com/vendor/frontend/static/index.html#/login).
 
-<Note>
-  API services are actively developing to provide more complete functionality. Some endpoints or features may not yet be available. Check the [API reference](/api-reference/leads/overview) for current endpoint coverage.
-</Note>
+**API Key** — User-scoped personal access tokens with configurable expiration and `THIRD_PARTY_OPERATION` scope. Used by the Lofty CLI as `LOFTY_CUSTOMER_KEY`. Generate yours under **Settings → Integrations → API**.
 
 <CardGroup cols={2}>
   <Card title="Quickstart" icon="rocket" href="/quickstart">
-    Set up your developer account, get credentials, and make your first API call.
+    Get credentials and make your first API call in minutes.
   </Card>
 
-  <Card title="Authentication overview" icon="lock" href="/authentication/overview">
-    Learn the full details of OAuth 2.0 and API Key authentication.
+  <Card title="Lofty CLI" icon="terminal" href="/cli/install">
+    Install the CLI for fast terminal-based API access.
   </Card>
 
-  <Card title="Leads" icon="users" href="/concepts/leads">
-    Understand the lead object and how to create, retrieve, and manage leads.
+  <Card title="API Reference" icon="code" href="/api-reference/leads/overview">
+    115 endpoints across leads, tasks, listings, transactions, and more.
   </Card>
 
   <Card title="Webhooks" icon="bolt" href="/concepts/webhooks">
-    Subscribe to real-time events and get notified when data changes in Lofty.
+    Subscribe to real-time events when data changes.
   </Card>
 </CardGroup>

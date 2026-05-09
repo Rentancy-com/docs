@@ -30,19 +30,23 @@ This guide walks you through everything you need to make your first API call to 
 
     If you call an endpoint your application hasn't been granted access to, the API returns `HTTP 403` with error code `200100` ("Sorry, the vendor does not have permission for this API.") — even if your token is otherwise valid. Grant the necessary scopes in the Developer Portal before making those calls.
 
-    **API Key (for internal tools)**
+    **API Key (for personal use, scripts, CLI)**
 
-    In the Lofty CRM, go to **Settings > Integrations > API** to generate an API key. This key is tied to the user account and does not expire automatically.
+    In the Lofty CRM, go to **Settings > Integrations > API** to generate an API key. Each key is a user-scoped personal access token with configurable expiration.
 
-    <Warning>
-      API keys must remain internal. Do not share them with external vendors or embed them in client-side code. You assume full responsibility for managing the key's usage and security.
-    </Warning>
+    <Note>
+      API keys are also used as `LOFTY_CUSTOMER_KEY` in the [Lofty CLI](/cli/install) and the [Client Credentials flow](/authentication/oauth2#client-credentials-flow).
+    </Note>
   </Step>
 
   <Step title="Make your first API call">
     Fetch a list of leads from your Lofty account. The endpoint requires your credentials in the `Authorization` header.
 
     <CodeGroup>
+
+    ```bash CLI
+    lofty-cli leads list --limit 10
+    ```
 
     ```bash OAuth 2.0
     curl --request GET \

@@ -1,19 +1,28 @@
 ---
 title: "API Keys"
-description: "Authenticate with the Lofty API using a static API key."
+description: "Authenticate with the Lofty API using a personal access token (API key)."
 ---
 
-API keys provide a simple authentication method for internal tools and development. Unlike OAuth 2.0, API keys do not expire automatically and have no built-in scope control.
+API keys (personal access tokens) are user-scoped credentials for authenticating with the Lofty API. They are well suited for personal automation, scripts, CLI usage, and server-side integrations where the developer controls the environment.
 
-<Warning>
-  API keys are intended for internal use only. For production integrations or any third-party access, use [OAuth 2.0](/authentication/oauth2).
-</Warning>
+<Note>
+The Lofty CLI uses API keys as `LOFTY_CUSTOMER_KEY` for the [Client Credentials flow](/cli/authentication). API keys are a fully supported authentication method — not just for testing.
+</Note>
 
 ## Obtain your API key
 
 Navigate to **Settings → Integrations → API** in your Lofty account to view or generate your key.
 
-Each key is bound to the account that generated it. Requests authenticated with that key inherit the account's permissions.
+Each key is bound to the account that generated it. Requests authenticated with that key operate within that account's permissions and carry a `THIRD_PARTY_OPERATION` scope.
+
+## Key properties
+
+| Property | Description |
+|---|---|
+| **Scope** | `THIRD_PARTY_OPERATION` — enforced at token verification |
+| **Expiration** | Configurable. Keys can have an `expires_at` date set at creation. Check your key's expiry in account settings. |
+| **Revocation** | Can be revoked immediately in account settings |
+| **Format** | JWS token with metadata (not a static string) |
 
 ## Authenticate requests
 
@@ -25,23 +34,27 @@ curl https://api.lofty.com/v1.0/leads \
   -H "Authorization: token <API_KEY>"
 ```
 
+Or use the Lofty CLI:
+
+```bash
+export LOFTY_CUSTOMER_KEY="<API_KEY>"
+lofty-cli leads list --limit 10
+```
+
 ## Security considerations
 
 - **Do not** expose keys in client-side code, public repositories, or logs.
 - **Do not** share keys with external vendors or third parties.
 - Keys are not subject to Lofty's security review process — you are responsible for access control.
 - If a key is compromised, revoke it immediately in your account settings and generate a new one.
+- Monitor your key's expiration date and rotate before it expires.
 
-## When to use API keys
+## When to use each method
 
-| Scenario | Recommended method |
+| Scenario | Recommended |
 |---|---|
-| Internal automation or scripts | API Key |
-| Quick prototyping and testing | API Key |
-| Third-party integrations | OAuth 2.0 |
-| User-facing applications | OAuth 2.0 |
-| Multi-tenant platforms | OAuth 2.0 |
-
-<Tip>
-  If your use case grows beyond internal tooling, migrate to [OAuth 2.0](/authentication/oauth2) before expanding access.
-</Tip>
+| Personal automation or scripts | API Key |
+| CLI usage (`lofty-cli`) | API Key (as `LOFTY_CUSTOMER_KEY`) |
+| Server-to-server (no user interaction) | OAuth 2.0 Client Credentials + API Key |
+| Third-party multi-tenant integrations | OAuth 2.0 Authorization Code |
+| User-facing applications / SPAs | OAuth 2.0 with PKCE |
