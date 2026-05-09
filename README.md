@@ -1,55 +1,60 @@
-# Mintlify Starter Kit
+# Lofty Open API Documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
-
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
-
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
-
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
-
-## AI-assisted writing
-
-Set up your AI coding tool to work with Mintlify:
-
-```bash
-npx skills add https://mintlify.com/docs
-```
-
-This command installs Mintlify's documentation skill for your configured AI tools like Claude Code, Cursor, Windsurf, and others. The skill includes component reference, writing standards, and workflow guidance.
-
-See the [AI tools guides](/ai-tools) for tool-specific setup.
+Lofty Developer API documentation built with [Mintlify](https://mintlify.com). Live at [developer.lofty.com](https://developer.lofty.com).
 
 ## Development
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
-
-```
+```bash
+# Install Mintlify CLI
 npm i -g mint
-```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
-
-```
+# Preview locally
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+View at `http://localhost:3000`.
 
-## Publishing changes
+## Sync OpenAPI Spec
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+The API reference pages are auto-generated from `openapi/openapi.json`. Use the sync script to update from the remote spec:
 
-## Need help?
+```bash
+# Sync from production (default)
+./scripts/sync-openapi.sh
 
-### Troubleshooting
+# Sync from staging
+./scripts/sync-openapi.sh https://api-stage.lofty.com/v3/api-docs
+```
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
+The script automatically:
+- Downloads the latest OpenAPI spec
+- Removes duplicate array item descriptions
+- Removes malformed stringified array examples
+- Fixes internal webhook documentation links
 
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+After syncing, restart `mint dev` to preview changes (OpenAPI spec is only loaded at startup).
+
+## Publishing
+
+Push to `main` branch to trigger automatic deployment via the Mintlify GitHub integration.
+
+## Project Structure
+
+```
+docs.json              # Mintlify configuration (navigation, theme, branding)
+openapi/openapi.json   # OpenAPI 3.0.1 spec (auto-synced from API server)
+scripts/sync-openapi.sh # Spec sync + auto-fix script
+api-reference/         # API endpoint pages (openapi frontmatter)
+authentication/        # Auth docs (OAuth 2.0, API Keys, Error Codes)
+concepts/              # Core concepts (Leads, Webhooks, etc.)
+guides/                # How-to guides (Lead Management, Communication)
+cli/                   # Lofty CLI documentation
+changelog/             # API changelog by year
+```
+
+## Troubleshooting
+
+- **OpenAPI changes not showing**: Restart `mint dev` — spec is loaded once at startup.
+- **404 page**: Check that the page is listed in `docs.json` navigation.
+- **Build errors**: Run `mint validate` to check for issues.
+- **Broken links**: Run `mint broken-links` to scan all internal links.
