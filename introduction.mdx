@@ -20,22 +20,6 @@ The API exposes two versioned path prefixes:
 | v1.0 | `/v1.0/` | Current stable version for most endpoints |
 | v2.0 | `/v2.0/` | Available for select endpoints; check the API reference for availability |
 
-## 64-bit integer IDs
-
-All entity IDs in the Lofty API are **64-bit integers** that can exceed JavaScript's safe integer limit (`2^53 - 1`).
-
-```javascript
-// ❌ Unsafe — ID is silently corrupted
-const data = JSON.parse('{"leadId": 1738234566814937089}');
-console.log(data.leadId); // 1738234566814937088 ← wrong!
-
-// ✅ Safe — parse as string
-const text = await response.text();
-const safeData = text.replace(/:\s*(\d{16,})/g, ':"$1"');
-```
-
-See [JS / TS Integration](/javascript-integration) for complete solutions using BigInt and custom parsers.
-
 ## Authentication
 
 Lofty supports **OAuth 2.0** and **API Keys** (personal access tokens).
